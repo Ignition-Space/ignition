@@ -1,0 +1,25 @@
+{
+  "include": [
+    "src",
+    "src/index.tsx"
+  ],
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "es2018",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "noUnusedLocals": false,
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": "./",
+    "keyofStringsOnly": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  }
+}

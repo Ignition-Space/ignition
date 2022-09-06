@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+    },
+    "baseUrl": "./",
+    "outDir": "../../dist/apps/ignition-server"
+  },
+  "include": [
+    "src/**/*",
+    "../../types/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "**/*spec.ts"
+  ]
+}

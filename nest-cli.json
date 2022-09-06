@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/ignition-server/src",
+  "monorepo": true,
+  "root": "apps/ignition-server",
+  "compilerOptions": {
+    "webpack": false,
+    "tsConfigPath": "apps/ignition-server/tsconfig.app.json"
+  },
+  "projects": {
+    "ignition-server": {
+      "type": "application",
+      "root": "apps/ignition-server",
+      "entryFile": "main",
+      "sourceRoot": "apps/ignition-server/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/ignition-server/tsconfig.app.json"
+      }
+    }
+  }
+}
