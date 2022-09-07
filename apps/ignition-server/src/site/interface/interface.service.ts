@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
-import { MongoRepository, ObjectID } from 'typeorm';
+import { MongoRepository } from 'typeorm';
 import { Interface } from './interface.mongo.entity';
+import { ObjectId } from 'mongodb';
 
 export class InterfaceService {
   constructor(
@@ -8,18 +9,22 @@ export class InterfaceService {
     private interfaceRepository: MongoRepository<Interface>,
   ) { }
 
-  saveAndUpdate(site) {
-    if (site.id) {
-      const { id, ...res } = site;
+  saveAndUpdate(inter) {
+    const { id, ...res } = inter;
+    if (id) {
       return this.updateOne(id, res);
     }
-    return this.interfaceRepository.save(site);
+    return this.interfaceRepository.save(res);
   }
 
-  updateOne(id, site) {
+  insertMany(list) {
+    return this.interfaceRepository.insertMany(list);
+  }
+
+  updateOne(id, inter) {
     return this.interfaceRepository.findOneAndUpdate(
-      { _id: new ObjectID(id) },
-      { $set: { ...site } },
+      { _id: new ObjectId(id) },
+      { $set: { ...inter } },
       { upsert: true },
     );
   }

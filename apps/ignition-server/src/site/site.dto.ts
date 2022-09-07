@@ -3,7 +3,7 @@ import { IsNotEmpty } from 'class-validator';
 import { API_TYPE, PAGE_TYPE } from './site.mongo.entity';
 
 export class AddSiteDto {
-  @ApiProperty({ example: '6263f15f6d160033b35061d7' })
+  @ApiProperty({ example: '63183f3635609a2d4965ccaa' })
   id?: string;
 
   @ApiProperty({ example: 'http://localhost:3004/api/doc-json' })
@@ -24,7 +24,7 @@ export class AddSiteDto {
 }
 
 export class GenerateSiteDto {
-  @ApiProperty({ example: '6263f15f6d160033b35061d7' })
+  @ApiProperty({ example: '63183f3635609a2d4965ccaa' })
   @IsNotEmpty()
   id: string;
 }

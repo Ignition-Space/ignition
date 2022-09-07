@@ -29,6 +29,8 @@
     "cross-env": "^7.0.3",
     "history": "^4.0.0",
     "isarray": "^2.0.5",
+    "loadsh": "^0.0.4",
+    "mongodb": "^4.9.1",
     "mongoose": "^6.2.10",
     "mysql2": "^2.3.3",
     "object-assign": "^4.1.1",

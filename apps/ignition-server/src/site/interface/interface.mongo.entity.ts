@@ -7,6 +7,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+import { Method } from 'axios';
+
 export enum API_TYPE {
   'swagger' = 0,
 }
@@ -23,10 +25,19 @@ export class Interface {
   url: string;
 
   @Column({ default: null })
-  tags: API_TYPE;
+  tags: string;
 
   @Column({ default: null })
-  methodType: string;
+  schema: string;
+
+  @Column({ default: null })
+  apiType: API_TYPE;
+
+  @Column({ default: null })
+  parameterType: string;
+
+  @Column({ default: null })
+  methodType: Method;
 
   @CreateDateColumn()
   createDate: string;

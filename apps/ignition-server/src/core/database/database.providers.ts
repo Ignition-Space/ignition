@@ -5,7 +5,7 @@
 
 import { DataSource } from 'typeorm';
 
-import { getConfig } from '../utils/index';
+import { getConfig } from '../../utils/index';
 import { NamingStrategy } from './naming.strategies';
 
 import * as path from 'path';

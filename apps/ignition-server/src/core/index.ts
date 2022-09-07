@@ -6,4 +6,3 @@ export * from './exceptions/feishu.exception';
 export * from './exceptions/http.exception.filter';
 export * from './interceptors/transform.interceptor';
 export * from './constants';
-export * from './utils';

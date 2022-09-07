@@ -1,12 +1,9 @@
 /*
  * @Author: Cookie
- * @Description: 
+ * @Description:
  */
 
 import axios, { Method } from 'axios';
-import { getConfig } from './index';
-
-const { FEISHU_CONFIG: { FEISHU_URL } } = getConfig()
 
 /**
  * @description: 任意请求
@@ -38,7 +35,7 @@ export interface IRequest {
 /**
  * @description: 带 version 的通用 api 请求
  */
-const methodV = async ({
+const method = async ({
   url,
   method,
   headers,
@@ -49,9 +46,8 @@ const methodV = async ({
   if (/^(http:\/\/|https:\/\/)/.test(url)) {
     sendUrl = url;
   } else {
-    sendUrl = `${FEISHU_URL}${url}`;
+    sendUrl = `${url}`;
   }
-  console.log(sendUrl);
   try {
     return new Promise((resolve, reject) => {
       axios({
@@ -78,4 +74,4 @@ const methodV = async ({
   }
 };
 
-export { request, methodV };
+export { request, method };

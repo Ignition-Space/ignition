@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
-import { MongoRepository, ObjectID } from 'typeorm';
+import { MongoRepository } from 'typeorm';
 import { Site } from './site.mongo.entity';
+import { ObjectId } from 'mongodb';
 
 export class SiteService {
   constructor(
@@ -9,8 +10,8 @@ export class SiteService {
   ) { }
 
   saveAndUpdate(site) {
-    if (site.id) {
-      const { id, ...res } = site;
+    const { id, ...res } = site;
+    if (id) {
       return this.updateOne(id, res);
     }
     return this.siteRepository.save(site);
@@ -18,9 +19,9 @@ export class SiteService {
 
   updateOne(id, site) {
     return this.siteRepository.findOneAndUpdate(
-      { _id: new ObjectID(id) },
+      { _id: new ObjectId(id) },
       { $set: { ...site } },
-      { upsert: true },
+      { upsert: false },
     );
   }
 
