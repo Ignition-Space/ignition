@@ -2,12 +2,13 @@
  * @Author: Cookie
  * @Date: 2021-07-18 18:04:32
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-09-06 09:20:51
+ * @LastEditTime: 2022-09-08 09:18:56
  * @Description:
  */
 
-import Home from '@/view/Home'
-import { Navigate } from "react-router-dom";
+import Home from '@/view/Home';
+import { Navigate } from 'react-router';
+import BaseLayout from '@/layout/BaseLayout';
 
 export interface RouterProps {
   path: string;
@@ -20,17 +21,17 @@ export interface RouterProps {
 
 const routes = [
   {
-    path: "/",
+    path: '/',
+    element: <BaseLayout />,
+  },
+  {
+    path: '/about',
     element: <Home />,
   },
   {
-    path: "/about",
-    element: <Home />,
-  },
-  {
-    path: "/",
+    path: '/',
     element: <Navigate to="/about" />,
   },
-]
+];
 
-export default routes
+export default routes;
