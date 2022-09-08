@@ -25,5 +25,6 @@ import { SiteService } from './site.service';
       inject: ['MONGODB_DATA_SOURCE'],
     },
   ],
+  exports: [SiteService],
 })
 export class SiteModule { }
