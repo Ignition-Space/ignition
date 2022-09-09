@@ -10,8 +10,8 @@ export class PageConfigService {
     private pageConfigRepository: MongoRepository<PageConfig>,
   ) { }
 
-  save(page) {
-    return this.pageConfigRepository.save(page);
+  save(pageConfig) {
+    return this.pageConfigRepository.save(pageConfig);
   }
 
   findOne(id) {

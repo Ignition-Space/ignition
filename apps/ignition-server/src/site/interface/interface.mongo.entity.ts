@@ -25,6 +25,9 @@ export class Interface {
   url: string;
 
   @Column({ default: null })
+  summary: string;
+
+  @Column({ default: null })
   tags: string;
 
   @Column({ default: null })

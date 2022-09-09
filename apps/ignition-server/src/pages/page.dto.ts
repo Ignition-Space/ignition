@@ -8,8 +8,12 @@ export class addPageDto {
   path: string;
 
   @IsNotEmpty()
-  @ApiProperty({ example: '61ee7e9e6011b7395d4a7834' })
+  @ApiProperty({ example: '631a94d2593f1aa2a85d5de7' })
   siteId: string;
+
+  @IsNotEmpty()
+  @ApiProperty({ example: '631a9ed2fc0ca4a4616c76fe' })
+  interfaceId: string;
 
   @ApiProperty({ example: 'website' })
   @IsNotEmpty()

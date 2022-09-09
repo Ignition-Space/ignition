@@ -12,6 +12,7 @@ import { PageService } from './page.service';
 import { Response } from 'express';
 import { PageConfigService } from './config/pageConfig.service';
 import { SiteService } from '../site/site.service';
+import { InterfaceService } from '../site/interface/interface.service';
 import { STATUS_TYPE } from '../site/site.mongo.entity';
 import { DeployConfigService } from './deploy/deployConfig.service';
 
@@ -23,6 +24,7 @@ export class PageController {
   constructor(
     private pageService: PageService,
     private pageConfigService: PageConfigService,
+    private interfaceService: InterfaceService,
     // private templateService: TemplateService,
     private siteService: SiteService,
     private deployConfigService: DeployConfigService,
@@ -33,12 +35,17 @@ export class PageController {
   })
   @Post('save')
   async save(@Body() params: addPageDto) {
-    const { siteId } = params;
+    const { siteId, interfaceId } = params;
 
     const site = await this.siteService.findOne(siteId);
+    const interfaceOne = await this.interfaceService.findOne(interfaceId);
 
     if (!site) {
-      throw new BusinessException('站点项目部村长！');
+      throw new BusinessException('站点项目不存在！');
+    }
+
+    if (!interfaceOne) {
+      throw new BusinessException('此接口不存在');
     }
 
     const exit = await this.pageService.findOneByQuery({
@@ -50,9 +57,37 @@ export class PageController {
       throw new BusinessException('页面路径重复！');
     }
 
-    const page = await this.pageService.save(params);
+    console.log(interfaceOne);
 
-    return page;
+    const { schema: schemas }: any = interfaceOne;
+
+    let html = '';
+    const getTpl = (props: any) => {
+      return `
+        <Form.Item
+          label="${props.label}"
+          name="${props.name}"
+        >
+          <Input  placeholder="${props.placeholder}" />
+        </Form.Item>
+      `;
+    };
+    const properties = schemas.properties;
+    Object.keys(properties).forEach((key) => {
+      const property = properties[key];
+      console.log('property==', property);
+      html =
+        html +
+        getTpl({
+          label: property.description,
+          name: key,
+          placeholder: property.example,
+        });
+    });
+
+    // const page = await this.pageService.save(params);
+
+    return html;
   }
 
   @ApiOperation({

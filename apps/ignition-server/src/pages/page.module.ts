@@ -2,11 +2,11 @@ import { Module, forwardRef } from '@nestjs/common';
 import { PageController } from './page.controller';
 import { PageService } from './page.service';
 import { PageConfigService } from './config/pageConfig.service';
-import { SiteModule } from '../site/site.module';
 import { DeployConfigService } from './deploy/deployConfig.service';
 import { Page } from './page.mongo.entity';
 import { DeployConfig } from './deploy/deployConfig.mongo.entity';
 import { PageConfig } from './config/pageConfig.mongo.entity';
+import { SiteModule } from '../site/site.module';
 
 @Module({
   imports: [forwardRef(() => SiteModule)],

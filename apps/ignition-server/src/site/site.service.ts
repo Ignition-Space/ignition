@@ -28,4 +28,8 @@ export class SiteService {
   findOne(id) {
     return this.siteRepository.findOne(id);
   }
+
+  findALL() {
+    return this.siteRepository.find();
+  }
 }

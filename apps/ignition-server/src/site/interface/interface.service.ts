@@ -2,6 +2,7 @@ import { Inject } from '@nestjs/common';
 import { MongoRepository } from 'typeorm';
 import { Interface } from './interface.mongo.entity';
 import { ObjectId } from 'mongodb';
+import path from 'path';
 
 export class InterfaceService {
   constructor(
@@ -10,6 +11,14 @@ export class InterfaceService {
   ) { }
 
   saveAndUpdate(inter) {
+    const { id, ...res } = inter;
+    if (id) {
+      return this.updateOne(id, res);
+    }
+    return this.interfaceRepository.save(res);
+  }
+
+  saveAndUpdateByPath(inter) {
     const { id, ...res } = inter;
     if (id) {
       return this.updateOne(id, res);
@@ -31,6 +40,14 @@ export class InterfaceService {
 
   findOne(id) {
     return this.interfaceRepository.findOne(id);
+  }
+
+  findByUrl(url) {
+    return this.interfaceRepository.findOne({
+      where: {
+        url,
+      },
+    });
   }
 
   findBySite(siteId) {

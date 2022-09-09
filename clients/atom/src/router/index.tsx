@@ -2,7 +2,7 @@
  * @Author: Cookie
  * @Date: 2021-07-18 18:04:32
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-09-08 09:18:56
+ * @LastEditTime: 2022-09-09 10:04:34
  * @Description:
  */
 
@@ -25,7 +25,7 @@ const routes = [
     element: <BaseLayout />,
   },
   {
-    path: '/about',
+    path: '/test',
     element: <Home />,
   },
   {

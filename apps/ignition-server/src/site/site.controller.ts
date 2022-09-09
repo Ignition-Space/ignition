@@ -24,6 +24,15 @@ export class SiteController {
   }
 
   @ApiOperation({
+    summary: '获取站点列表',
+  })
+  @Post('getList')
+  async getList() {
+    const site = await this.siteService.findALL();
+    return site;
+  }
+
+  @ApiOperation({
     summary: '分析接口数据',
   })
   @Post('analysis')
@@ -31,16 +40,17 @@ export class SiteController {
     const site = await this.siteService.findOne(generateSiteDto.id);
     const { paths, components } = await getRecursion(site.url);
     const interfaces = [];
+
     Object.keys(paths).forEach((url) => {
       Object.keys(paths[url]).forEach((methodType) => {
         const request = paths[url][methodType];
         if (methodType === 'post') {
-          console.log(url, '====>', request?.requestBody?.content);
           !request?.requestBody &&
             interfaces.push({
               siteId: String(site.id),
               methodType: methodType,
               url,
+              summary: request.summary,
               schema: '',
               apiType: site.apiType,
               parameterType: '',
@@ -59,6 +69,7 @@ export class SiteController {
                 siteId: String(site.id),
                 methodType: methodType,
                 url,
+                summary: request.summary,
                 schema: reSchema,
                 apiType: site.apiType,
                 parameterType: contentType,
@@ -71,6 +82,7 @@ export class SiteController {
             siteId: String(site.id),
             methodType: methodType,
             url,
+            summary: request.summary,
             schema: request.parameters,
             apiType: site.apiType,
             parameterType: 'query',
@@ -79,7 +91,21 @@ export class SiteController {
         }
       });
     });
-    const callback = await this.interfaceService.insertMany(interfaces);
+    const callback = [];
+    for (const inter of interfaces) {
+      const isExit = this.interfaceService.findByUrl(inter.url);
+      let newOne = {};
+      if (isExit) {
+        newOne = await this.interfaceService.saveAndUpdate({
+          ...isExit,
+          ...inter,
+        });
+      } else {
+        newOne = await this.interfaceService.saveAndUpdate(inter);
+      }
+      callback.push(newOne);
+    }
+
     return callback;
   }
 
