@@ -22,144 +22,152 @@ export default () => {
 
   const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
     fixSiderbar: true,
+    layout: 'mix',
     splitMenus: true,
   });
 
   const [pathname, setPathname] = useState(location.pathname);
 
   return (
-    <ProLayout
-      {...defaultProps}
-      location={{
-        pathname,
+    <div
+      id="pro-layout"
+      style={{
+        height: '100vh',
       }}
-      siderMenuType="group"
-      menu={{
-        collapsedShowGroupTitle: true,
-      }}
-      avatarProps={{
-        src: profileImg,
-        size: 'small',
-        title: '言萧凡',
-      }}
-      actionsRender={(props) => {
-        if (props.isMobile) return [];
-        return [
-          props.layout !== 'side' && document.body.clientWidth > 1400 ? (
+    >
+      <ProLayout
+        {...defaultProps}
+        location={{
+          pathname,
+        }}
+        siderMenuType="group"
+        menu={{
+          collapsedShowGroupTitle: true,
+        }}
+        avatarProps={{
+          src: profileImg,
+          size: 'small',
+          title: '言萧凡',
+        }}
+        actionsRender={(props) => {
+          if (props.isMobile) return [];
+          return [
+            props.layout !== 'side' && document.body.clientWidth > 1400 ? (
+              <div
+                key="SearchOutlined"
+                aria-hidden
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginInlineEnd: 24,
+                }}
+                onMouseDown={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }}
+              >
+                <Input
+                  style={{
+                    borderRadius: 4,
+                    marginInlineEnd: 12,
+                    backgroundColor: 'rgba(0,0,0,0.03)',
+                  }}
+                  prefix={
+                    <SearchOutlined
+                      style={{
+                        color: 'rgba(0, 0, 0, 0.15)',
+                      }}
+                    />
+                  }
+                  placeholder="搜索方案"
+                  bordered={false}
+                />
+                <PlusCircleFilled
+                  style={{
+                    color: 'var(--ant-primary-color)',
+                    fontSize: 24,
+                  }}
+                />
+              </div>
+            ) : undefined,
+            <InfoCircleFilled key="InfoCircleFilled" />,
+            <QuestionCircleFilled key="QuestionCircleFilled" />,
+            <GithubFilled
+              key="GithubFilled"
+              onClick={() => window.open('https://github.com/boty-design')}
+            />,
+          ];
+        }}
+        headerTitleRender={(logo, title, _) => {
+          const defaultDom = (
+            <a>
+              {logo}
+              {title}
+            </a>
+          );
+          if (document.body.clientWidth < 1400) {
+            return defaultDom;
+          }
+          if (_.isMobile) return defaultDom;
+          return (
+            <>
+              {defaultDom}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <Divider
+                  style={{
+                    height: '1.5em',
+                  }}
+                  type="vertical"
+                />
+              </div>
+            </>
+          );
+        }}
+        menuFooterRender={(props) => {
+          if (props?.collapsed) return undefined;
+          return (
             <div
-              key="SearchOutlined"
-              aria-hidden
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginInlineEnd: 24,
-              }}
-              onMouseDown={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
+                textAlign: 'center',
+                paddingBlockStart: 12,
               }}
             >
-              <Input
-                style={{
-                  borderRadius: 4,
-                  marginInlineEnd: 12,
-                  backgroundColor: 'rgba(0,0,0,0.03)',
-                }}
-                prefix={
-                  <SearchOutlined
-                    style={{
-                      color: 'rgba(0, 0, 0, 0.15)',
-                    }}
-                  />
-                }
-                placeholder="搜索方案"
-                bordered={false}
-              />
-              <PlusCircleFilled
-                style={{
-                  color: 'var(--ant-primary-color)',
-                  fontSize: 24,
-                }}
-              />
+              <div>© 2021 Made with love</div>
+              <div>by HouS</div>
             </div>
-          ) : undefined,
-          <InfoCircleFilled key="InfoCircleFilled" />,
-          <QuestionCircleFilled key="QuestionCircleFilled" />,
-          <GithubFilled
-            key="GithubFilled"
-            onClick={() => window.open('https://github.com/boty-design')}
-          />,
-        ];
-      }}
-      headerTitleRender={(logo, title, _) => {
-        const defaultDom = (
-          <a>
-            {logo}
-            {title}
-          </a>
-        );
-        if (document.body.clientWidth < 1400) {
-          return defaultDom;
-        }
-        if (_.isMobile) return defaultDom;
-        return (
-          <>
-            {defaultDom}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <Divider
-                style={{
-                  height: '1.5em',
-                }}
-                type="vertical"
-              />
-            </div>
-          </>
-        );
-      }}
-      menuFooterRender={(props) => {
-        if (props?.collapsed) return undefined;
-        return (
+          );
+        }}
+        contentStyle={{ margin: 0, padding: '20px' }}
+        onMenuHeaderClick={(e) => console.log(e)}
+        menuItemRender={(item, dom) => (
           <div
-            style={{
-              textAlign: 'center',
-              paddingBlockStart: 12,
+            onClick={() => {
+              setPathname(item.path || '/welcome');
+              navigate(item.path || '/welcome');
             }}
           >
-            <div>© 2021 Made with love</div>
-            <div>by HouS</div>
+            {dom}
           </div>
-        );
-      }}
-      contentStyle={{ margin: 0, padding: '20px' }}
-      onMenuHeaderClick={(e) => console.log(e)}
-      menuItemRender={(item, dom) => (
-        <div
-          onClick={() => {
-            setPathname(item.path || '/welcome');
-            navigate(item.path || '/welcome');
+        )}
+        {...settings}
+      >
+        <Outlet />
+        <SettingDrawer
+          pathname={pathname}
+          enableDarkTheme
+          getContainer={() => document.getElementById('pro-layout')}
+          settings={settings}
+          onSettingChange={(changeSetting) => {
+            setSetting(changeSetting);
           }}
-        >
-          {dom}
-        </div>
-      )}
-      {...settings}
-    >
-      <Outlet />
-      <SettingDrawer
-        pathname={pathname}
-        enableDarkTheme
-        getContainer={() => document.getElementById('test-pro-layout')}
-        settings={settings}
-        onSettingChange={(changeSetting) => {
-          setSetting(changeSetting);
-        }}
-        disableUrlParams={false}
-      />
-    </ProLayout>
+          disableUrlParams={false}
+        />
+      </ProLayout>
+    </div>
   );
 };
