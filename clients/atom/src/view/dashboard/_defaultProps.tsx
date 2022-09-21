@@ -7,7 +7,7 @@ import DESIGN_LOGO from '@/assets/images/design-logo.png';
 import DEVOPS_LOGO from '@/assets/images/devops-logo.png';
 
 export default {
-  title: 'HouS',
+  title: 'HuoS',
   logo: DESIGN_LOGO,
   route: {
     path: '/',

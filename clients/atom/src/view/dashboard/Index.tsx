@@ -138,7 +138,7 @@ export default () => {
               }}
             >
               <div>© 2021 Made with love</div>
-              <div>by HouS</div>
+              <div>by HuoS</div>
             </div>
           );
         }}
