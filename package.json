@@ -29,6 +29,7 @@
     "cookie-parser": "^1.4.6",
     "cross-env": "^7.0.3",
     "history": "^4.0.0",
+    "invariant": "^2.2.4",
     "isarray": "^2.0.5",
     "loadsh": "^0.0.4",
     "lodash": "^4.17.21",

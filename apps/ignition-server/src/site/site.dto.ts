@@ -25,6 +25,10 @@ export class AddSiteDto {
   @IsNotEmpty()
   name: string;
 
+  @ApiProperty({ example: '搭建服务描述', description: '站点描述' })
+  @IsNotEmpty()
+  description: string;
+
   @ApiProperty({
     example: PAGE_TYPE.pc,
     enum: PAGE_TYPE,

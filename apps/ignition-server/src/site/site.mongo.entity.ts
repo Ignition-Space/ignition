@@ -32,6 +32,9 @@ export class Site {
   name: string;
 
   @Column({ default: null })
+  description: string;
+
+  @Column({ default: null })
   url: string;
 
   @Column({ default: null })

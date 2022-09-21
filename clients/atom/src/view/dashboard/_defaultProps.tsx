@@ -1,5 +1,5 @@
 import { CrownFilled, SmileFilled, TabletFilled } from '@ant-design/icons';
-import Home from '@/view/dashboard/Index';
+import Home from '@/view/dashboard';
 
 import CLI_LOGO from '@/assets/images/cli-logo.png';
 import COMPONENT_LOGO from '@/assets/images/component-logo.png';
@@ -16,20 +16,18 @@ export default {
         path: '/',
         name: '欢迎',
         icon: <SmileFilled />,
-        component: './Welcome',
       },
       {
-        path: '/admin',
         name: '管理页',
         icon: <CrownFilled />,
         access: 'canAdmin',
-        component: './Admin',
-      },
-      {
-        name: '列表页',
-        icon: <TabletFilled />,
-        path: '/list',
-        component: './ListTableList',
+        routes: [
+          {
+            path: '/siteList',
+            name: '站点列表',
+            icon: <SmileFilled />,
+          },
+        ],
       },
     ],
   },

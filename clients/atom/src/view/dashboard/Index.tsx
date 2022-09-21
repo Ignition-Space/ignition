@@ -1,198 +1,165 @@
 import {
-  CaretDownFilled,
-  DoubleRightOutlined,
   GithubFilled,
   InfoCircleFilled,
   PlusCircleFilled,
   QuestionCircleFilled,
   SearchOutlined,
 } from '@ant-design/icons';
-import ProCard from '@ant-design/pro-card';
 import type { ProSettings } from '@ant-design/pro-layout';
 
-import {
-  PageContainer,
-  ProLayout,
-  SettingDrawer,
-} from '@ant-design/pro-layout';
+import { ProLayout, SettingDrawer } from '@ant-design/pro-layout';
 
-import routes from '@/router';
-
-import { Button, Divider, Dropdown, Input } from 'antd';
+import { Divider, Input } from 'antd';
 import React, { useState } from 'react';
+import { useLocation } from 'react-router';
+import { Outlet, useNavigate } from 'react-router-dom';
 import defaultProps from './_defaultProps';
+import profileImg from '@/assets/profile.jpeg';
 
 export default () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
     fixSiderbar: true,
-    layout: 'mix',
     splitMenus: true,
   });
 
-  const [pathname, setPathname] = useState('/');
+  const [pathname, setPathname] = useState(location.pathname);
 
   return (
-    <div
-      id="test-pro-layout"
-      style={{
-        height: '100vh',
+    <ProLayout
+      {...defaultProps}
+      location={{
+        pathname,
       }}
-    >
-      <ProLayout
-        bgLayoutImgList={[
-          {
-            src: 'https://img.alicdn.com/imgextra/i2/O1CN01O4etvp1DvpFLKfuWq_!!6000000000279-2-tps-609-606.png',
-            left: 85,
-            bottom: 100,
-            height: '303px',
-          },
-          {
-            src: 'https://img.alicdn.com/imgextra/i2/O1CN01O4etvp1DvpFLKfuWq_!!6000000000279-2-tps-609-606.png',
-            bottom: -68,
-            right: -45,
-            height: '303px',
-          },
-          {
-            src: 'https://img.alicdn.com/imgextra/i3/O1CN018NxReL1shX85Yz6Cx_!!6000000005798-2-tps-884-496.png',
-            bottom: 0,
-            left: 0,
-            width: '331px',
-          },
-        ]}
-        {...defaultProps}
-        location={{
-          pathname,
-        }}
-        siderMenuType="group"
-        menu={{
-          collapsedShowGroupTitle: true,
-        }}
-        avatarProps={{
-          src: 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
-          size: 'small',
-          title: '言萧凡',
-        }}
-        actionsRender={(props) => {
-          if (props.isMobile) return [];
-          return [
-            props.layout !== 'side' && document.body.clientWidth > 1400 ? (
-              <div
-                key="SearchOutlined"
-                aria-hidden
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginInlineEnd: 24,
-                }}
-                onMouseDown={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                }}
-              >
-                <Input
-                  style={{
-                    borderRadius: 4,
-                    marginInlineEnd: 12,
-                    backgroundColor: 'rgba(0,0,0,0.03)',
-                  }}
-                  prefix={
-                    <SearchOutlined
-                      style={{
-                        color: 'rgba(0, 0, 0, 0.15)',
-                      }}
-                    />
-                  }
-                  placeholder="搜索方案"
-                  bordered={false}
-                />
-                <PlusCircleFilled
-                  style={{
-                    color: 'var(--ant-primary-color)',
-                    fontSize: 24,
-                  }}
-                />
-              </div>
-            ) : undefined,
-            <InfoCircleFilled key="InfoCircleFilled" />,
-            <QuestionCircleFilled key="QuestionCircleFilled" />,
-            <GithubFilled key="GithubFilled" />,
-          ];
-        }}
-        headerTitleRender={(logo, title, _) => {
-          const defaultDom = (
-            <a>
-              {logo}
-              {title}
-            </a>
-          );
-          if (document.body.clientWidth < 1400) {
-            return defaultDom;
-          }
-          if (_.isMobile) return defaultDom;
-          return (
-            <>
-              {defaultDom}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <Divider
-                  style={{
-                    height: '1.5em',
-                  }}
-                  type="vertical"
-                />
-              </div>
-            </>
-          );
-        }}
-        menuFooterRender={(props) => {
-          if (props?.collapsed) return undefined;
-          return (
+      siderMenuType="group"
+      menu={{
+        collapsedShowGroupTitle: true,
+      }}
+      avatarProps={{
+        src: profileImg,
+        size: 'small',
+        title: '言萧凡',
+      }}
+      actionsRender={(props) => {
+        if (props.isMobile) return [];
+        return [
+          props.layout !== 'side' && document.body.clientWidth > 1400 ? (
             <div
+              key="SearchOutlined"
+              aria-hidden
               style={{
-                textAlign: 'center',
-                paddingBlockStart: 12,
+                display: 'flex',
+                alignItems: 'center',
+                marginInlineEnd: 24,
+              }}
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
               }}
             >
-              <div>© 2021 Made with love</div>
-              <div>by Ant Design</div>
+              <Input
+                style={{
+                  borderRadius: 4,
+                  marginInlineEnd: 12,
+                  backgroundColor: 'rgba(0,0,0,0.03)',
+                }}
+                prefix={
+                  <SearchOutlined
+                    style={{
+                      color: 'rgba(0, 0, 0, 0.15)',
+                    }}
+                  />
+                }
+                placeholder="搜索方案"
+                bordered={false}
+              />
+              <PlusCircleFilled
+                style={{
+                  color: 'var(--ant-primary-color)',
+                  fontSize: 24,
+                }}
+              />
             </div>
-          );
-        }}
-        onMenuHeaderClick={(e) => console.log(e)}
-        menuItemRender={(item, dom) => (
+          ) : undefined,
+          <InfoCircleFilled key="InfoCircleFilled" />,
+          <QuestionCircleFilled key="QuestionCircleFilled" />,
+          <GithubFilled
+            key="GithubFilled"
+            onClick={() => window.open('https://github.com/boty-design')}
+          />,
+        ];
+      }}
+      headerTitleRender={(logo, title, _) => {
+        const defaultDom = (
+          <a>
+            {logo}
+            {title}
+          </a>
+        );
+        if (document.body.clientWidth < 1400) {
+          return defaultDom;
+        }
+        if (_.isMobile) return defaultDom;
+        return (
+          <>
+            {defaultDom}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <Divider
+                style={{
+                  height: '1.5em',
+                }}
+                type="vertical"
+              />
+            </div>
+          </>
+        );
+      }}
+      menuFooterRender={(props) => {
+        if (props?.collapsed) return undefined;
+        return (
           <div
-            onClick={() => {
-              setPathname(item.path || '/welcome');
+            style={{
+              textAlign: 'center',
+              paddingBlockStart: 12,
             }}
           >
-            {dom}
+            <div>© 2021 Made with love</div>
+            <div>by HouS</div>
           </div>
-        )}
-        {...settings}
-      >
-        <PageContainer>
-          <ProCard
-            style={{
-              height: '200vh',
-              minHeight: 800,
-            }}
-          ></ProCard>
-        </PageContainer>
-        <SettingDrawer
-          pathname={pathname}
-          enableDarkTheme
-          getContainer={() => document.getElementById('test-pro-layout')}
-          settings={settings}
-          onSettingChange={(changeSetting) => {
-            setSetting(changeSetting);
+        );
+      }}
+      contentStyle={{ margin: 0, padding: '20px' }}
+      onMenuHeaderClick={(e) => console.log(e)}
+      menuItemRender={(item, dom) => (
+        <div
+          onClick={() => {
+            setPathname(item.path || '/welcome');
+            navigate(item.path || '/welcome');
           }}
-          disableUrlParams={false}
-        />
-      </ProLayout>
-    </div>
+        >
+          {dom}
+        </div>
+      )}
+      {...settings}
+    >
+      <Outlet />
+      <SettingDrawer
+        pathname={pathname}
+        enableDarkTheme
+        getContainer={() => document.getElementById('test-pro-layout')}
+        settings={settings}
+        onSettingChange={(changeSetting) => {
+          setSetting(changeSetting);
+        }}
+        disableUrlParams={false}
+      />
+    </ProLayout>
   );
 };
