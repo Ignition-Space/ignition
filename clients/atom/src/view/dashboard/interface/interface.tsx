@@ -13,9 +13,9 @@ import {
   Col,
   Descriptions,
   Drawer,
+  Empty,
   Form,
   Menu,
-  Popconfirm,
   Radio,
   Row,
   Select,
@@ -31,7 +31,8 @@ import _ from 'loadsh';
 import { ColumnsType } from 'antd/lib/table';
 import MonacoEditor from 'react-monaco-editor';
 import { PageContainer } from '@ant-design/pro-layout';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import EddSite from '../site/EddSite';
+import SyncInterface from '../site/SyncInterface';
 
 const { Option } = Select;
 
@@ -39,7 +40,7 @@ const InterfaceDom = () => {
   const params = useParams();
 
   const [interfaceList, setInterfaceList] = useState([]);
-  const [menuList, setMenuList] = useState([]);
+  const [menuList, setMenuList] = useState<any>([]);
   const [site, setSite] = useState<ISite>({});
 
   const [currentInterface, setCurrentInterface] = useState<IInterface>();
@@ -47,37 +48,62 @@ const InterfaceDom = () => {
   const [formData, setFormData] = useState<Array<IProperty>>([]);
   const [editorValue, seteditorValue] = useState('');
   const [open, setOpen] = useState(false);
+  const [showSpin, setShowSpin] = useState(true);
+
   const editorRef = useRef();
 
   const fetchSite = (id: string) => {
     getSite(id).then((res) => setSite(res.data));
   };
 
-  const fetchInterface = (id: string) => {
-    getInterfaceList(id).then((res) => {
-      setInterfaceList(res.data);
-      setCurrentInterface(res.data[0]);
-      setMenuList(
-        res.data.map((d: IInterface) => ({
-          key: d.id,
-          label: d.summary,
-        })),
-      );
+  const packageMenu = (list: IInterface[]) => {
+    const menu: any = {};
+    list.forEach((l) => {
+      if (l.tags.length > 0) {
+        const tag = l.tags[0];
+        if (!menu[tag]) menu[tag] = [];
+        menu[tag].push({
+          key: l.id,
+          label: l.summary || l.url,
+        });
+      }
     });
+    return Object.keys(menu).map((key) => ({
+      key,
+      label: key,
+      children: menu[key],
+    }));
+  };
+
+  const fetchInterface = (id: string) => {
+    getInterfaceList(id)
+      .then((res) => {
+        setInterfaceList(res.data);
+        const menu = packageMenu(res.data);
+        setMenuList(menu);
+        setCurrentInterface(res.data[0]);
+      })
+      .finally(() => {
+        setShowSpin(false);
+      });
   };
 
   const analysisParams = (current: IInterface) => {
     const properties = current?.schema.properties;
-    setFormData(
-      Object.keys(properties).map((key) => {
-        return {
-          name: key,
-          type: properties[key].type,
-          example: properties[key].example,
-          description: properties[key].description,
-        };
-      }),
-    );
+    if (!properties) {
+      setFormData([]);
+    } else {
+      setFormData(
+        Object.keys(properties).map((key) => {
+          return {
+            name: key,
+            type: properties[key].type,
+            example: properties[key].example,
+            description: properties[key].description,
+          };
+        }),
+      );
+    }
   };
 
   useEffect(() => {
@@ -135,87 +161,105 @@ const InterfaceDom = () => {
       dataIndex: 'description',
       key: 'description',
     },
+    {
+      title: '订正后数据',
+      dataIndex: ' recoverType',
+      key: 'recoverType',
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (_) => (
+        <Space size="middle">
+          <a>数据订正</a>
+        </Space>
+      ),
+    },
   ];
 
   const confirm = () => { };
 
   return (
-    <Spin
-      spinning={currentInterface == undefined || site == undefined}
-      tip="加载中..."
-      style={{ width: '100vw' }}
-    >
+    <>
       <PageContainer
         header={{
           title: site.name,
         }}
         extra={[
-          <Popconfirm
-            placement="bottomRight"
-            title="此操作会同步更新所有的 API，可能存在已校对的 Schema 丢失，确定继续此操作吗?"
-            onConfirm={confirm}
-            okText="确定"
-            cancelText="取消"
-            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-          >
-            <Button key="1" type="primary" danger>
-              重新更新 API
+          <EddSite key="1" {...site}>
+            <Button>修改项目</Button>
+          </EddSite>,
+          <SyncInterface key="2" {...site} placement="bottomRight">
+            <Button type="primary" danger>
+              接口同步
             </Button>
-          </Popconfirm>,
+          </SyncInterface>,
         ]}
       >
-        {currentInterface && (
-          <Row>
-            <Col span={4}>
-              <Menu
-                onClick={onClick}
-                style={{
-                  width: 256,
-                }}
-                selectedKeys={[currentInterface.id]}
-                mode="inline"
-                items={menuList}
-              />
-            </Col>
-            <Col span={20}>
-              <Descriptions
-                title={currentInterface.summary}
-                extra={
-                  <Button type="primary" onClick={generateCode}>
-                    解析当前 Schema
-                  </Button>
-                }
-              >
-                <Descriptions.Item label="URL">
-                  <Tag color="blue">{currentInterface.url}</Tag>
-                </Descriptions.Item>
-                <Descriptions.Item label="标签">
-                  {currentInterface.tags.map((tag) => (
-                    <Tag color="cyan">{tag}</Tag>
-                  ))}
-                </Descriptions.Item>
-                <Descriptions.Item label="接口信息">
-                  <Tag color="magenta">
-                    {_.toUpper(currentInterface.parameterType)}
-                  </Tag>
-                  <Tag color="red">
-                    {_.toUpper(currentInterface.methodType)}
-                  </Tag>
-                </Descriptions.Item>
-                <Descriptions.Item label="最后修改时间">
-                  <Tag color="purple">
-                    {dayjs(currentInterface.updateDate).format(
-                      'YYYY-MM-DD hh:mm:ss',
-                    )}
-                  </Tag>
-                </Descriptions.Item>
-              </Descriptions>
-              <Card title="请求体" bordered={false}>
-                <Table columns={columns} dataSource={formData} />
-              </Card>
-            </Col>
-          </Row>
-        )}
+        <Spin spinning={showSpin} tip="加载中..." style={{ width: '100vw' }}>
+          {currentInterface && (
+            <Row gutter={20}>
+              <Col span={4}>
+                <Menu
+                  onClick={onClick}
+                  defaultOpenKeys={[currentInterface.tags[0]]}
+                  selectedKeys={[currentInterface.id]}
+                  mode="inline"
+                  items={menuList}
+                />
+              </Col>
+              <Col span={20}>
+                <Descriptions
+                  style={{ marginBottom: '20px' }}
+                  title={currentInterface.summary}
+                  extra={
+                    <Button type="primary" onClick={generateCode}>
+                      解析当前 Schema
+                    </Button>
+                  }
+                >
+                  <Descriptions.Item label="URL">
+                    <Tag color="blue">{currentInterface.url}</Tag>
+                  </Descriptions.Item>
+                  <Descriptions.Item label="接口信息">
+                    <Tag color="magenta">
+                      {_.toUpper(currentInterface.parameterType)}
+                    </Tag>
+                    <Tag color="red">
+                      {_.toUpper(currentInterface.methodType)}
+                    </Tag>
+                  </Descriptions.Item>
+                  <Descriptions.Item label="最后修改时间">
+                    <Tag color="purple">
+                      {dayjs(currentInterface.updateDate).format(
+                        'YYYY-MM-DD hh:mm:ss',
+                      )}
+                    </Tag>
+                  </Descriptions.Item>
+                </Descriptions>
+                <Card title="请求体" bordered={false}>
+                  <Table
+                    columns={columns}
+                    dataSource={formData}
+                    rowKey={(row) => row.name}
+                  />
+                </Card>
+              </Col>
+            </Row>
+          )}
+          {!currentInterface && (
+            <Empty
+              imageStyle={{
+                height: 60,
+              }}
+              description={<span>暂无接口数据，请同步。</span>}
+            >
+              <SyncInterface {...site}>
+                <Button type="primary">接口同步</Button>
+              </SyncInterface>
+            </Empty>
+          )}
+        </Spin>
       </PageContainer>
       <Drawer
         title="源代码推导预览"
@@ -258,8 +302,12 @@ const InterfaceDom = () => {
                   placeholder="Select a option and change input text above"
                   allowClear
                 >
-                  <Option value="form">表单</Option>
-                  <Option value="table">表格</Option>
+                  <Option key="from" value="form">
+                    表单
+                  </Option>
+                  <Option key="table" value="table">
+                    表格
+                  </Option>
                 </Select>
               </Form.Item>
               <Form.Item>
@@ -289,7 +337,7 @@ const InterfaceDom = () => {
           />
         </>
       </Drawer>
-    </Spin>
+    </>
   );
 };
 

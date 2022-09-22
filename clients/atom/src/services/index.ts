@@ -27,7 +27,7 @@ export interface IInterface {
   schema: any;
   siteId: string;
   summary: string;
-  tags: [];
+  tags: string[];
   updateDate: string;
   url: string;
 }

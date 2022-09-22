@@ -93,8 +93,12 @@ export class SiteController {
     });
     const callback = [];
     for (const inter of interfaces) {
-      const isExit = this.interfaceService.findByUrl(inter.url);
+      const isExit = await this.interfaceService.findByUrl(
+        String(site.id),
+        inter.url,
+      );
       let newOne = {};
+      console.log(isExit);
       if (isExit) {
         newOne = await this.interfaceService.saveAndUpdate({
           ...isExit,

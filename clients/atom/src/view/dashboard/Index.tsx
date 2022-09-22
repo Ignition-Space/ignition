@@ -22,11 +22,11 @@ export default () => {
 
   const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
     fixSiderbar: true,
-    layout: 'mix',
+    layout: 'top',
     splitMenus: true,
   });
 
-  const [pathname, setPathname] = useState(location.pathname);
+  const [pathname, setPathname] = useState('siteList');
 
   return (
     <div
@@ -147,8 +147,8 @@ export default () => {
         menuItemRender={(item, dom) => (
           <div
             onClick={() => {
-              setPathname(item.path || '/welcome');
-              navigate(item.path || '/welcome');
+              setPathname(item.key || '/welcome');
+              item.path && navigate(item.path || '/welcome');
             }}
           >
             {dom}

@@ -1,4 +1,9 @@
-import { CrownFilled, SmileFilled } from '@ant-design/icons';
+import {
+  CrownFilled,
+  GroupOutlined,
+  SmileFilled,
+  UnorderedListOutlined,
+} from '@ant-design/icons';
 
 import CLI_LOGO from '@/assets/images/cli-logo.png';
 import COMPONENT_LOGO from '@/assets/images/component-logo.png';
@@ -17,14 +22,23 @@ export default {
         icon: <SmileFilled />,
       },
       {
+        path: '/',
         name: '管理页',
-        icon: <CrownFilled />,
-        access: 'canAdmin',
+        icon: <GroupOutlined />,
         routes: [
           {
             path: '/siteList',
             name: '站点列表',
-            icon: <SmileFilled />,
+            key: 'siteList',
+            icon: <UnorderedListOutlined />,
+            routes: [
+              {
+                path: '/interface:id',
+                name: '接口列表',
+                hideInMenu: true,
+                parentKeys: 'siteList',
+              },
+            ],
           },
         ],
       },

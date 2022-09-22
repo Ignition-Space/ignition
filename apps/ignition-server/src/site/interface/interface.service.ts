@@ -42,9 +42,10 @@ export class InterfaceService {
     return this.interfaceRepository.findOne(id);
   }
 
-  findByUrl(url) {
+  findByUrl(siteId, url) {
     return this.interfaceRepository.findOne({
       where: {
+        siteId,
         url,
       },
     });

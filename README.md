@@ -2,6 +2,8 @@
 
 <p align="center">一站式工程化解决方案</p>
 
+![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d720ef26d4234208966dfc3da7f47306~tplv-k3u1fbpfcp-watermark.image?)
+
 ## 安装
 ```jsx
 $ pnpm i
@@ -32,15 +34,24 @@ MYSQL_CONFIG:
 ```
 
 2. 启动项目
+
 ```
 pnpm dev
 ```
+
 
 3. 浏览器打开链接
 ```
 http://localhost:3000/doc // 服务端 Api 地址
 http://localhost:8000/siteList // 客户端界面
 ```
+
+
+![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d1101a963c784de8b9f970bf86545095~tplv-k3u1fbpfcp-watermark.image?)
+
+4. 创建 Demo 项目
+
+解析 URL 可以填入 http://localhost:3000/doc-json，将 ignition-server 的服务作为 Demo 演示。
 
 ## 技术
 
@@ -49,4 +60,6 @@ http://localhost:8000/siteList // 客户端界面
 
 ## 支持
 
-有想催更跟建议的朋友可以添加我的微信: **Cookieboty** 进群同步消息
+有想催更跟建议的朋友可以添加我的微信: **Cookieboty** 进群同步消息。
+
+![121663845161_.pic.jpg](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d6fb48debdfe4a88a81fd5bedbbea23f~tplv-k3u1fbpfcp-watermark.image?)
