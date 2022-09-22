@@ -1,5 +1,4 @@
-import { CrownFilled, SmileFilled, TabletFilled } from '@ant-design/icons';
-import Home from '@/view/dashboard';
+import { CrownFilled, SmileFilled } from '@ant-design/icons';
 
 import CLI_LOGO from '@/assets/images/cli-logo.png';
 import COMPONENT_LOGO from '@/assets/images/component-logo.png';

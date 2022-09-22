@@ -19,6 +19,16 @@ MONGODB_CONFIG:
   entities: "mongo"
   logging: false
   synchronize: true
+MYSQL_CONFIG:
+  name: "material_test"
+  type: "mysql"
+  host: "127.0.0.1"
+  port: 3306
+  database: "material_test"
+  username: "root"
+  password: "123456"
+  entities: "mysql"
+  synchronize: true
 ```
 
 2. 启动项目
@@ -35,7 +45,7 @@ http://localhost:8000/siteList // 客户端界面
 ## 技术
 
 服务端：NestJS
-客户端：ReactJS + And
+客户端：ReactJS + AntD
 
 ## 支持
 
