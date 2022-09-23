@@ -3,38 +3,18 @@ import {
   getInterfaceList,
   getSite,
   IInterface,
-  IProperty,
   ISite,
 } from '@/services';
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Descriptions,
-  Drawer,
-  Empty,
-  Form,
-  Menu,
-  Radio,
-  Row,
-  Select,
-  Space,
-  Spin,
-  Table,
-  Tag,
-} from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import { Button, Col, Descriptions, Empty, Menu, Row, Spin, Tag } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import dayjs from 'dayjs';
 import _ from 'loadsh';
-import { ColumnsType } from 'antd/lib/table';
-import MonacoEditor from 'react-monaco-editor';
 import { PageContainer } from '@ant-design/pro-layout';
 import EddSite from '../site/EddSite';
 import SyncInterface from '../site/SyncInterface';
-
-const { Option } = Select;
+import CodeEdit from './CodeEdit';
+import Parameter from './Parameter';
 
 const InterfaceDom = () => {
   const params = useParams();
@@ -45,12 +25,9 @@ const InterfaceDom = () => {
 
   const [currentInterface, setCurrentInterface] = useState<IInterface>();
 
-  const [formData, setFormData] = useState<Array<IProperty>>([]);
-  const [editorValue, seteditorValue] = useState('');
-  const [open, setOpen] = useState(false);
+  const [editorValue, setEditorValue] = useState('');
   const [showSpin, setShowSpin] = useState(true);
-
-  const editorRef = useRef();
+  const [open, setOpen] = useState(false);
 
   const fetchSite = (id: string) => {
     getSite(id).then((res) => setSite(res.data));
@@ -88,24 +65,6 @@ const InterfaceDom = () => {
       });
   };
 
-  const analysisParams = (current: IInterface) => {
-    const properties = current?.schema.properties;
-    if (!properties) {
-      setFormData([]);
-    } else {
-      setFormData(
-        Object.keys(properties).map((key) => {
-          return {
-            name: key,
-            type: properties[key].type,
-            example: properties[key].example,
-            description: properties[key].description,
-          };
-        }),
-      );
-    }
-  };
-
   useEffect(() => {
     if (params.id) {
       fetchInterface(params.id);
@@ -116,7 +75,6 @@ const InterfaceDom = () => {
   const onClick = (e) => {
     const current = interfaceList.filter((inter) => inter.id === e.key)[0];
     setCurrentInterface(current);
-    analysisParams(current);
   };
 
   const generateCode = () => {
@@ -130,54 +88,10 @@ const InterfaceDom = () => {
         type: 0,
         device: 0,
       }).then((res) => {
-        seteditorValue(res.data);
+        setEditorValue(res.data);
         setOpen(true);
       });
   };
-
-  const onClose = () => {
-    setOpen(false);
-  };
-
-  const columns: ColumnsType<IProperty> = [
-    {
-      title: '名称',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: '类型',
-      dataIndex: 'type',
-      key: 'type',
-    },
-    {
-      title: '默认值',
-      dataIndex: 'example',
-      key: 'example',
-    },
-    {
-      title: '描述',
-      dataIndex: 'description',
-      key: 'description',
-    },
-    {
-      title: '订正后数据',
-      dataIndex: ' recoverType',
-      key: 'recoverType',
-    },
-    {
-      title: '操作',
-      key: 'action',
-      render: (_) => (
-        <Space size="middle">
-          <a>数据订正</a>
-        </Space>
-      ),
-    },
-  ];
-
-  const confirm = () => { };
 
   return (
     <>
@@ -237,13 +151,7 @@ const InterfaceDom = () => {
                     </Tag>
                   </Descriptions.Item>
                 </Descriptions>
-                <Card title="请求体" bordered={false}>
-                  <Table
-                    columns={columns}
-                    dataSource={formData}
-                    rowKey={(row) => row.name}
-                  />
-                </Card>
+                <Parameter originData={currentInterface}></Parameter>
               </Col>
             </Row>
           )}
@@ -261,82 +169,12 @@ const InterfaceDom = () => {
           )}
         </Spin>
       </PageContainer>
-      <Drawer
-        title="源代码推导预览"
-        placement="right"
+      <CodeEdit
         open={open}
-        onClose={onClose}
-        width={1000}
-        footer={
-          <div>
-            <Form
-              style={{ width: 500 }}
-              name="basic"
-              initialValues={{
-                defaultFrame: 'react',
-                pageType: 'pc',
-                defaultTpl: 'form',
-              }}
-            >
-              <Form.Item label="页面类型" name="pageType">
-                <Radio.Group>
-                  <Radio value="pc"> PC </Radio>
-                  <Radio value="h5" disabled>
-                    H5
-                  </Radio>
-                  <Radio value="rn" disabled>
-                    RN
-                  </Radio>
-                </Radio.Group>
-              </Form.Item>
-              <Form.Item label="编程语言" name="defaultFrame">
-                <Radio.Group>
-                  <Radio value="react"> React </Radio>
-                  <Radio value="vue" disabled>
-                    Vue
-                  </Radio>
-                </Radio.Group>
-              </Form.Item>
-              <Form.Item label="预设模版" name="defaultTpl">
-                <Select
-                  placeholder="Select a option and change input text above"
-                  allowClear
-                >
-                  <Option key="from" value="form">
-                    表单
-                  </Option>
-                  <Option key="table" value="table">
-                    表格
-                  </Option>
-                </Select>
-              </Form.Item>
-              <Form.Item>
-                <Space>
-                  <Button>保存页面</Button>
-                  <Button type="primary">进入设计器编辑</Button>
-                </Space>
-              </Form.Item>
-            </Form>
-          </div>
-        }
-      >
-        <>
-          <Alert
-            message="以下代码仅依靠类型推导生成，如需更多的定制，请前往设计器调试!"
-            type="warning"
-            style={{ marginBottom: '10px' }}
-          />
-          <MonacoEditor
-            width="100%"
-            height="900"
-            language="sql"
-            theme="vs-dark"
-            value={editorValue}
-            onChange={(v) => seteditorValue(v)}
-            ref={editorRef}
-          />
-        </>
-      </Drawer>
+        editorValue={editorValue}
+        setEditorValue={setEditorValue}
+        setOpen={setOpen}
+      ></CodeEdit>
     </>
   );
 };

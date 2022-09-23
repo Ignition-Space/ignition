@@ -53,7 +53,8 @@ const AddSite = () => {
           type: 0,
           ...values,
         }).then(() => {
-          message.success('提交成功');
+          message.success('创建站点成功！');
+          setModalVisible(false);
         });
       }}
     >
@@ -72,7 +73,7 @@ const AddSite = () => {
       <ProFormText
         width="md"
         name="description"
-        label="站点名称"
+        label="站点描述"
         placeholder="请输入解析站点描述"
       />
     </ModalForm>

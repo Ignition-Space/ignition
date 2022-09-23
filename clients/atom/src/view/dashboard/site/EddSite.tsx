@@ -50,7 +50,7 @@ const EddSite = (props: IEddSiteProps) => {
       <ProFormText
         width="md"
         name="description"
-        label="站点名称"
+        label="站点描述"
         placeholder="请输入解析站点描述"
       />
     </ModalForm>
