@@ -5,9 +5,9 @@ import {
   QuestionCircleFilled,
   SearchOutlined,
 } from '@ant-design/icons';
-import type { ProSettings } from '@ant-design/pro-layout';
+import type { ProSettings } from '@ant-design/pro-components';
 
-import { ProLayout, SettingDrawer } from '@ant-design/pro-layout';
+import { ProLayout, SettingDrawer } from '@ant-design/pro-components';
 
 import { Divider, Input } from 'antd';
 import React, { useState } from 'react';

@@ -38,7 +38,6 @@
     "mysql2": "^2.3.3",
     "nunjucks": "^3.2.3",
     "object-assign": "^4.1.1",
-    "path-to-regexp": "6.2.1",
     "postcss-loader": "^7.0.1",
     "prop-types": "^15.8.1",
     "reflect-metadata": "^0.1.13",
