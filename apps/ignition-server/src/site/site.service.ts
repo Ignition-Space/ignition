@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { MongoRepository } from 'typeorm';
-import { Site } from './site.mongo.entity';
+import { Site, STATUS_TYPE } from './site.mongo.entity';
 import { ObjectId } from 'mongodb';
 
 export class SiteService {
@@ -30,6 +30,11 @@ export class SiteService {
   }
 
   findALL() {
-    return this.siteRepository.find();
+    return this.siteRepository.find({
+      where: {
+        status: STATUS_TYPE.inactive,
+      },
+    });
   }
+
 }

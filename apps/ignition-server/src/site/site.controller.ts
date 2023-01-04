@@ -29,6 +29,7 @@ export class SiteController {
   @Post('getList')
   async getList() {
     const site = await this.siteService.findALL();
+    console.log(site)
     return site;
   }
 
@@ -38,6 +39,7 @@ export class SiteController {
   @Post('analysis')
   async analysis(@Body() generateSiteDto: GenerateSiteDto) {
     const site = await this.siteService.findOne(generateSiteDto.id);
+    console.log('site===>', site)
     const { paths, components } = await getRecursion(site.url);
     const interfaces = [];
 
@@ -91,6 +93,7 @@ export class SiteController {
         }
       });
     });
+    console.log(interfaces)
     const callback = [];
     for (const inter of interfaces) {
       const isExit = await this.interfaceService.findByUrl(
@@ -98,7 +101,7 @@ export class SiteController {
         inter.url,
       );
       let newOne = {};
-      console.log(isExit);
+
       if (isExit) {
         newOne = await this.interfaceService.saveAndUpdate({
           ...isExit,

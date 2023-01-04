@@ -15,7 +15,6 @@ const { MONGODB_CONFIG, MYSQL_CONFIG } = getConfig();
 // 静态文件处理与 webpack hmr 热更新冲突
 const MONGODB_DATABASE_CONFIG = {
   ...MONGODB_CONFIG,
-  NamedNodeMap: new NamingStrategy(),
   entities: [
     path.join(
       __dirname,
@@ -27,7 +26,7 @@ const MONGODB_DATABASE_CONFIG = {
 
 const MYSQL_DATABASE_CONFIG = {
   ...MYSQL_CONFIG,
-  NamedNodeMap: new NamingStrategy(),
+  namingStrategy: new NamingStrategy(),
   entities: [
     path.join(
       __dirname,
