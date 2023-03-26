@@ -28,8 +28,9 @@ export class SiteController {
   })
   @Post('getList')
   async getList() {
+    console.log(this.siteService)
     const site = await this.siteService.findALL();
-    console.log(site)
+    console.log('site====>', site)
     return site;
   }
 

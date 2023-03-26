@@ -7,22 +7,29 @@ import { DataSource } from 'typeorm';
 
 import { getConfig } from '../../utils/index';
 import { NamingStrategy } from './naming.strategies';
+import { Site } from '../../site/site.mongo.entity';
+import { Page } from '../../pages/page.mongo.entity';
+import { PageConfig } from '../../pages/config/pageConfig.mongo.entity';
+import { Interface } from '../../site/interface/interface.mongo.entity';
 
 import * as path from 'path';
 
 const { MONGODB_CONFIG, MYSQL_CONFIG } = getConfig();
 
+console.log('MONGODB_CONFIG====>', MONGODB_CONFIG)
+
 // 静态文件处理与 webpack hmr 热更新冲突
 const MONGODB_DATABASE_CONFIG = {
   ...MONGODB_CONFIG,
   entities: [
-    path.join(
-      __dirname,
-      `../../../../**/*.${MONGODB_CONFIG.entities}.entity{.ts,.js}`,
-    ),
-  ], // 自动加载实体
-  // entities: [PageConfig]
+    Site,
+    Page,
+    PageConfig,
+    Interface
+  ],
 };
+
+console.log(MONGODB_DATABASE_CONFIG)
 
 const MYSQL_DATABASE_CONFIG = {
   ...MYSQL_CONFIG,
@@ -30,8 +37,8 @@ const MYSQL_DATABASE_CONFIG = {
   entities: [
     path.join(
       __dirname,
-      `../../../../**/*.${MYSQL_CONFIG.entities}.entity{.ts,.js}`,
-    ),
+      `/../../**/*.${MYSQL_CONFIG.entities}.entity.js`,
+    )
   ],
 };
 
@@ -48,12 +55,12 @@ export const DatabaseProviders = [
       return MONGODB_DATA_SOURCE;
     },
   },
-  {
-    provide: 'MYSQL_DATA_SOURCE',
-    useFactory: async () => {
-      if (!MYSQL_DATA_SOURCE.isInitialized)
-        await MYSQL_DATA_SOURCE.initialize();
-      return MYSQL_DATA_SOURCE;
-    },
-  },
+  // {
+  //   provide: 'MYSQL_DATA_SOURCE',
+  //   useFactory: async () => {
+  //     if (!MYSQL_DATA_SOURCE.isInitialized)
+  //       await MYSQL_DATA_SOURCE.initialize();
+  //     return MYSQL_DATA_SOURCE;
+  //   },
+  // },
 ];

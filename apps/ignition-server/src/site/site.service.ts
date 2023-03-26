@@ -30,11 +30,12 @@ export class SiteService {
   }
 
   findALL() {
-    return this.siteRepository.find({
-      where: {
-        status: STATUS_TYPE.inactive,
-      },
-    });
+    return this.siteRepository.find()
+    // return this.siteRepository.find({
+    //   where: {
+    //     status: STATUS_TYPE.inactive,
+    //   },
+    // });
   }
 
 }
