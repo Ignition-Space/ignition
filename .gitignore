@@ -5,7 +5,7 @@
 */**/dist
 */**/node_modules
 
-/.config
+# /.config
 
 */**/temp_cache
 

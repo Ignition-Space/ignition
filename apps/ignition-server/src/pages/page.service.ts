@@ -9,7 +9,7 @@ export class PageService {
   constructor(
     @Inject('PAGE_REPOSITORY')
     private pageRepository: MongoRepository<Page>,
-  ) { }
+  ) {}
 
   save(page) {
     return this.pageRepository.save(page);

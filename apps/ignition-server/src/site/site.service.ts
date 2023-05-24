@@ -7,7 +7,7 @@ export class SiteService {
   constructor(
     @Inject('SITE_REPOSITORY')
     private siteRepository: MongoRepository<Site>,
-  ) { }
+  ) {}
 
   saveAndUpdate(site) {
     const { id, ...res } = site;
@@ -36,5 +36,4 @@ export class SiteService {
       },
     });
   }
-
 }

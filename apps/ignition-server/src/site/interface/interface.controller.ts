@@ -6,7 +6,7 @@ import { InterfaceService } from './interface.service';
 @ApiTags('接口配置')
 @Controller('interface')
 export class InterfaceController {
-  constructor(private readonly interfaceService: InterfaceService) { }
+  constructor(private readonly interfaceService: InterfaceService) {}
 
   @ApiOperation({
     summary: '根据站点获取接口列表',

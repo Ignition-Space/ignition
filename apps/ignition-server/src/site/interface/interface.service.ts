@@ -8,7 +8,7 @@ export class InterfaceService {
   constructor(
     @Inject('INTERFACE_REPOSITORY')
     private interfaceRepository: MongoRepository<Interface>,
-  ) { }
+  ) {}
 
   saveAndUpdate(inter) {
     const { id, ...res } = inter;

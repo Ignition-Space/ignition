@@ -8,5 +8,5 @@ import { CodeGroupService } from '../group/code/code.service';
 @ApiTags('物料')
 @Controller('material')
 export class MaterialController {
-  constructor(private groupService: CodeGroupService) { }
+  constructor(private groupService: CodeGroupService) {}
 }

@@ -5,14 +5,14 @@ import { BusinessException } from '../../core';
 @ApiTags('物料库配置')
 @Controller('group')
 export class GroupController {
-  constructor() { }
+  constructor() {}
 
   @Post('getList')
-  async getList() { }
+  async getList() {}
 
   @Post('getMonorepoDetail')
-  async getMonorepoGroupDetail() { }
+  async getMonorepoGroupDetail() {}
 
   @Post('del')
-  del() { }
+  del() {}
 }

@@ -17,4 +17,4 @@ import { CodeGroup } from './code/code.mongo.entity';
   ],
   exports: [CodeGroupService],
 })
-export class GroupModule { }
+export class GroupModule {}

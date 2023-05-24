@@ -7,7 +7,7 @@ export class MaterialConfigService {
   constructor(
     @Inject('MATERIAL_CONFIG_REPOSITORY')
     private materialConfigServer: MongoRepository<MaterialConfig>,
-  ) { }
+  ) {}
 
   save(materialConfig) {
     return this.materialConfigServer.save(materialConfig);

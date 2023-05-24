@@ -3,7 +3,7 @@ import {
   Column,
   CreateDateColumn,
   ObjectIdColumn,
-  ObjectID,
+  ObjectId,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -26,7 +26,7 @@ export enum API_TYPE {
 @Entity()
 export class Site {
   @ObjectIdColumn({ name: '_id' })
-  id: ObjectID;
+  id: ObjectId;
 
   @Column()
   name: string;
