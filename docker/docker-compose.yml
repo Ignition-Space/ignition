@@ -52,8 +52,9 @@ services:
       - MYSQL_ROOT_HOST=%
       - TZ=${WORKSPACE_TIMEZONE}
     volumes:
-      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql
+      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql:rw
       - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+    user: mysql
     ports:
       - "${MYSQL_PORT}:3306"
     networks:
