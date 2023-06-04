@@ -36,4 +36,4 @@ import { SiteModule } from '../site/site.module';
   ],
   exports: [PageService, PageConfigService],
 })
-export class PageModule { }
+export class PageModule {}

@@ -28,7 +28,7 @@ export class PageController {
     // private templateService: TemplateService,
     private siteService: SiteService,
     private deployConfigService: DeployConfigService,
-  ) { }
+  ) {}
 
   @ApiOperation({
     summary: '生成页面',

@@ -5,7 +5,7 @@ import {
   Column,
   CreateDateColumn,
   ObjectIdColumn,
-  ObjectID,
+  ObjectId,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -24,7 +24,7 @@ export enum DEVICE_TYPE {
 @Entity()
 export class Page {
   @ObjectIdColumn()
-  id: ObjectID;
+  id: ObjectId;
 
   @Column()
   siteId: string;

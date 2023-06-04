@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { MongoRepository, ObjectID } from 'typeorm';
+import { MongoRepository, ObjectId } from 'typeorm';
 import { CodeGroup } from './code.mongo.entity';
 
 @Injectable()
@@ -7,7 +7,7 @@ export class CodeGroupService {
   constructor(
     @Inject('CODE_GROUP_REPOSITORY')
     private groupRepository: MongoRepository<CodeGroup>,
-  ) { }
+  ) {}
 
   save(group) {
     return this.groupRepository.save(group);
@@ -25,13 +25,13 @@ export class CodeGroupService {
     return this.groupRepository.find({
       where: {
         _id: {
-          $in: ids.map((id) => new ObjectID(id)),
+          $in: ids.map((id) => new ObjectId(id)),
         },
       },
     });
   }
 
   del(id) {
-    this.groupRepository.delete(new ObjectID(id));
+    this.groupRepository.delete(new ObjectId(id));
   }
 }
