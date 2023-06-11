@@ -5,6 +5,7 @@ import {
   ObjectIdColumn,
   ObjectId,
   UpdateDateColumn,
+  BeforeInsert,
 } from 'typeorm';
 
 export enum PAGE_TYPE {
@@ -51,8 +52,8 @@ export class Site {
   type: PAGE_TYPE;
 
   // site 状态
-  @Column({ default: STATUS_TYPE.inactive })
-  status: STATUS_TYPE;
+  @Column({ default: STATUS_TYPE.activated })
+  status: number = STATUS_TYPE.activated;
 
   @CreateDateColumn()
   createDate: string;

@@ -5,6 +5,7 @@ import { SiteService } from './site.service';
 import { getRecursion } from '../utils/analysis';
 import * as _ from 'lodash';
 import { InterfaceService } from './interface/interface.service';
+import { STATUS_TYPE } from './site.mongo.entity';
 
 @ApiTags('站点配置')
 @Controller('site')
@@ -12,14 +13,14 @@ export class SiteController {
   constructor(
     private readonly siteService: SiteService,
     private readonly interfaceService: InterfaceService,
-  ) {}
+  ) { }
 
   @ApiOperation({
     summary: '站点新增与更新',
   })
   @Post('saveAndUpdate')
   async saveAndUpdate(@Body() params: AddSiteDto) {
-    const site = await this.siteService.saveAndUpdate(params);
+    const site = await this.siteService.saveAndUpdate({ status: STATUS_TYPE.inactive, ...params });
     return site;
   }
 
