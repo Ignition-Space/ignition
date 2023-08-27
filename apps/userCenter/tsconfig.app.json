@@ -1,0 +1,31 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "types/*": [
+        "../../types/*"
+      ],
+      "@app/common": [
+        "../../libs/common/src"
+      ],
+      "@app/common/*": [
+        "../../libs/common/src/*"
+      ]
+    },
+    "baseUrl": "./",
+    "outDir": "../../dist/apps/user-center"
+  },
+  "include": [
+    "src/**/*",
+    "../../types/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "**/*spec.ts"
+  ]
+}

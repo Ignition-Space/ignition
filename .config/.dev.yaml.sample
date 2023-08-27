@@ -17,3 +17,6 @@ MYSQL_CONFIG:
   password: '123456'
   entities: 'mysql'
   synchronize: true
+GITGUB_CONFIG:
+  CLIENT_ID: 
+  CLIENT_SECRETS: 
