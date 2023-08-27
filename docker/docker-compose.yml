@@ -1,0 +1,72 @@
+version: "3.5"
+
+networks:
+  backend:
+    driver: ${NETWORKS_DRIVER}
+
+volumes:
+  mysql:
+    driver: ${VOLUMES_DRIVER}
+  redis:
+    driver: ${VOLUMES_DRIVER}
+  mongo:
+    driver: ${VOLUMES_DRIVER}
+
+services:
+  ### MongoDB ##############################################
+  mongo:
+    build:
+      context: ./mongo
+      args:
+        - MONGODB_VERSION=${MONGODB_VERSION}
+    ports:
+      - "${MONGODB_PORT}:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
+      - MONGO_QUERY_USERNAME=${MONGO_QUERY_USERNAME}
+      - MONGO_QUERY_PWD=${MONGO_QUERY_PWD}
+      - MONGO_QUERY_ROLE=${MONGO_QUERY_ROLE}
+      - MONGO_QUERY_DATABASE=${MONGO_QUERY_DATABASE}
+    volumes:
+      - ${DATA_PATH_HOST}/mongo:/data/db
+      - ${DATA_PATH_HOST}/mongo_config:/data/configdb
+      # init-mongo.js 文件会在 mongodb 容器初始化完成之后执行，给数据库创建默认的角色
+      # - ./mongo/init-mongo.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./mongo/init-mongo.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+    networks:
+      - backend
+
+  ### MySQL ################################################
+  mysql:
+    build:
+      context: ./mysql
+      args:
+        - MYSQL_VERSION=${MYSQL_VERSION}
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_HOST=%
+      - TZ=${WORKSPACE_TIMEZONE}
+    volumes:
+      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql:rw
+      - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+    user: mysql
+    ports:
+      - "${MYSQL_PORT}:3306"
+    networks:
+      - backend
+
+  ### Redis ################################################
+  redis:
+    build: ./redis
+    volumes:
+      - ${DATA_PATH_HOST}/redis:/data
+    command: --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "${REDIS_PORT}:6379"
+    networks:
+      - backend

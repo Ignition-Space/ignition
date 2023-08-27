@@ -5,14 +5,14 @@ import {
   Column,
   CreateDateColumn,
   ObjectIdColumn,
-  ObjectID,
+  ObjectId,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
 export class PageConfig {
   @ObjectIdColumn()
-  id: ObjectID;
+  id: ObjectId;
 
   @Column()
   pageId: string;

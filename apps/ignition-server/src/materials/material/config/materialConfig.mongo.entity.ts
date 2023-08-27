@@ -1,4 +1,4 @@
-import { Entity, Column, ObjectIdColumn, ObjectID } from 'typeorm';
+import { Entity, Column, ObjectIdColumn, ObjectId } from 'typeorm';
 
 export enum MATERIAL_TYPE {
   'cdn' = 0,
@@ -9,7 +9,7 @@ export enum MATERIAL_TYPE {
 @Entity()
 export class MaterialConfig {
   @ObjectIdColumn()
-  id: ObjectID;
+  id: ObjectId;
 
   @Column()
   materialId: string;

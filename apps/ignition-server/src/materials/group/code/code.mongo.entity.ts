@@ -3,14 +3,14 @@ import {
   Column,
   CreateDateColumn,
   ObjectIdColumn,
-  ObjectID,
+  ObjectId,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
 export class CodeGroup {
   @ObjectIdColumn()
-  id: ObjectID;
+  id: ObjectId;
 
   @Column({ default: null })
   name: string;

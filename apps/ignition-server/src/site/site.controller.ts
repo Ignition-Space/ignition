@@ -3,8 +3,9 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AddSiteDto, GenerateSiteDto } from './site.dto';
 import { SiteService } from './site.service';
 import { getRecursion } from '../utils/analysis';
-import * as _ from 'loadsh';
+import * as _ from 'lodash';
 import { InterfaceService } from './interface/interface.service';
+import { STATUS_TYPE } from './site.mongo.entity';
 
 @ApiTags('站点配置')
 @Controller('site')
@@ -19,7 +20,7 @@ export class SiteController {
   })
   @Post('saveAndUpdate')
   async saveAndUpdate(@Body() params: AddSiteDto) {
-    const site = await this.siteService.saveAndUpdate(params);
+    const site = await this.siteService.saveAndUpdate({ status: STATUS_TYPE.inactive, ...params });
     return site;
   }
 
@@ -30,7 +31,7 @@ export class SiteController {
   async getList() {
     console.log(this.siteService)
     const site = await this.siteService.findALL();
-    console.log('site====>', site)
+    console.log(site);
     return site;
   }
 
@@ -40,7 +41,7 @@ export class SiteController {
   @Post('analysis')
   async analysis(@Body() generateSiteDto: GenerateSiteDto) {
     const site = await this.siteService.findOne(generateSiteDto.id);
-    console.log('site===>', site)
+    console.log('site===>', site);
     const { paths, components } = await getRecursion(site.url);
     const interfaces = [];
 
@@ -94,7 +95,7 @@ export class SiteController {
         }
       });
     });
-    console.log(interfaces)
+    console.log(interfaces);
     const callback = [];
     for (const inter of interfaces) {
       const isExit = await this.interfaceService.findByUrl(

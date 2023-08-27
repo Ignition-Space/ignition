@@ -10,36 +10,22 @@
 ### 开发环境（开发者）
 
 ```sh
-
 # 构建数据库基础环境
-
-docker-compose up
-
+cd docker
+docker-compose up -d mysql mongodb
+# 关闭数据库基础环境
+docker-compose down
+```
 # 登录 mysql 客户端或者命令行手动创建数据库, 'material_test'
-
+```text
 username: root
 password: 123456
-
+```
 # 新建配置文件.config/.dev.yaml
 
-MONGODB_CONFIG:
-  name: "ignition_test"
-  type: "mongodb"
-  url: "mongodb://127.0.0.1:27017"
-  database: "ignition_test"
-  entities: "mongo"
-  logging: false
-  synchronize: true
-MYSQL_CONFIG:
-  name: "material_test"
-  type: "mysql"
-  host: "127.0.0.1"
-  port: 3306
-  database: "material_test"
-  username: "root"
-  password: "123456"
-  entities: "mysql"
-  synchronize: true
+```sh
+cp .config/.dev.yaml.example .config/.dev.yaml
+```
 
 # 安装依赖
 

@@ -9,7 +9,7 @@ import { Button, Col, Descriptions, Empty, Menu, Row, Spin, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import dayjs from 'dayjs';
-import _ from 'loadsh';
+import _ from 'lodash';
 import { PageContainer } from '@ant-design/pro-layout';
 import EddSite from '../site/EddSite';
 import SyncInterface from '../site/SyncInterface';

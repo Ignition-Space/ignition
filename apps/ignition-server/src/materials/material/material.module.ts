@@ -18,4 +18,4 @@ import { GroupModule } from '../group/group.module';
   ],
   exports: [MaterialConfigService],
 })
-export class MaterialModule { }
+export class MaterialModule {}

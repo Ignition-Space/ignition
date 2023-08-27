@@ -8,8 +8,8 @@ import { snakeCase } from 'typeorm/util/StringUtils';
 
 export class NamingStrategy
   extends DefaultNamingStrategy
-  implements NamingStrategyInterface {
-
+  implements NamingStrategyInterface
+{
   tableName(className: string, customName: string): string {
     return customName ? customName : snakeCase(className);
   }
@@ -67,5 +67,4 @@ export class NamingStrategy
   eagerJoinRelationAlias(alias: string, propertyPath: string): string {
     return alias + '__' + propertyPath.replace('.', '_');
   }
-
 }

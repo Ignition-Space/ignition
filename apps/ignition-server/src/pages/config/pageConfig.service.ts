@@ -8,7 +8,7 @@ export class PageConfigService {
   constructor(
     @Inject('PAGE_CONFIG_REPOSITORY')
     private pageConfigRepository: MongoRepository<PageConfig>,
-  ) { }
+  ) {}
 
   save(pageConfig) {
     return this.pageConfigRepository.save(pageConfig);
