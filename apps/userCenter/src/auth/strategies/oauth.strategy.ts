@@ -4,7 +4,7 @@ import { AuthService } from '../auth.service';
 import { Strategy } from 'passport-custom';
 
 @Injectable()
-export class FeishuStrategy extends PassportStrategy(Strategy, 'feishu') {
+export class OAuthStrategy extends PassportStrategy(Strategy, 'oauth') {
   constructor(private authService: AuthService) {
     super();
   }

@@ -48,6 +48,7 @@
     "passport-jwt": "^4.0.1",
     "postcss-loader": "^7.3.3",
     "prop-types": "^15.8.1",
+    "querystring": "^0.2.1",
     "reflect-metadata": "^0.1.13",
     "resolve-pathname": "^3.0.0",
     "rimraf": "^5.0.1",

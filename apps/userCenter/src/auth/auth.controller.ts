@@ -10,21 +10,37 @@ import {
   Response
 } from '@nestjs/common';
 
-import { FeishuAuthGuard } from './guards/feishu-auth.guard';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetTokenByApplications } from './auth.dto';
 import { Public } from './constants';
 import { PayloadUser } from '@app/common';
-import { FeishuService } from '../userCenter/user/feishu/feishu.service';
+import { OAuthGuard } from './guards/oauth.guard';
 
 @ApiTags('用户认证')
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
-    private readonly feishuService: FeishuService,
   ) { }
+
+  @ApiOperation({
+    summary: 'OAUTH 授权',
+  })
+  @Public()
+  @UseGuards(OAuthGuard)
+  @Get('/')
+  async OAuth(@PayloadUser() user: Payload, @Res({ passthrough: true }) response) {
+    const { access_token } = await this.authService.login(user);
+
+    response.cookie('jwt', access_token, {
+      path: '/',
+      httpOnly: true,
+      domain: '.ig-space.com'
+    });
+
+    return access_token
+  }
 
   @ApiOperation({
     summary: '登出',
@@ -40,7 +56,6 @@ export class AuthController {
     summary: '飞书 Auth2 授权登录',
     description: '通过 code 获取`access_token`https://open.feishu.cn/open-apis/authen/v1/index?app_id=cli_a2ed5e7be4f9500d&redirect_uri=http%3A%2F%2F127.0.0.1%3A8080%2Fauth',
   })
-  @UseGuards(FeishuAuthGuard)
   @Public()
   @Get('/feishu/auth2')
   async getFeishuTokenByApplications(

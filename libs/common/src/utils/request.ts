@@ -48,8 +48,11 @@ const methodV = async ({
   query = {},
 }: IMethodV): Promise<IRequest> => {
   let sendUrl = '';
+  if (baseUrl) {
+    url = baseUrl + url
+  }
   if (/^(http:\/\/|https:\/\/)/.test(url)) {
-    sendUrl = baseUrl + url;
+    sendUrl = url;
   } else {
     sendUrl = `${FEISHU_URL}${url}`;
   }

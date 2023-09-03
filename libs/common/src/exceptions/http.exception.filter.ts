@@ -22,7 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest();
     const status = exception.getStatus();
 
-    request.log.error(exception)
+    console.log(exception)
 
     // 处理业务异常
     if (exception instanceof BusinessException) {

@@ -11,7 +11,7 @@ import { BusinessException } from '@app/common';
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly userRoleService: UserRoleService
+    private readonly userRoleService: UserRoleService,
   ) { }
 
   @ApiOperation({

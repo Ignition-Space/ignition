@@ -3,7 +3,7 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { User } from './user.mysql.entity';
 import { UserListWithPaginationDto } from './user.dto';
 import { isNotEmpty } from 'class-validator';
-import { GithubUserInfo } from '@/userCenter/user/feishu/feishu.dto';
+import { GithubUserInfo } from './user.dto';
 import { BusinessException } from '@app/common';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { getPaginationOptions } from '@app/common';
@@ -12,7 +12,6 @@ import { UserRoleService } from '../user-role/user-role.service';
 import { UserRole } from '../user-role/user-role.mysql.entity';
 import { RoleService } from '../role/role.service';
 import { PrivilegeService } from '../privilege/privilege.service';
-import { FeishuService } from './feishu/feishu.service';
 
 const _ = require('lodash');
 
@@ -32,7 +31,6 @@ export class UserService {
     private readonly userRoleService: UserRoleService,
     private readonly roleService: RoleService,
     private readonly privilegeService: PrivilegeService,
-    private readonly feishuService: FeishuService
   ) { }
 
   createOrSave(user: User) {

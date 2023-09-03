@@ -8,11 +8,11 @@ import { RolePrivilegeModule } from '../role-privilege/role-privilege.module';
 import { UserRoleModule } from '../user-role/user-role.module';
 import { RoleModule } from '../role/role.module';
 import { PrivilegeModule } from '../privilege/privilege.module';
-import { FeishuService } from './feishu/feishu.service';
+import { OAuthService } from './oauth.service';
 
 @Module({
   controllers: [UserController],
-  providers: [...UserProviders, UserService, FeishuService],
+  providers: [...UserProviders, UserService, OAuthService],
   imports: [
     forwardRef(() => DatabaseModule),
     RolePrivilegeModule,
@@ -20,7 +20,7 @@ import { FeishuService } from './feishu/feishu.service';
     RoleModule,
     PrivilegeModule
   ],
-  exports: [UserService, FeishuService],
+  exports: [UserService, OAuthService],
 })
 
 export class UserModule { }

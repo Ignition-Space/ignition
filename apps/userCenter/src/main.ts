@@ -6,6 +6,7 @@ import { UserCenterModule } from './user-center.module';
 import { generateDocument } from './doc'
 import { AllExceptionsFilter, HttpExceptionFilter } from '@app/common';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
 
@@ -27,6 +28,9 @@ async function bootstrap() {
 
   // 创建文档
   generateDocument(app)
+
+  // 格式化 cookie
+  app.use(cookieParser());
 
   // 启动所有微服务
   await app.startAllMicroservices();

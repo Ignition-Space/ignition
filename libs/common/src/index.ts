@@ -11,4 +11,5 @@ export * from './helper'
 export * from './helper/feishu/auth'
 export * from './helper/feishu/user'
 export * from './helper/feishu/message'
+export * from './helper/github/auth'
 
