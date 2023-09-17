@@ -11,6 +11,7 @@ $ pnpm i
 ```
 
 ## 使用
+
 1. 添加 .config/.dev.yaml
 ```
 MONGODB_CONFIG:
@@ -35,10 +36,15 @@ MYSQL_CONFIG:
 
 2. 启动项目
 
+- 启动所有项目
 ```
 pnpm dev
 ```
 
+- 启动用户服务
+```
+pnpm dev:user
+```
 
 3. 浏览器打开链接
 ```

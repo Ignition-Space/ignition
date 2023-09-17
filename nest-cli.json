@@ -18,7 +18,7 @@
         "tsConfigPath": "apps/ignitionServer/tsconfig.app.json"
       }
     },
-    "user-center": {
+    "user-server": {
       "type": "application",
       "root": "apps/userServer",
       "entryFile": "main",

@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "turbo run dev",
+    "dev:user": "turbo run dev:user",
     "prebuild": "rimraf dist",
     "clean": "rimraf dist && rimraf node_modules && rimraf **/*/node_modules",
     "build": "nest build",
@@ -14,7 +15,7 @@
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start:ignition": "pnpm prebuild && cross-env RUNNING_ENV=dev nest start --watch",
     "start:materials": "cross-env RUNNING_ENV=dev nest start --watch materials",
-    "start:user": "cross-env RUNNING_ENV=dev nest start --watch user-center",
+    "start-server:user": "cross-env RUNNING_ENV=dev nest start --watch user-server",
     "start-client:user": "pnpm --filter user-center run dev"
   },
   "dependencies": {

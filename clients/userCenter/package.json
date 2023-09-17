@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:user": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "prettier": "prettier --write \"{src,mock}/**/*.{js,css,less,ts,tsx}\""
