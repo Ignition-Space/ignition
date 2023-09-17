@@ -58,6 +58,11 @@ http://localhost:8000/siteList // 客户端界面
 服务端：NestJS
 客户端：ReactJS + AntD
 
+
+## 特别声明
+
+用户系统的模板是基于 https://github.com/javaLuo/react-admin 这个项目，有疑问可以与我联系
+
 ## 支持
 
 有想催更跟建议的朋友可以添加我的微信: **Cookieboty** 进群同步消息。

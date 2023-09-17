@@ -20,11 +20,11 @@
     },
     "user-center": {
       "type": "application",
-      "root": "apps/userCenter",
+      "root": "apps/userServer",
       "entryFile": "main",
-      "sourceRoot": "apps/userCenter/src",
+      "sourceRoot": "apps/userServer/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/userCenter/tsconfig.app.json"
+        "tsConfigPath": "apps/userServer/tsconfig.app.json"
       }
     },
     "common": {
