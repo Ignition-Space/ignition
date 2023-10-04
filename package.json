@@ -10,13 +10,12 @@
     "dev:user": "turbo run dev:user",
     "prebuild": "rimraf dist",
     "clean": "rimraf dist && rimraf node_modules && rimraf **/*/node_modules",
-    "build": "nest build",
-    "start": "nest start",
+    "build": "turbo run build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start:ignition": "pnpm prebuild && cross-env RUNNING_ENV=dev nest start --watch",
     "start:materials": "cross-env RUNNING_ENV=dev nest start --watch materials",
     "start-server:user": "cross-env RUNNING_ENV=dev nest start --watch user-server",
-    "start-client:user": "pnpm --filter user-center run dev"
+    "start-client:user": "pnpm --filter user-center run dev:user"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^2.1.0",

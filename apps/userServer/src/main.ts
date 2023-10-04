@@ -3,13 +3,12 @@ declare const module: any;
 import { NestFactory } from '@nestjs/core';
 import { UserCenterModule } from './user-center.module';
 
-import { generateDocument } from './doc'
+import { generateDocument } from './doc';
 import { AllExceptionsFilter, HttpExceptionFilter } from '@app/common';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-
   const app = await NestFactory.create(UserCenterModule);
 
   // 异常过滤器
@@ -27,7 +26,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   // 创建文档
-  generateDocument(app)
+  generateDocument(app);
 
   // 格式化 cookie
   app.use(cookieParser());

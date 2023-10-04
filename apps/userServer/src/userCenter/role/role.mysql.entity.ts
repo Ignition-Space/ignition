@@ -1,4 +1,11 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { STATUS } from '../system/system.mysql.entity';
 
 @Entity()
 export class Role {
@@ -9,6 +16,9 @@ export class Role {
 
   @Column()
   systemId: number;
+
+  @Column({ default: STATUS.enabled })
+  status?: STATUS;
 
   @Column({ type: 'text', default: null })
   description?: string;

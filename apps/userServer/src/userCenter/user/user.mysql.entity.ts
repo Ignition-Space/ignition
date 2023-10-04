@@ -1,8 +1,13 @@
-import { Entity, Column, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  UpdateDateColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export enum UserStatus {
   disabled = 0,
-  enabled = 1
+  enabled = 1,
 }
 
 @Entity()

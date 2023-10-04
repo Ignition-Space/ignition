@@ -27,6 +27,6 @@ export interface TreeSourceData {
   parent: number | null; // 父级ID
   desc: string; // 描述
   sorts: number; // 排序编号
-  conditions: number; // 状态，1启用，-1禁用
+  status: number; // 状态，1启用，-1禁用
   children?: TreeSourceData[]; // 子菜单
 }

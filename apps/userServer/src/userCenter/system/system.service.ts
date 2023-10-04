@@ -6,14 +6,14 @@ import { System } from './system.mysql.entity';
 export class SystemService {
   constructor(
     @Inject('SYSTEM_REPOSITORY') private systemRepository: Repository<System>,
-  ) {
-  }
+  ) { }
+
   create(system: System) {
-    return this.systemRepository.save(system)
+    return this.systemRepository.save(system);
   }
 
   update(system: System) {
-    return this.systemRepository.save(system)
+    return this.systemRepository.save(system);
   }
 
   async delete(id: number) {
@@ -21,15 +21,17 @@ export class SystemService {
   }
 
   findById(id) {
-    return this.systemRepository.findOne(id)
+    return this.systemRepository.findOne({
+      where: { id },
+    });
   }
 
   findByIds(ids: number[]) {
     return this.systemRepository.find({
       where: {
-        id: In(ids)
-      }
-    })
+        id: In(ids),
+      },
+    });
   }
 
   list() {

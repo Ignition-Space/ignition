@@ -1,8 +1,13 @@
-import { Controller, Post, Body, } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserListWithPaginationDto, GetRolesByIdDto, SetRolesDto, DisableUserDto } from './user.dto';
+import {
+  UserListWithPaginationDto,
+  GetRolesByIdDto,
+  SetRolesDto,
+  DisableUserDto,
+} from './user.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { PayloadUser, Public } from '@app/common';
+import { PayloadUser } from '@app/common';
 import { UserRoleService } from '../user-role/user-role.service';
 import { BusinessException } from '@app/common';
 
@@ -52,11 +57,14 @@ export class UserController {
   }
 
   @ApiOperation({
-    summary: '设置用户角色'
+    summary: '设置用户角色',
   })
   @Post('setRoles')
   async setRoles(@Body() dto: SetRolesDto) {
-    return await this.userRoleService.setUserRoles(dto.userId, dto.roleIds, dto.systemId);
+    return await this.userRoleService.setUserRoles(
+      dto.userId,
+      dto.roleIds,
+      dto.systemId,
+    );
   }
-
 }

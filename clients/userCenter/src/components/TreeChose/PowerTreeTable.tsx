@@ -1,13 +1,9 @@
 /** 权限Table树 **/
 
-import React, { useState, useMemo, useEffect, useCallback } from "react";
-import { Modal, Table, Checkbox, Spin } from "antd";
-import { Power, PowerTree } from "@/models/index.type";
-import { cloneDeep } from "lodash";
-
-// ==================
-// 类型声明
-// ==================
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { Modal, Table, Checkbox, Spin } from 'antd';
+import { Power, PowerTree } from '@/models/index.type';
+import { cloneDeep } from 'lodash';
 
 // 默认被选中的菜单和权限
 export type PowerTreeDefault = {
@@ -71,13 +67,13 @@ export default function TreeTable(props: Props): JSX.Element {
     (id: number): boolean => {
       return !!btnDtoChecked.find((item) => item === id);
     },
-    [btnDtoChecked]
+    [btnDtoChecked],
   );
 
   // TABLE btn权限选中和取消选中，需要记录哪些被选中 id/title/powers
   const onBtnDtoChange = useCallback(
     (e: any, id: number, record: PowerLevel) => {
-      console.log("哈？", record);
+      console.log('哈？', record);
       const old = [...btnDtoChecked];
       let treeCheckedTemp = [...treeChecked];
       if (e.target.checked) {
@@ -92,7 +88,7 @@ export default function TreeTable(props: Props): JSX.Element {
         const tempMap = record.powers.map((item: Power) => item.id);
         if (
           !btnDtoChecked.some(
-            (item) => item !== id && tempMap.indexOf(item) >= 0
+            (item) => item !== id && tempMap.indexOf(item) >= 0,
           )
         ) {
           treeCheckedTemp.splice(treeCheckedTemp.indexOf(record.id), 1);
@@ -102,7 +98,7 @@ export default function TreeTable(props: Props): JSX.Element {
       setBtnDtoChecked(old);
       setTreeChecked(treeCheckedTemp);
     },
-    [btnDtoChecked, treeChecked]
+    [btnDtoChecked, treeChecked],
   );
 
   // 工具 - 递归将扁平数据转换为层级数据
@@ -121,12 +117,8 @@ export default function TreeTable(props: Props): JSX.Element {
       });
       return kids.length ? kids : undefined;
     },
-    []
+    [],
   );
-
-  // ==================
-  // 计算属性 memo
-  // ==================
 
   // 工具 - 赋值Key
   const makeKey = useCallback((data: PowerTree[]) => {
@@ -174,7 +166,7 @@ export default function TreeTable(props: Props): JSX.Element {
           // 选中，连带其权限全部勾选
           if (t && Array.isArray(t.powers)) {
             const temp = Array.from(
-              new Set([...t.powers.map((item) => item.id), ...btnDtoChecked])
+              new Set([...t.powers.map((item) => item.id), ...btnDtoChecked]),
             );
             setBtnDtoChecked(temp);
           }
@@ -183,7 +175,7 @@ export default function TreeTable(props: Props): JSX.Element {
           if (t && Array.isArray(t.powers)) {
             const mapTemp = t.powers.map((item) => item.id);
             const temp = btnDtoChecked.filter(
-              (item) => mapTemp.indexOf(item) < 0
+              (item) => mapTemp.indexOf(item) < 0,
             );
             setBtnDtoChecked(temp);
           }
@@ -195,7 +187,7 @@ export default function TreeTable(props: Props): JSX.Element {
           setBtnDtoChecked(
             props.data.reduce((v1, v2) => {
               return [...v1, ...v2.powers.map((k) => k.id)];
-            }, [] as number[])
+            }, [] as number[]),
           );
         } else {
           setBtnDtoChecked([]);
@@ -209,16 +201,16 @@ export default function TreeTable(props: Props): JSX.Element {
   const tableColumns = useMemo(() => {
     return [
       {
-        title: "菜单",
-        dataIndex: "title",
-        key: "title",
-        width: "30%",
+        title: '菜单',
+        dataIndex: 'title',
+        key: 'title',
+        width: '30%',
       },
       {
-        title: "权限",
-        dataIndex: "powers",
-        key: "powers",
-        width: "70%",
+        title: '权限',
+        dataIndex: 'powers',
+        key: 'powers',
+        width: '70%',
         render: (value: Power[], record: PowerLevel): JSX.Element[] | null => {
           if (value) {
             return value.map((item: Power, index: number) => {
@@ -244,14 +236,14 @@ export default function TreeTable(props: Props): JSX.Element {
       className="menu-tree-table"
       zIndex={1001}
       width={750}
-      title={props.title || "请选择"}
+      title={props.title || '请选择'}
       open={props.modalShow}
       onOk={onOk}
       onCancel={onClose}
       confirmLoading={props.loading}
     >
       {props.initloading ? (
-        <div style={{ textAlign: "center" }}>
+        <div style={{ textAlign: 'center' }}>
           <Spin tip="加载中…" />
         </div>
       ) : (

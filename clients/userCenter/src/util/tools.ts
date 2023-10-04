@@ -25,7 +25,7 @@ const tools = {
    */
   trim(str: string): string {
     const reg = /^\s*|\s*$/g;
-    return str.replace(reg, "");
+    return str.replace(reg, '');
   },
 
   /**
@@ -48,13 +48,13 @@ const tools = {
       return 6;
     })();
     const start = Math.floor((lenth - howmuch) / 2);
-    const ret = s.split("").map((v, i) => {
+    const ret = s.split('').map((v, i) => {
       if (i >= start && i < start + howmuch) {
-        return "*";
+        return '*';
       }
       return v;
     });
-    return ret.join("");
+    return ret.join('');
   },
 
   /**
@@ -64,7 +64,7 @@ const tools = {
    * @param str - 待处理的字符串
    * **/
   checkStr(str: string): boolean {
-    if (str === "") {
+    if (str === '') {
       return true;
     }
     const rex = /^[_a-zA-Z0-9]+$/;

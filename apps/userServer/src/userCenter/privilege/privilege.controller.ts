@@ -3,7 +3,14 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BusinessException } from '@app/common';
 import { SystemService } from '../system/system.service';
 import { ResourceService } from '../resource/resource.service';
-import { CreatePrivilegeDto, DeletePrivilegeDto, DisablePrivilegeDto, ListAllPrivilegeDto, PrivilegeListWithPaginationDto, UpdatePrivilegeDto } from './privilege.dto';
+import {
+  CreatePrivilegeDto,
+  DeletePrivilegeDto,
+  DisablePrivilegeDto,
+  ListAllPrivilegeDto,
+  PrivilegeListWithPaginationDto,
+  UpdatePrivilegeDto,
+} from './privilege.dto';
 import { Privilege } from './privilege.mysql.entity';
 import { PrivilegeService } from './privilege.service';
 
@@ -13,7 +20,7 @@ export class PrivilegeController {
   constructor(
     private readonly privilegeService: PrivilegeService,
     private readonly resourceService: ResourceService,
-    private readonly systemService: SystemService
+    private readonly systemService: SystemService,
   ) { }
 
   @ApiOperation({
@@ -26,8 +33,8 @@ export class PrivilegeController {
       name: dto.name,
       resourceKey: dto.resourceKey,
       action: dto.action,
-      description: dto.description
-    }
+      description: dto.description,
+    };
     const resource = await this.resourceService.findByKey(dto.resourceKey);
     if (!resource) {
       throw new BusinessException('未找到资源 Key:' + dto.resourceKey);
@@ -45,10 +52,10 @@ export class PrivilegeController {
       systemId: dto.systemId,
       resourceKey: dto.resourceKey,
       action: dto.action,
-      description: dto.description
-    }
+      description: dto.description,
+    };
 
-    const privilege = await this.privilegeService.findById(dto.id)
+    const privilege = await this.privilegeService.findById(dto.id);
 
     if (!privilege) {
       throw new BusinessException(`未找到 id 为 ${dto.id} 的权限`);
@@ -59,7 +66,10 @@ export class PrivilegeController {
       throw new BusinessException('未找到资源 Key:' + dto.resourceKey);
     }
 
-    return this.privilegeService.createOrUpdate({ ...privilege, ...updatedPrivilege });
+    return this.privilegeService.createOrUpdate({
+      ...privilege,
+      ...updatedPrivilege,
+    });
   }
 
   @ApiOperation({
@@ -71,7 +81,10 @@ export class PrivilegeController {
     if (!found) {
       throw new BusinessException(`未找到 ID 为 ${dto.privilegeId} 的权限`);
     }
-    return this.privilegeService.createOrUpdate({ ...found, status: dto.status });
+    return this.privilegeService.createOrUpdate({
+      ...found,
+      status: dto.status,
+    });
   }
 
   @ApiOperation({
@@ -91,15 +104,15 @@ export class PrivilegeController {
     const { page, ...searchParams } = dto;
 
     const pageData = await this.privilegeService.paginate(searchParams, page);
-    const systemIds = pageData.items.map(privilege => privilege.systemId);
+    const systemIds = pageData.items.map((privilege) => privilege.systemId);
     const systemList = await this.systemService.findByIds(systemIds);
     const systemMap = {};
-    systemList.forEach(system => systemMap[system.id] = system);
-    const newRoles = pageData.items.map(privilege => {
-      privilege['systemName'] = systemMap[privilege.systemId].name
+    systemList.forEach((system) => (systemMap[system.id] = system));
+    const newRoles = pageData.items.map((privilege) => {
+      privilege['systemName'] = systemMap[privilege.systemId].name;
       return privilege;
-    })
-    return { ...pageData, items: newRoles }
+    });
+    return { ...pageData, items: newRoles };
   }
 
   @ApiOperation({

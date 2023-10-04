@@ -4,9 +4,7 @@ import { Tree, Modal } from "antd";
 import { cloneDeep } from "lodash";
 import { Role } from "@/models/index.type";
 
-// ==================
-// 类型声明
-// ==================
+
 
 type RoleLevel = Role & {
   key: string | number;
@@ -24,9 +22,7 @@ interface Props {
   onClose: () => void; // 关闭
 }
 
-// ==================
-// 本组件
-// ==================
+
 export default function RoleTreeComponent(props: Props): JSX.Element {
   const [nowKeys, setNowKeys] = useState<string[]>([]);
 
@@ -72,9 +68,7 @@ export default function RoleTreeComponent(props: Props): JSX.Element {
     setNowKeys(keys);
   }, []);
 
-  // ==================
-  // 计算属性 memo
-  // ==================
+
 
   // 工具 - 赋值Key
   const makeKey = useCallback((data: Role[]) => {

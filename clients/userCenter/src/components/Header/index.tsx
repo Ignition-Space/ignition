@@ -1,11 +1,6 @@
-/** 头部 **/
-
-// ==================
-// 第三方库
-// ==================
-import React, { useState, useCallback } from "react";
-import { Link } from "react-router-dom";
-import { Layout, Tooltip, Dropdown } from "antd";
+import React, { useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import { Layout, Tooltip, Dropdown } from 'antd';
 import {
   MenuFoldOutlined,
   FullscreenOutlined,
@@ -14,20 +9,14 @@ import {
   ChromeOutlined,
   LogoutOutlined,
   SmileOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 
 const { Header } = Layout;
 
-// ==================
-// 自定义的东西
-// ==================
-import "./index.less";
+import './index.less';
 
-// ==================
-// 类型声明
-// ==================
-import type { MenuProps } from "antd";
-import { UserInfo } from "@/models/index.type";
+import type { MenuProps } from 'antd';
+import { UserInfo } from '@/models/index.type';
 
 interface Element {
   webkitRequestFullscreen?: () => void;
@@ -79,23 +68,24 @@ export default function HeaderCom(props: Props): JSX.Element {
   }, []);
 
   // 退出登录
-  const onMenuClick: MenuProps["onClick"] = (e) => {
+  const onMenuClick: MenuProps['onClick'] = (e) => {
     // 退出按钮被点击
-    if (e.key === "logout") {
+    if (e.key === 'logout') {
       props.onLogout();
     }
   };
 
-  const u = props.userinfo.userBasicInfo;
+  const u = props.userinfo;
+
   return (
     <Header className="header">
       <MenuFoldOutlined
-        className={props.collapsed ? "trigger fold" : "trigger"}
+        className={props.collapsed ? 'trigger fold' : 'trigger'}
         onClick={() => props.onToggle()}
       />
 
       <div className="rightBox">
-        <Tooltip placement="bottom" title={fullScreen ? "退出全屏" : "全屏"}>
+        <Tooltip placement="bottom" title={fullScreen ? '退出全屏' : '全屏'}>
           <div className="full all_center">
             {fullScreen ? (
               <FullscreenExitOutlined
@@ -113,11 +103,11 @@ export default function HeaderCom(props: Props): JSX.Element {
         {u ? (
           <Dropdown
             menu={{
-              className: "menu",
+              className: 'menu',
               onClick: onMenuClick,
               items: [
                 {
-                  key: "item-1",
+                  key: 'item-1',
                   label: (
                     <a
                       href="https://ig.space.com"
@@ -130,7 +120,7 @@ export default function HeaderCom(props: Props): JSX.Element {
                   ),
                 },
                 {
-                  key: "item-2",
+                  key: 'item-2',
                   label: (
                     <a
                       href="https://github.com/javaLuo/react-admin"
@@ -143,10 +133,10 @@ export default function HeaderCom(props: Props): JSX.Element {
                   ),
                 },
                 {
-                  type: "divider",
+                  type: 'divider',
                 },
                 {
-                  key: "logout",
+                  key: 'logout',
                   label: (
                     <>
                       <LogoutOutlined />
@@ -159,8 +149,8 @@ export default function HeaderCom(props: Props): JSX.Element {
             placement="bottomRight"
           >
             <div className="userhead all_center">
-              <SmileOutlined />
-              <span className="username">{u.username}</span>
+              <SmileOutlined color="red" />
+              <span className="username">{u.name}</span>
             </div>
           </Dropdown>
         ) : (

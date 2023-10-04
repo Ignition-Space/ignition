@@ -1,28 +1,13 @@
-/** 基础页面结构 - 有头部，有底部，有侧边导航 **/
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import { Layout } from 'antd';
 
-// ==================
-// 所需的第三方库
-// ==================
-import React from "react";
-import { Outlet } from "react-router-dom";
-import { Layout } from "antd";
+import './UserLayout.less';
 
-// ==================
-// 自定义的东西
-// ==================
-import "./UserLayout.less";
-
-// ==================
-// 组件
-// ==================
-
-import Footer from "../components/Footer";
+import Footer from '../components/Footer';
 
 const { Content } = Layout;
 
-// ==================
-// 本组件
-// ==================
 export default function AppContainer(): JSX.Element {
   return (
     <Layout className="page-user">

@@ -1,36 +1,30 @@
 /** 左侧导航 **/
 
-// ==================
-// 第三方库
-// ==================
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Layout, Menu as MenuAntd } from "antd";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { cloneDeep } from "lodash";
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { Layout, Menu as MenuAntd, MenuProps } from 'antd';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { cloneDeep } from 'lodash';
 
 const { Sider } = Layout;
 
-// ==================
-// 自定义的东西
-// ==================
-import "./index.less";
-import ImgLogo from "@/assets/logo.png";
-import Icon from "@/components/Icon";
+import './index.less';
+import ImgLogo from '@/assets/logo.png';
+import Icon from '@/components/Icon';
 
-// ==================
-// 类型声明
-// ==================
-import type { Menu } from "@/models/index.type";
-import type { ItemType } from "antd/lib/menu/hooks/useItems";
+import type { Menu } from '@/models/index.type';
+import type { ItemType } from 'antd/lib/menu/hooks/useItems';
+import MenuItem from 'antd/lib/menu/MenuItem';
+import {
+  DeploymentUnitOutlined,
+  MailOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 
 interface Props {
   data: Menu[]; // 所有的菜单数据
   collapsed: boolean; // 菜单咱开还是收起
 }
 
-// ==================
-// 本组件
-// ==================
 export default function MenuCom(props: Props): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,7 +33,7 @@ export default function MenuCom(props: Props): JSX.Element {
 
   // 当页面路由跳转时，即location发生改变，则更新选中项
   useEffect(() => {
-    const paths = location.pathname.split("/").filter((item) => !!item);
+    const paths = location.pathname.split('/').filter((item) => !!item);
     setChosedKey([location.pathname]);
     setOpenKeys(paths.map((item) => `/${item}`));
   }, [location]);
@@ -68,7 +62,7 @@ export default function MenuCom(props: Props): JSX.Element {
       kids.forEach((item: Menu) => (item.children = dataToJson(item, data)));
       return kids.length ? kids : undefined;
     },
-    []
+    [],
   );
 
   // 构建树结构
@@ -102,21 +96,27 @@ export default function MenuCom(props: Props): JSX.Element {
     });
   }, []);
 
-  // ==================
-  // 计算属性 memo
-  // ==================
+  const getItem = (
+    label: React.ReactNode,
+    key: React.Key,
+    icon?: React.ReactNode,
+    children?: MenuItem[],
+    type?: 'group',
+  ) => {
+    return {
+      key,
+      icon,
+      children,
+      label,
+      type,
+    };
+  };
 
-  /** 处理原始数据，将原始数据处理为层级关系 **/
-  const treeDom: ItemType[] = useMemo(() => {
-    const d: Menu[] = cloneDeep(props.data);
-    // 按照sort排序
-    d.sort((a, b) => {
-      return a.sorts - b.sorts;
-    });
-    const sourceData: Menu[] = dataToJson(undefined, d) || [];
-    const treeDom = makeTreeDom(sourceData);
-    return treeDom;
-  }, [props.data, dataToJson, makeTreeDom]);
+  const items = [
+    getItem('用户管理', 'system/useradmin', <UserOutlined />),
+    getItem('角色管理', 'system/roleadmin', <DeploymentUnitOutlined />),
+    getItem('系统管理', 'system/admin', <DeploymentUnitOutlined />),
+  ];
 
   return (
     <Sider
@@ -126,7 +126,7 @@ export default function MenuCom(props: Props): JSX.Element {
       collapsible
       collapsed={props.collapsed}
     >
-      <div className={props.collapsed ? "menuLogo hide" : "menuLogo"}>
+      <div className={props.collapsed ? 'menuLogo hide' : 'menuLogo'}>
         <Link to="/">
           <img src={ImgLogo} />
           <div>IG-User-Center</div>
@@ -135,7 +135,7 @@ export default function MenuCom(props: Props): JSX.Element {
       <MenuAntd
         theme="dark"
         mode="inline"
-        items={treeDom}
+        items={items}
         selectedKeys={chosedKey}
         {...(props.collapsed ? {} : { openKeys })}
         onOpenChange={(keys: string[]) => setOpenKeys(keys)}

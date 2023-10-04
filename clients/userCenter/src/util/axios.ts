@@ -1,20 +1,22 @@
 /** 对axios做一些配置 **/
 
-import { baseUrl } from "../config";
-import axios from "axios";
+import { baseUrl } from '../config';
+import axios from 'axios';
 
 /**
  * MOCK模拟数据
  * 不需要下面这些mock配置，仅本地用
  * 正式打包需要去掉
  * */
-import Mock from "mockjs";
+
+// import Mock from 'mockjs';
 // @ts-ignore
-import mock from "../../mock/app-data.js";
-Mock.mock(/\/api.*/, (options: any) => {
-  const res = mock(options);
-  return res;
-});
+// import mock from '../../mock/app-data.js';
+
+// Mock.mock(/\/api.*/, (options: any) => {
+//   const res = mock(options);
+//   return res;
+// });
 
 /**
  * 根据不同环境设置不同的请求地址
@@ -30,7 +32,7 @@ Mock.mock(/\/api.*/, (options: any) => {
 // }
 
 // 默认基础请求地址
-axios.defaults.baseURL = baseUrl;
+axios.defaults.baseURL = '/api';
 // 请求是否带上cookie
 axios.defaults.withCredentials = false;
 // 对返回的结果做处理

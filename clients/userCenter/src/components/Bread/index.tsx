@@ -1,10 +1,10 @@
 /** 通用动态面包屑 **/
-import React, { useMemo } from "react";
-import { useLocation } from "react-router-dom";
-import { Breadcrumb } from "antd";
-import { EnvironmentOutlined } from "@ant-design/icons";
-import "./index.less";
-import { Menu } from "@/models/index.type";
+import React, { useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Breadcrumb } from 'antd';
+import { EnvironmentOutlined } from '@ant-design/icons';
+import './index.less';
+import { Menu } from '@/models/index.type';
 
 interface Props {
   menus: Menu[];
@@ -21,12 +21,12 @@ export default function BreadCom(props: Props): JSX.Element {
     let parentId: number | null = null;
     do {
       const pathObj: Menu | undefined = props.menus.find(
-        (v) => v.id === parentId || v.url === paths
+        (v) => v.id === parentId || v.url === paths,
       );
 
       if (pathObj) {
         breads.push(
-          <Breadcrumb.Item key={pathObj.id}>{pathObj.title}</Breadcrumb.Item>
+          <Breadcrumb.Item key={pathObj.id}>{pathObj.title}</Breadcrumb.Item>,
         );
         parentId = pathObj.parent;
       } else {

@@ -1,5 +1,15 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
+export enum STATUS {
+  disabled = 0,
+  enabled = 1,
+}
 @Entity()
 export class System {
   @PrimaryGeneratedColumn()
@@ -10,6 +20,9 @@ export class System {
 
   @Column({ type: 'text', default: null })
   description?: string;
+
+  @Column({ default: STATUS.enabled })
+  status?: STATUS;
 
   @Column()
   creatorName?: string;

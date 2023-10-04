@@ -1,13 +1,13 @@
 // 菜单添加，修改时的参数类型
 export interface MenuParam {
   id?: number; // ID,添加时可以没有id
-  title: string; // 标题
+  name: string; // 标题
   icon: string; // 图标
   url: string; // 链接路径
   parent: number | null; // 父级ID
   desc: string; // 描述
   sorts: number; // 排序编号
-  conditions: number; // 状态，1启用，-1禁用
+  status: number; // 状态，1启用，-1禁用
   children?: Menu[]; // 子菜单
 }
 
@@ -25,11 +25,19 @@ export interface MenuAndPower {
 // 角色添加和修改时的参数类型
 export interface RoleParam {
   id?: number; // ID,添加时可以不传id
-  title: string; // 角色名
+  name: string; // 角色名
   desc: string; // 描述
   sorts: number; // 排序编号
-  conditions: number; // 状态，1启用，-1禁用
+  status: number; // 状态，1启用，-1禁用
   menuAndPowers?: MenuAndPower[]; // 添加时可以不传菜单和权限
+}
+
+// 角色添加和修改时的参数类型
+export interface SystemParam {
+  id?: number; // ID,添加时可以不传id
+  name: string; // 系统名
+  description: string; // 描述
+  status: number; // 状态，1启用，-1禁用
 }
 
 // 角色对象
@@ -42,11 +50,11 @@ export interface Role extends RoleParam {
 export interface PowerParam {
   id?: number; // ID, 添加时可以没有id
   menu: number; // 所属的菜单
-  title: string; // 标题
+  name: string; // 标题
   code: string; // CODE
   desc: string; // 描述
   sorts: number; // 排序
-  conditions: number; // 状态 1启用，-1禁用
+  status: number; // 状态 1启用，-1禁用
 }
 
 // 权限对象
@@ -56,7 +64,6 @@ export interface Power extends PowerParam {
 
 // 用户数据类型
 export interface UserInfo {
-  userBasicInfo: UserBasicInfo | null; // 用户的基本信息
   menus: Menu[]; // 拥有的所有菜单对象
   roles: Role[]; // 拥有的所有角色对象
   powers: Power[]; // 拥有的所有权限对象
@@ -70,7 +77,7 @@ export interface UserBasicInfo {
   phone: string | number; // 手机
   email: string; // 邮箱
   desc: string; // 描述
-  conditions: number; // 状态 1启用，-1禁用
+  status: number; // 状态 1启用，-1禁用
   roles: number[]; // 拥有的所有角色ID
 }
 
@@ -82,7 +89,7 @@ export interface UserBasicInfoParam {
   phone?: string | number; // 手机
   email?: string; // 邮箱
   desc?: string; // 描述
-  conditions?: number; // 状态 1启用，-1禁用
+  status?: number; // 状态 1启用，-1禁用
 }
 
 export interface PowerTree extends Menu {
@@ -105,8 +112,8 @@ export interface SysState {
 // 接口的返回值类型
 export type Res =
   | {
-      status: number; // 状态，200成功
-      data?: any; // 返回的数据
-      message?: string; // 返回的消息
-    }
+    status: number; // 状态，200成功
+    data?: any; // 返回的数据
+    message?: string; // 返回的消息
+  }
   | undefined;

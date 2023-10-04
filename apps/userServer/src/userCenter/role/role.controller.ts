@@ -4,7 +4,15 @@ import { BusinessException } from '@app/common';
 import { PrivilegeService } from '../privilege/privilege.service';
 import { RolePrivilegeService } from '../role-privilege/role-privilege.service';
 import { SystemService } from '../system/system.service';
-import { CreateRoleDto, DeleteRoleDto, GetPrivilegeListByIdDto, RoleListDto, RoleListWithPaginationDto, RolePrivilegeSetDto, UpdateRoleDto } from './role.dto';
+import {
+  CreateRoleDto,
+  DeleteRoleDto,
+  GetPrivilegeListByIdDto,
+  RoleListDto,
+  RoleListWithPaginationDto,
+  RolePrivilegeSetDto,
+  UpdateRoleDto,
+} from './role.dto';
 import { RoleService } from './role.service';
 
 @Controller('role')
@@ -15,8 +23,7 @@ export class RoleController {
     private readonly rolePrivilegeService: RolePrivilegeService,
     private readonly privilegeService: PrivilegeService,
     private readonly systemService: SystemService,
-  ) {
-  }
+  ) { }
 
   @ApiOperation({
     summary: '创建新角色',
@@ -31,7 +38,7 @@ export class RoleController {
   })
   @Post('update')
   async update(@Body() dto: UpdateRoleDto) {
-    const foundRole = await this.roleService.findById(dto.id)
+    const foundRole = await this.roleService.findById(dto.id);
     if (!foundRole) {
       throw new BusinessException('未找到角色');
     }
@@ -40,7 +47,8 @@ export class RoleController {
 
   @ApiOperation({
     summary: '删除角色',
-    description: '如果发现角色有绑定权限，权限将同步删除 Role - privilege 关系表',
+    description:
+      '如果发现角色有绑定权限，权限将同步删除 Role - privilege 关系表',
   })
   @Post('/delete')
   async delete(@Body() dto: DeleteRoleDto) {
@@ -53,7 +61,7 @@ export class RoleController {
   })
   @Post('/list')
   async list(@Body() dto: RoleListDto) {
-    return await this.roleService.list(dto.systemId)
+    return await this.roleService.list(dto.systemId);
   }
 
   @ApiOperation({
@@ -62,8 +70,12 @@ export class RoleController {
   })
   @Post('/getPrivilegeListById')
   async getPrivilegeListById(@Body() dto: GetPrivilegeListByIdDto) {
-    const rolePrivilegeList = await this.rolePrivilegeService.listByRoleIds([dto.roleId]);
-    const privilegeList = await this.privilegeService.findByIds(rolePrivilegeList.map(rp => rp.privilegeId))
+    const rolePrivilegeList = await this.rolePrivilegeService.listByRoleIds([
+      dto.roleId,
+    ]);
+    const privilegeList = await this.privilegeService.findByIds(
+      rolePrivilegeList.map((rp) => rp.privilegeId),
+    );
     return privilegeList;
   }
 
@@ -75,15 +87,15 @@ export class RoleController {
   async listWithPagination(@Body() dto: RoleListWithPaginationDto) {
     const { page, ...searchParams } = dto;
     const pageData = await this.roleService.paginate(searchParams, page);
-    const systemIds = pageData.items.map(role => role.systemId);
+    const systemIds = pageData.items.map((role) => role.systemId);
     const systemList = await this.systemService.findByIds(systemIds);
     const systemMap = {};
-    systemList.forEach(system => systemMap[system.id] = system);
-    const newRoles = pageData.items.map(role => {
-      role['systemName'] = systemMap[role.systemId].name
+    systemList.forEach((system) => (systemMap[system.id] = system));
+    const newRoles = pageData.items.map((role) => {
+      role['systemName'] = systemMap[role.systemId].name;
       return role;
-    })
-    return { ...pageData, items: newRoles }
+    });
+    return { ...pageData, items: newRoles };
   }
 
   @ApiOperation({
@@ -92,7 +104,11 @@ export class RoleController {
   })
   @Post('set')
   async set(@Body() dto: RolePrivilegeSetDto) {
-    await this.rolePrivilegeService.remove(dto.roleId)
-    return await this.rolePrivilegeService.set(dto.roleId, dto.privilegeIds, dto.systemId)
+    await this.rolePrivilegeService.remove(dto.roleId);
+    return await this.rolePrivilegeService.set(
+      dto.roleId,
+      dto.privilegeIds,
+      dto.systemId,
+    );
   }
 }

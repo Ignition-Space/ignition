@@ -3,10 +3,10 @@
  * 在src/store/index.js 中被挂载到store上，命名为 sys
  * **/
 
-import axios from "@/util/axios"; // 自己写的工具函数，封装了请求数据的通用接口
-import qs from "qs";
-import { message } from "antd";
-import { Dispatch } from "@/store";
+import axios from '@/util/axios'; // 自己写的工具函数，封装了请求数据的通用接口
+import qs from 'qs';
+import { message } from 'antd';
+import { Dispatch } from '@/store';
 
 import {
   Menu,
@@ -18,7 +18,8 @@ import {
   SysState,
   Res,
   UserBasicInfoParam,
-} from "./index.type";
+  SystemParam,
+} from './index.type';
 
 const defaultState: SysState = {
   menus: [], // 所有的菜单信息（用于菜单管理，无视权限）
@@ -50,13 +51,13 @@ export default {
      * **/
     async getMenus(): Promise<Res> {
       try {
-        const res: Res = await axios.get("/api/getmenus");
+        const res: Res = await axios.get('/getmenus');
         if (res && res.status === 200) {
           dispatch.sys.reducerSetMenus(res.data);
         }
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -66,10 +67,10 @@ export default {
      * **/
     async getMenusById(params: { id: number | number[] }) {
       try {
-        const res: Res = await axios.post(`/api/getMenusById`, params);
+        const res: Res = await axios.post(`/getMenusById`, params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -80,10 +81,10 @@ export default {
      */
     async addMenu(params: MenuParam) {
       try {
-        const res: Res = await axios.post("/api/addmenu", params);
+        const res: Res = await axios.post('/addmenu', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -92,10 +93,10 @@ export default {
      * **/
     async upMenu(params: MenuParam) {
       try {
-        const res: Res = await axios.post("/api/upmenu", params);
+        const res: Res = await axios.post('/upmenu', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -104,10 +105,10 @@ export default {
      * **/
     async delMenu(params: { id: number }) {
       try {
-        const res: Res = await axios.post("/api/delmenu", params);
+        const res: Res = await axios.post('/delmenu', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -118,11 +119,11 @@ export default {
     async getPowerDataByMenuId(params: { menuId: number | null }) {
       try {
         const res: Res = await axios.get(
-          `/api/getpowerbymenuid?${qs.stringify(params)}`
+          `/getpowerbymenuid?${qs.stringify(params)}`,
         );
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -133,10 +134,10 @@ export default {
      * **/
     async getPowerById(params: { id: number | number[] }) {
       try {
-        const res: Res = await axios.post(`/api/getPowerById`, params);
+        const res: Res = await axios.post(`/getPowerById`, params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -144,13 +145,13 @@ export default {
     /** 获取所有角色 **/
     async getAllRoles(): Promise<Res> {
       try {
-        const res: Res = await axios.get("/api/getAllRoles");
+        const res: Res = await axios.get('/getAllRoles');
         if (res && res.status === 200) {
           dispatch.sys.reducerSetRoles(res.data);
         }
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -159,10 +160,10 @@ export default {
      * **/
     async addPower(params: PowerParam) {
       try {
-        const res: Res = await axios.post("/api/addpower", params);
+        const res: Res = await axios.post('/addpower', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -172,10 +173,10 @@ export default {
      * **/
     async upPower(params: PowerParam) {
       try {
-        const res: Res = await axios.post("/api/uppower", params);
+        const res: Res = await axios.post('/uppower', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -185,10 +186,10 @@ export default {
      * **/
     async delPower(params: { id: number }) {
       try {
-        const res: Res = await axios.post("/api/delpower", params);
+        const res: Res = await axios.post('/delpower', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -199,16 +200,32 @@ export default {
     async getRoles(params: {
       pageNum: number;
       pageSize: number;
-      title?: string;
-      conditions?: number;
+      name?: string;
+      status?: number;
     }) {
       try {
-        const res: Res = await axios.get(
-          `/api/getroles?${qs.stringify(params)}`
-        );
+        const res: Res = await axios.get(`/getroles?${qs.stringify(params)}`);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
+      }
+      return;
+    },
+
+    /**
+     * 分页查询角色数据
+     * **/
+    async getSysTem(params: {
+      pageNum: number;
+      pageSize: number;
+      name?: string;
+      status?: number;
+    }) {
+      try {
+        const res: Res = await axios.post(`/system/list`, params);
+        return res;
+      } catch (err) {
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -220,23 +237,35 @@ export default {
      * **/
     async getRoleById(params: { id: number | number[] }) {
       try {
-        const res: Res = await axios.post(`/api/getRoleById`, params);
+        const res: Res = await axios.post(`/getRoleById`, params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
 
     /**
+     * 添加系统
+     * **/
+    async addSystem(params: SystemParam) {
+      try {
+        const res: Res = await axios.post('/system/create', params);
+        return res;
+      } catch (err) {
+        message.error('网络错误，请重试');
+      }
+      return;
+    },
+    /**
      * 添加角色
      * **/
     async addRole(params: RoleParam) {
       try {
-        const res: Res = await axios.post("/api/addrole", params);
+        const res: Res = await axios.post('/system/create', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -245,10 +274,22 @@ export default {
      * **/
     async upRole(params: RoleParam) {
       try {
-        const res: Res = await axios.post("/api/uprole", params);
+        const res: Res = await axios.post('/system/update', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
+      }
+      return;
+    },
+    /**
+     * 修改角色
+     * **/
+    async upSystem(params: SystemParam) {
+      try {
+        const res: Res = await axios.post('/system/update', params);
+        return res;
+      } catch (err) {
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -258,12 +299,19 @@ export default {
      * **/
     async delRole(params: { id: number }) {
       try {
-        const res: Res = await axios.post("/api/delrole", params);
+        const res: Res = await axios.post('/delrole', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
+    },
+
+    /**
+     * 删除角色
+     * **/
+    async delSystem(params: { id: number }) {
+      return await axios.post('/system/delete', params);
     },
 
     /**
@@ -272,11 +320,11 @@ export default {
     async findAllPowerByRoleId(params: { id: number }) {
       try {
         const res: Res = await axios.get(
-          `/api/findAllPowerByRoleId?${qs.stringify(params)}`
+          `/findAllPowerByRoleId?${qs.stringify(params)}`,
         );
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -287,13 +335,13 @@ export default {
      * **/
     async getAllMenusAndPowers(): Promise<Res> {
       try {
-        const res: Res = await axios.get(`/api/getAllMenusAndPowers`);
+        const res: Res = await axios.post(`/role/list`);
         if (res && res.status === 200) {
           dispatch.sys.reducerSetAllPowers(res.data);
         }
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -307,10 +355,10 @@ export default {
       powers: number[];
     }) {
       try {
-        const res: Res = await axios.post("/api/setPowersByRoleId", params);
+        const res: Res = await axios.post('/setPowersByRoleId', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -324,13 +372,13 @@ export default {
         id: number;
         menus: number[];
         powers: number[];
-      }[]
+      }[],
     ) {
       try {
-        const res: Res = await axios.post("/api/setPowersByRoleIds", params);
+        const res: Res = await axios.post('/setPowersByRoleIds', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -342,15 +390,18 @@ export default {
       pageNum: number;
       pageSize: number;
       username?: string;
-      conditions?: number;
+      status?: number;
     }) {
       try {
-        const res: Res = await axios.get(
-          `/api/getUserList?${qs.stringify(params)}`
-        );
+        const res: Res = await axios.post(`/user/list/pagination`, {
+          page: {
+            pageSize: params.pageSize,
+            currentPage: params.pageNum,
+          },
+        });
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -360,10 +411,10 @@ export default {
      * **/
     async addUser(params: UserBasicInfoParam) {
       try {
-        const res: Res = await axios.post("/api/addUser", params);
+        const res: Res = await axios.post('/addUser', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -373,10 +424,10 @@ export default {
      * **/
     async upUser(params: UserBasicInfoParam) {
       try {
-        const res: Res = await axios.post("/api/upUser", params);
+        const res: Res = await axios.post('/upUser', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -386,10 +437,10 @@ export default {
      * **/
     async delUser(params: { id: number }) {
       try {
-        const res: Res = await axios.post("/api/delUser", params);
+        const res: Res = await axios.post('/delUser', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
@@ -400,10 +451,10 @@ export default {
      * **/
     async setUserRoles(params: { id: number; roles: number[] }) {
       try {
-        const res: Res = await axios.post("/api/upUser", params);
+        const res: Res = await axios.post('/upUser', params);
         return res;
       } catch (err) {
-        message.error("网络错误，请重试");
+        message.error('网络错误，请重试');
       }
       return;
     },
