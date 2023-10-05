@@ -1,7 +1,7 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
-import { PaginationParams } from "types/type";
-import { Action, PrivilegeStatus } from "./privilege.mysql.entity";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
+import { PaginationParams } from 'types/type';
+import { Action, PrivilegeStatus } from './privilege.mysql.entity';
 export class CreatePrivilegeDto {
   @ApiProperty({ example: '2', description: '系统ID' })
   @IsNotEmpty()
@@ -20,7 +20,7 @@ export class CreatePrivilegeDto {
 
   @ApiProperty({ example: 'read', enum: Action })
   @IsNotEmpty()
-  action: string;
+  action: Action;
 }
 
 export class DeletePrivilegeDto {

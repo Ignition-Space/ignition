@@ -89,10 +89,6 @@ function PowerAdminContainer() {
 
   // 根据所选菜单id获取其下权限数据
   const getData = async (menuId: string | number | null = null) => {
-    if (!p.includes('power:query')) {
-      return;
-    }
-
     setLoading(true);
     const params = {
       menuId: Number(menuId) || null,
@@ -106,65 +102,6 @@ function PowerAdminContainer() {
       }
     } finally {
       setLoading(false);
-    }
-  };
-
-  // // 工具 - 递归将扁平数据转换为层级数据
-  // const dataToJson = useCallback(
-  //   (one: TreeSourceData | null, data: TreeSourceData[]) => {
-  //     let kids: TreeSourceData[];
-  //     if (!one) {
-  //       // 第1次递归
-  //       kids = data.filter((item: TreeSourceData) => !item.parent);
-  //     } else {
-  //       kids = data.filter((item: TreeSourceData) => item.parent === one.id);
-  //     }
-  //     kids.forEach(
-  //       (item: TreeSourceData) => (item.children = dataToJson(item, data)),
-  //     );
-  //     return kids.length ? kids : undefined;
-  //   },
-  //   [],
-  // );
-
-  // // 工具 - 赋值Key
-  // const makeKey = useCallback((data: Menu[]) => {
-  //   const newData: TreeSourceData[] = [];
-  //   for (let i = 0; i < data.length; i++) {
-  //     const item: any = { ...data[i] };
-  //     if (item.children) {
-  //       item.children = makeKey(item.children);
-  //     }
-  //     const treeItem: TreeSourceData = {
-  //       ...(item as TreeSourceData),
-  //       key: item.id,
-  //     };
-  //     newData.push(treeItem);
-  //   }
-  //   return newData;
-  // }, []);
-
-  // 点击树目录时触发
-  const onTreeSelect = (
-    keys: React.Key[],
-    info: {
-      event: 'select';
-      selected: boolean;
-      node: EventDataNode<DataNode> & { id: number; title: string };
-      selectedNodes: DataNode[];
-      nativeEvent: MouseEvent;
-    },
-  ) => {
-    if (info.selected) {
-      // 选中时才触发
-      getData(keys[0]);
-      setTreeSelect({
-        title: info.node.title,
-        id: info.node.id,
-      });
-    } else {
-      setTreeSelect({});
-      setData([]);
     }
   };
 
@@ -313,7 +250,7 @@ function PowerAdminContainer() {
     dispatch.sys.setPowersByRoleIds(params);
   };
 
-  dispatch.role
+  dispatch.role;
 
   // 处理原始数据，将原始数据处理为层级关系
   // const sourceData: TreeSourceData[] = useMemo(() => {
@@ -368,46 +305,43 @@ function PowerAdminContainer() {
       width: 120,
       render: (v: number, record: TableRecordData) => {
         const controls = [];
-        p.includes('power:query') &&
-          controls.push(
-            <span
-              key="0"
-              className="control-btn green"
-              onClick={() => onModalShow(record, 'see')}
-            >
-              <Tooltip placement="top" title="查看">
-                <EyeOutlined />
+        controls.push(
+          <span
+            key="0"
+            className="control-btn green"
+            onClick={() => onModalShow(record, 'see')}
+          >
+            <Tooltip placement="top" title="查看">
+              <EyeOutlined />
+            </Tooltip>
+          </span>,
+        );
+        controls.push(
+          <span
+            key="1"
+            className="control-btn blue"
+            onClick={() => onModalShow(record, 'up')}
+          >
+            <Tooltip placement="top" title="修改">
+              <ToolOutlined />
+            </Tooltip>
+          </span>,
+        );
+        controls.push(
+          <Popconfirm
+            key="2"
+            title="确定删除吗?"
+            okText="确定"
+            cancelText="取消"
+            onConfirm={() => onDel(record)}
+          >
+            <span className="control-btn red">
+              <Tooltip placement="top" title="删除">
+                <DeleteOutlined />
               </Tooltip>
-            </span>,
-          );
-        p.includes('power:up') &&
-          controls.push(
-            <span
-              key="1"
-              className="control-btn blue"
-              onClick={() => onModalShow(record, 'up')}
-            >
-              <Tooltip placement="top" title="修改">
-                <ToolOutlined />
-              </Tooltip>
-            </span>,
-          );
-        p.includes('power:del') &&
-          controls.push(
-            <Popconfirm
-              key="2"
-              title="确定删除吗?"
-              okText="确定"
-              cancelText="取消"
-              onConfirm={() => onDel(record)}
-            >
-              <span className="control-btn red">
-                <Tooltip placement="top" title="删除">
-                  <DeleteOutlined />
-                </Tooltip>
-              </span>
-            </Popconfirm>,
-          );
+            </span>
+          </Popconfirm>,
+        );
         const result: JSX.Element[] = [];
         controls.forEach((item, index) => {
           if (index) {
@@ -448,12 +382,6 @@ function PowerAdminContainer() {
 
   return (
     <div className="page-power-admin">
-      <div className="l">
-        <div className="title">目录结构</div>
-        <div>
-          {/* <Tree onSelect={onTreeSelect} treeData={sourceData}></Tree> */}
-        </div>
-      </div>
       <div className="r">
         <div className="searchBox">
           <ul>
@@ -462,7 +390,6 @@ function PowerAdminContainer() {
                 type="primary"
                 icon={<PlusCircleOutlined />}
                 onClick={() => onModalShow(null, 'add')}
-                disabled={!(treeSelect.id && p.includes('power:add'))}
               >
                 {`添加${treeSelect.title || ''}权限`}
               </Button>

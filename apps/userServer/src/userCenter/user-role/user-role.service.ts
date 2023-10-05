@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { UserRole } from './user-role.mysql.entity';
+import { IBathRole } from '../user/user.dto';
 
 @Injectable()
 export class UserRoleService {
@@ -9,7 +10,15 @@ export class UserRoleService {
     private userRoleRepository: Repository<UserRole>,
   ) { }
 
-  listByUserId(userId: number, systemId: number) {
+  listByUserId(userId: number) {
+    return this.userRoleRepository.find({
+      where: {
+        userId,
+      },
+    });
+  }
+
+  listByUserIdWithSys(userId: number, systemId: number) {
     return this.userRoleRepository.find({
       where: {
         systemId,
@@ -25,15 +34,23 @@ export class UserRoleService {
     });
   }
 
-  async setUserRoles(userId: number, roleIds: number[], systemId: number) {
-    const userRoles: UserRole[] = roleIds.map((roleId) => {
-      return {
-        userId,
-        roleId,
-        systemId,
-      };
-    });
-    await this.deleteByUserId(userId, systemId);
+  async setUserRoles(userId: number, bathRoles: IBathRole[]) {
+    let userRoles: UserRole[] = [];
+
+    for (const sys of bathRoles) {
+      await this.deleteByUserId(userId, sys.systemId);
+      userRoles = [
+        ...userRoles,
+        ...sys.roleIds.map((roleId) => {
+          return {
+            userId,
+            roleId,
+            systemId: sys.systemId,
+          };
+        }),
+      ];
+    }
+
     return await this.userRoleRepository.save(userRoles);
   }
 }

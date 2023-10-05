@@ -51,20 +51,24 @@ export class UserController {
   @ApiOperation({
     summary: '通过用户 ID 获取角色列表',
   })
+  @Post('/getAllRolesById')
+  getAllRolesById(@Body() dto: GetRolesByIdDto) {
+    return this.userService.getRolesById(dto.userId, dto.systemId);
+  }
+
+  @ApiOperation({
+    summary: '通过用户 ID 获取角色列表',
+  })
   @Post('/getRolesById')
   getRolesById(@Body() dto: GetRolesByIdDto) {
     return this.userService.getRolesById(dto.userId, dto.systemId);
   }
 
   @ApiOperation({
-    summary: '设置用户角色',
+    summary: '设置用户角色批量',
   })
-  @Post('setRoles')
+  @Post('/setRoles')
   async setRoles(@Body() dto: SetRolesDto) {
-    return await this.userRoleService.setUserRoles(
-      dto.userId,
-      dto.roleIds,
-      dto.systemId,
-    );
+    return await this.userRoleService.setUserRoles(dto.userId, dto.bathRoles);
   }
 }

@@ -10,12 +10,13 @@ interface Props {
   defaultKeys: number[]; // 当前默认选中的key们
   visible: boolean; // 是否显示
   loading: boolean; // 确定按钮是否在等待中状态
-  onOk: (keys: string[], role) => Promise<void>; // 确定
+  onOk: (keys: string[], tree: object, role) => Promise<void>; // 确定
   onClose: () => void; // 关闭
 }
 
 export default function RoleTreeComponent(props: Props): JSX.Element {
   const [nowKeys, setNowKeys] = useState<string[]>([]);
+  const [nowTree, setNowTree] = useState({});
 
   useEffect(() => {
     setNowKeys(props.defaultKeys.map((item) => `${item}`));
@@ -24,12 +25,23 @@ export default function RoleTreeComponent(props: Props): JSX.Element {
   // 点击确定时触发
   const onOk = useCallback(() => {
     // 通过key返回指定的数据
+    console.log('nowKeys==>', nowKeys);
     const res = props.data.filter((item) => {
       return nowKeys.includes(`${item.id}`);
     });
     // 返回选中的keys和选中的具体数据
-    props.onOk && props.onOk(nowKeys, res);
+    props.onOk && props.onOk(nowKeys, nowTree, res);
   }, [props, nowKeys]);
+
+  const convertToTreeData = (data) => {
+    const parent = data.filter((d) => d.indexOf('sys_') == 0);
+    const parentObj = {};
+    parent.forEach((p) => {
+      const roles = data.filter((d) => d.indexOf(p) > 0);
+      parentObj[p] = roles;
+    });
+    return parentObj;
+  };
 
   // 点击关闭时触发
   const onClose = useCallback(() => {
@@ -37,13 +49,24 @@ export default function RoleTreeComponent(props: Props): JSX.Element {
   }, [props]);
 
   // 选中或取消选中时触发
-  const onCheck = useCallback((keys: any) => {
+  const onCheck = useCallback((keys: any, e) => {
+    const { halfCheckedKeys } = e;
+    console.log('halfCheckedKeys==>', halfCheckedKeys, e, keys);
     setNowKeys(keys);
+    const originKeys = [...keys, ...halfCheckedKeys];
+    setNowTree(convertToTreeData(originKeys));
   }, []);
 
   // 处理原始数据，将原始数据处理为层级关系
   const sourceData = useMemo(() => {
     const roleData = cloneDeep(props.data);
+
+    roleData.forEach((sys) => {
+      sys.key = `sys_${sys.id}`;
+      sys.roles.forEach((role) => {
+        role.key = `role_sys_${sys.id}_${role.id}`;
+      });
+    });
 
     return roleData;
   }, [props.data]);
@@ -58,13 +81,14 @@ export default function RoleTreeComponent(props: Props): JSX.Element {
       onCancel={onClose}
     >
       <Tree
+        defaultExpandAll={true}
         checkable
         selectable={false}
         checkedKeys={nowKeys}
         onCheck={onCheck}
         fieldNames={{
           title: 'name',
-          key: 'id',
+          key: 'key',
           children: 'roles',
         }}
         treeData={sourceData}

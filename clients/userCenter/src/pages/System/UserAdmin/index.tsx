@@ -112,6 +112,20 @@ function UserAdminContainer(): JSX.Element {
     }
   };
 
+  // 函数 - 获取单个的角色数据，用于分配角色控件的原始数据
+  const getSingleRolesData = async (id) => {
+    try {
+      const res = await dispatch.role.getAllRolesById({ userId: id });
+      if (res && res.status === 200) {
+        return res.data || [];
+      }
+      return [];
+    } catch {
+      //
+    }
+    return [];
+  };
+
   // 函数 - 查询当前页面所需列表数据
   async function onGetData(page: {
     pageNum: number;
@@ -174,7 +188,8 @@ function UserAdminContainer(): JSX.Element {
       nowData: data,
       operateType: type,
     });
-    // 用setTimeout是因为首次让Modal出现时得等它挂载DOM，不然form对象还没来得及挂载到Form上
+
+    // 用 setTimeout 是因为首次让Modal出现时得等它挂载DOM，不然form对象还没来得及挂载到Form上
     setTimeout(() => {
       if (type === 'add') {
         // 新增，需重置表单各控件的值
@@ -221,42 +236,9 @@ function UserAdminContainer(): JSX.Element {
             modalLoading: false,
           });
         }
-      } else {
-        // 修改
-        params.id = modal.nowData?.id;
-        try {
-          const res: Res | undefined = await dispatch.sys.upUser(params);
-          if (res && res.status === 200) {
-            message.success('修改成功');
-            onGetData(page);
-            onClose();
-          } else {
-            message.error(res?.message ?? '操作失败');
-          }
-        } finally {
-          setModal({
-            modalLoading: false,
-          });
-        }
       }
     } catch {
       // 未通过校验
-    }
-  };
-
-  // 删除某一条数据
-  const onDel = async (id: number): Promise<void> => {
-    setLoading(true);
-    try {
-      const res = await dispatch.sys.delUser({ id });
-      if (res && res.status === 200) {
-        message.success('删除成功');
-        onGetData(page);
-      } else {
-        message.error(res?.message ?? '操作失败');
-      }
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -268,31 +250,40 @@ function UserAdminContainer(): JSX.Element {
   };
 
   /** 分配角色按钮点击，角色控件出现 **/
-  const onTreeShowClick = (record: TableRecordData): void => {
+  const onTreeShowClick = async (record: TableRecordData): Promise<void> => {
     setModal({
       nowData: record,
     });
+    const roles = await getSingleRolesData(record.id);
     setRole({
       roleTreeShow: true,
-      roleTreeDefault: record.roles || [],
+      roleTreeDefault: roles.map(
+        (role) => `role_sys_${role.systemId}_${role.id}`,
+      ),
     });
   };
 
   // 分配角色确定
-  const onRoleOk = async (keys: string[]): Promise<void> => {
+  const onRoleOk = async (keys: string[], tree: object): Promise<void> => {
     if (!modal.nowData?.id) {
       message.error('未获取到该条数据id');
       return;
     }
-    const params = {
-      id: modal.nowData.id,
-      roles: keys.map((item) => Number(item)),
-    };
     setRole({
       roleTreeLoading: true,
     });
+
+    const bathRoles = Object.keys(tree).map((key) => {
+      return {
+        systemId: Number(key.replace('sys_', '')),
+        roleIds: tree[key].map((r) => Number(r.replace(`role_${key}_`, ''))),
+      };
+    });
     try {
-      const res: Res = await dispatch.sys.setUserRoles(params);
+      const res: Res = await dispatch.role.setUserRoles({
+        userId: modal.nowData?.id,
+        bathRoles,
+      });
       if (res && res.status === 200) {
         message.success('分配成功');
         onGetData(page);
@@ -318,10 +309,6 @@ function UserAdminContainer(): JSX.Element {
   const onTablePageChange = (pageNum: number, pageSize: number): void => {
     onGetData({ pageNum, pageSize });
   };
-
-  // ==================
-  // 属性 和 memo
-  // ==================
 
   // table字段
   const tableColumns = [
@@ -370,17 +357,6 @@ function UserAdminContainer(): JSX.Element {
           >
             <Tooltip placement="top" title="查看">
               <EyeOutlined />
-            </Tooltip>
-          </span>,
-        );
-        controls.push(
-          <span
-            key="1"
-            className="control-btn blue"
-            onClick={() => onModalShow(record, 'up')}
-          >
-            <Tooltip placement="top" title="修改">
-              <ToolOutlined />
             </Tooltip>
           </span>,
         );

@@ -24,9 +24,13 @@ export class GetRolesByIdDto {
   @ApiProperty({ example: 1, description: '用户ID' })
   userId: number;
 
-  @IsNotEmpty()
   @ApiProperty({ example: 2, description: '系统ID' })
+  systemId?: number;
+}
+
+export interface IBathRole {
   systemId: number;
+  roleIds: number[];
 }
 
 export class SetRolesDto {
@@ -35,12 +39,8 @@ export class SetRolesDto {
   userId: number;
 
   @IsNotEmpty()
-  @ApiProperty({ example: [1], description: '角色ID' })
-  roleIds: number[];
-
-  @IsNotEmpty()
-  @ApiProperty({ example: 2, description: '系统ID' })
-  systemId: number;
+  @ApiProperty({ example: 2, description: '系统id角色集合' })
+  bathRoles: IBathRole[];
 }
 
 export class GetPrivilegeListDto {
@@ -54,7 +54,6 @@ export class GetPrivilegeListDto {
 }
 
 export class UserListWithPaginationDto {
-
   @ApiProperty({ example: '', description: '查询关键词' })
   keyword?: string;
 

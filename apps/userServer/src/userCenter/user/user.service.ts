@@ -79,7 +79,7 @@ export class UserService {
 
   // 获取用户权限列表
   async getPrivilegeListByUserId(userId: number, systemId: number) {
-    const userRoleList = await this.userRoleService.listByUserId(
+    const userRoleList = await this.userRoleService.listByUserIdWithSys(
       userId,
       systemId,
     );
@@ -95,7 +95,7 @@ export class UserService {
   }
 
   async getPrivilegeCodesByUserId(userId: number, systemId: number) {
-    const userRoleList = await this.userRoleService.listByUserId(
+    const userRoleList = await this.userRoleService.listByUserIdWithSys(
       userId,
       systemId,
     );
@@ -115,11 +115,18 @@ export class UserService {
   }
 
   // 获取用户角色列表
-  async getRolesById(userId: number, systemId: number) {
+  async getAllRolesById(userId: number) {
     const userRoles: UserRole[] = await this.userRoleService.listByUserId(
       userId,
-      systemId,
     );
+    const roleIds = userRoles.map((ur) => ur.roleId);
+    return await this.roleService.findByIds(roleIds);
+  }
+
+  // 获取用户角色列表
+  async getRolesById(userId: number, systemId: number) {
+    const userRoles: UserRole[] =
+      await this.userRoleService.listByUserIdWithSys(userId, systemId);
     const roleIds = userRoles.map((ur) => ur.roleId);
     return await this.roleService.findByIds(roleIds);
   }
