@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { BusinessException } from '@app/common';
+import { BusinessException, PayloadUser } from '@app/common';
 import { PrivilegeService } from '../privilege/privilege.service';
 import { RolePrivilegeService } from '../role-privilege/role-privilege.service';
 import { SystemService } from '../system/system.service';
@@ -29,20 +29,36 @@ export class RoleController {
     summary: '创建新角色',
   })
   @Post('create')
-  create(@Body() createRoleDto: CreateRoleDto) {
-    return this.roleService.create(createRoleDto);
+  async create(
+    @Body() createRoleDto: CreateRoleDto,
+    @PayloadUser() user: Payload,
+  ) {
+    const system = await this.systemService.findById(createRoleDto.systemId);
+    return this.roleService.create({
+      ...createRoleDto,
+      systemName: system.name,
+      creatorName: user.name,
+      creatorId: user.userId,
+      updateName: user.name,
+      updateId: user.userId,
+    });
   }
 
   @ApiOperation({
     summary: '修改角色信息',
   })
   @Post('update')
-  async update(@Body() dto: UpdateRoleDto) {
+  async update(@Body() dto: UpdateRoleDto, @PayloadUser() user: Payload) {
     const foundRole = await this.roleService.findById(dto.id);
     if (!foundRole) {
       throw new BusinessException('未找到角色');
     }
-    return await this.roleService.update({ ...foundRole, ...dto });
+    return await this.roleService.update({
+      ...foundRole,
+      ...dto,
+      updateName: user.name,
+      updateId: user.userId,
+    });
   }
 
   @ApiOperation({
@@ -53,15 +69,6 @@ export class RoleController {
   @Post('/delete')
   async delete(@Body() dto: DeleteRoleDto) {
     return await this.roleService.delete(dto.id);
-  }
-
-  @ApiOperation({
-    summary: '角色列表',
-    description: '根据系统返回对应系统的角色列表',
-  })
-  @Post('/list')
-  async list(@Body() dto: RoleListDto) {
-    return await this.roleService.list(dto.systemId);
   }
 
   @ApiOperation({
@@ -96,6 +103,24 @@ export class RoleController {
       return role;
     });
     return { ...pageData, items: newRoles };
+  }
+
+  @ApiOperation({
+    summary: 'tree 形状角色列表',
+    description: '系统级别树状',
+  })
+  @Post('/list/withSystem')
+  async listWithSys() {
+    const newSys = [];
+    const systemList = await this.systemService.list();
+    for (const sys of systemList) {
+      const roles = await this.roleService.listWithSys(sys.id);
+      newSys.push({
+        ...sys,
+        roles,
+      });
+    }
+    return newSys;
   }
 
   @ApiOperation({

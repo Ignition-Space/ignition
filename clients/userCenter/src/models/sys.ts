@@ -14,7 +14,6 @@ import {
   MenuParam,
   PowerParam,
   PowerTree,
-  RoleParam,
   SysState,
   Res,
   UserBasicInfoParam,
@@ -34,11 +33,6 @@ export default {
     reducerSetMenus(state: SysState, payload: Menu[]): SysState {
       return { ...state, menus: payload };
     },
-    // 保存所有角色数据
-    reducerSetRoles(state: SysState, payload: Role[]): SysState {
-      return { ...state, roles: payload };
-    },
-
     // 保存所有权限数据
     reducerSetAllPowers(state: SysState, payload: PowerTree[]): SysState {
       return { ...state, powerTreeData: payload };
@@ -141,20 +135,6 @@ export default {
       }
       return;
     },
-
-    /** 获取所有角色 **/
-    async getAllRoles(): Promise<Res> {
-      try {
-        const res: Res = await axios.get('/getAllRoles');
-        if (res && res.status === 200) {
-          dispatch.sys.reducerSetRoles(res.data);
-        }
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
     /**
      * 添加权限
      * **/
@@ -193,51 +173,12 @@ export default {
       }
       return;
     },
-
     /**
      * 分页查询角色数据
      * **/
-    async getRoles(params: {
-      pageNum: number;
-      pageSize: number;
-      name?: string;
-      status?: number;
-    }) {
-      try {
-        const res: Res = await axios.get(`/getroles?${qs.stringify(params)}`);
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
-
-    /**
-     * 分页查询角色数据
-     * **/
-    async getSysTem(params: {
-      pageNum: number;
-      pageSize: number;
-      name?: string;
-      status?: number;
-    }) {
+    async getSysTem(params: { name?: string; status?: number }) {
       try {
         const res: Res = await axios.post(`/system/list`, params);
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
-
-    /**
-     * 通过角色ID查询对应的角色数据
-     * @param id 可以是一个数字，也可以是一个数组
-     * @return 返回值是数组
-     * **/
-    async getRoleById(params: { id: number | number[] }) {
-      try {
-        const res: Res = await axios.post(`/getRoleById`, params);
         return res;
       } catch (err) {
         message.error('网络错误，请重试');
@@ -257,32 +198,9 @@ export default {
       }
       return;
     },
+
     /**
-     * 添加角色
-     * **/
-    async addRole(params: RoleParam) {
-      try {
-        const res: Res = await axios.post('/system/create', params);
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
-    /**
-     * 修改角色
-     * **/
-    async upRole(params: RoleParam) {
-      try {
-        const res: Res = await axios.post('/system/update', params);
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
-    /**
-     * 修改角色
+     * 修改系统
      * **/
     async upSystem(params: SystemParam) {
       try {
@@ -293,22 +211,8 @@ export default {
       }
       return;
     },
-
     /**
-     * 删除角色
-     * **/
-    async delRole(params: { id: number }) {
-      try {
-        const res: Res = await axios.post('/delrole', params);
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
-
-    /**
-     * 删除角色
+     * 删除系统
      * **/
     async delSystem(params: { id: number }) {
       return await axios.post('/system/delete', params);
@@ -438,20 +342,6 @@ export default {
     async delUser(params: { id: number }) {
       try {
         const res: Res = await axios.post('/delUser', params);
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
-
-    /**
-     * 给用户分配角色
-     * 用的也是upUser接口
-     * **/
-    async setUserRoles(params: { id: number; roles: number[] }) {
-      try {
-        const res: Res = await axios.post('/upUser', params);
         return res;
       } catch (err) {
         message.error('网络错误，请重试');

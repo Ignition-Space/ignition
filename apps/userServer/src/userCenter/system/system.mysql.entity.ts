@@ -25,10 +25,16 @@ export class System {
   status?: STATUS;
 
   @Column()
+  creatorId?: number;
+
+  @Column()
   creatorName?: string;
 
   @Column()
-  creatorId?: number;
+  updateId?: number;
+
+  @Column()
+  updateName?: string;
 
   @CreateDateColumn()
   createTime?: string;

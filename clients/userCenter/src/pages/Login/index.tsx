@@ -29,9 +29,7 @@ import {
 } from '@/models/index.type';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
-// ==================
-// CSS
-// ==================
+
 import './index.less';
 
 

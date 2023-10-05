@@ -15,13 +15,12 @@ export class AuthService {
   ) { }
 
   async validateFeishuUser(code: string): Promise<Payload> {
-
-    const userInfo: GithubUserInfo = await this.getOAuthTokenByApplications(code);
+    const userInfo: GithubUserInfo = await this.getOAuthTokenByApplications(
+      code,
+    );
 
     // 同步信息
-    const user: User = await this.userService.createOrUpdateByOAoth(
-      userInfo,
-    );
+    const user: User = await this.userService.createOrUpdateByOAoth(userInfo);
 
     return {
       userId: user.id,
@@ -38,7 +37,6 @@ export class AuthService {
   }
 
   async getOAuthTokenByApplications(code: string) {
-
     const oauth = await this.oAuthService.getUserToken(code);
     return oauth;
   }

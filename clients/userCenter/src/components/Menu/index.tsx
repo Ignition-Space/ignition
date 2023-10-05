@@ -113,9 +113,10 @@ export default function MenuCom(props: Props): JSX.Element {
   };
 
   const items = [
-    getItem('用户管理', 'system/useradmin', <UserOutlined />),
-    getItem('角色管理', 'system/roleadmin', <DeploymentUnitOutlined />),
-    getItem('系统管理', 'system/admin', <DeploymentUnitOutlined />),
+    getItem('系统管理', '/system/admin', <DeploymentUnitOutlined />),
+    getItem('角色管理', '/system/role', <DeploymentUnitOutlined />),
+    getItem('权限管理', '/system/power', <UserOutlined />),
+    getItem('用户管理', '/system/user', <UserOutlined />),
   ];
 
   return (

@@ -5,7 +5,7 @@ import { RolePrivilegeService } from '../role-privilege/role-privilege.service';
 import { SystemService } from '../system/system.service';
 import { getPaginationOptions, CustomPaginationMeta } from '@app/common';
 import { In, Repository } from 'typeorm';
-import { CreateRoleDto, RoleListWithPaginationDto, UpdateRoleDto } from './role.dto';
+import { RoleListWithPaginationDto } from './role.dto';
 import { Role } from './role.mysql.entity';
 
 @Injectable()
@@ -13,21 +13,15 @@ export class RoleService {
   constructor(
     @Inject('ROLE_REPOSITORY') private roleRepository: Repository<Role>,
     private readonly rolePrivilegeService: RolePrivilegeService,
-    private readonly systemService: SystemService
-  ) {
+    private readonly systemService: SystemService,
+  ) { }
 
-  }
-  create(dto: CreateRoleDto) {
-    const role: Role = {
-      systemId: dto.systemId,
-      name: dto.name,
-      description: dto.description
-    }
-    return this.roleRepository.save(role)
+  create(role) {
+    return this.roleRepository.save(role);
   }
 
   update(role: Role) {
-    return this.roleRepository.save(role)
+    return this.roleRepository.save(role);
   }
 
   async delete(id: number) {
@@ -37,15 +31,15 @@ export class RoleService {
   }
 
   findById(id) {
-    return this.roleRepository.findOneBy(id)
+    return this.roleRepository.findOneBy(id);
   }
 
   findByIds(ids: number[]) {
     return this.roleRepository.find({
       where: {
-        id: In(ids)
-      }
-    })
+        id: In(ids),
+      },
+    });
   }
 
   async paginate(
@@ -53,7 +47,7 @@ export class RoleService {
     page: PaginationParams,
   ): Promise<Pagination<Role, CustomPaginationMeta>> {
     const queryBuilder = this.roleRepository.createQueryBuilder('role');
-    queryBuilder.orderBy('role.createTime', 'DESC');
+    // queryBuilder.orderBy('role.createTime', 'DESC');
 
     // 关键字
     if (isNotEmpty(searchParams.keyword)) {
@@ -68,11 +62,11 @@ export class RoleService {
     );
   }
 
-  async list(systemId: number) {
+  async listWithSys(systemId: number) {
     const roles = await this.roleRepository.find({
       where: {
-        systemId
-      }
+        systemId,
+      },
     });
     return roles;
   }

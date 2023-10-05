@@ -94,7 +94,7 @@ function RouterCom(): JSX.Element {
           }
         />
         <Route
-          path="system/poweradmin"
+          path="system/power"
           element={
             <AuthNoPower>
               <PowerAdmin />
@@ -102,7 +102,7 @@ function RouterCom(): JSX.Element {
           }
         />
         <Route
-          path="system/roleadmin"
+          path="system/role"
           element={
             <AuthNoPower>
               <RoleAdmin />
@@ -118,7 +118,7 @@ function RouterCom(): JSX.Element {
           }
         />
         <Route
-          path="system/useradmin"
+          path="system/user"
           element={
             <AuthNoPower>
               <UserAdmin />

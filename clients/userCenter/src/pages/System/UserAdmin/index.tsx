@@ -1,8 +1,5 @@
 /** User 系统管理/用户管理 **/
 
-// ==================
-// 所需的第三方库
-// ==================
 import React, { useState, useMemo } from 'react';
 import { useSetState, useMount } from 'react-use';
 import { useSelector, useDispatch } from 'react-redux';
@@ -27,9 +24,6 @@ import {
   SearchOutlined,
 } from '@ant-design/icons';
 
-// ==================
-// 所需的自定义的东西
-// ==================
 import tools from '@/util/tools'; // 工具函数
 
 const { TextArea } = Input;
@@ -46,9 +40,6 @@ const formItemLayout = {
   },
 };
 
-// ==================
-// 所需的组件
-// ==================
 import RoleTree from '@/components/TreeChose/RoleTree';
 
 import {
@@ -61,17 +52,12 @@ import {
   UserBasicInfoParam,
   Res,
 } from './index.type';
-import { RootState, Dispatch } from '@/store';
+import { Dispatch } from '@/store';
 
-// ==================
-// CSS
-// ==================
 import './index.less';
 
 function UserAdminContainer(): JSX.Element {
   const dispatch = useDispatch<Dispatch>();
-  const userinfo = useSelector((state: RootState) => state.app.userinfo);
-  const p = useSelector((state: RootState) => state.app.powersCode);
 
   const [form] = Form.useForm();
   const [data, setData] = useState<TableRecordData[]>([]); // 当前页面列表数据
@@ -115,7 +101,7 @@ function UserAdminContainer(): JSX.Element {
   // 函数 - 获取所有的角色数据，用于分配角色控件的原始数据
   const getAllRolesData = async (): Promise<void> => {
     try {
-      const res = await dispatch.sys.getAllRoles();
+      const res = await dispatch.role.getAllRoles();
       if (res && res.status === 200) {
         setRole({
           roleData: res.data,
@@ -140,13 +126,12 @@ function UserAdminContainer(): JSX.Element {
     setLoading(true);
     try {
       const res = await dispatch.sys.getUserList(tools.clearNull(params));
-      console.log('res==>', res);
-      if (res && res.status === 0) {
+      if (res && res.status === 200) {
         setData(res.data.items);
         setPage({
-          pageNum: page.pageNum,
-          pageSize: page.pageSize,
-          total: res.meta.totalCounts,
+          pageNum: res.data.meta.currentPage,
+          pageSize: res.data.meta.totalCounts,
+          total: res.data.meta.totalCounts,
         });
       } else {
         message.error(res?.message ?? '数据获取失败');
@@ -377,7 +362,6 @@ function UserAdminContainer(): JSX.Element {
       width: 200,
       render: (v: null, record: TableRecordData) => {
         const controls = [];
-        const u = userinfo.userBasicInfo || { id: -1 };
         controls.push(
           <span
             key="0"
@@ -411,25 +395,6 @@ function UserAdminContainer(): JSX.Element {
             </Tooltip>
           </span>,
         );
-
-        p.includes('user:del') &&
-          u.id !== record.id &&
-          controls.push(
-            <Popconfirm
-              key="3"
-              title="确定删除吗?"
-              onConfirm={() => onDel(record.id)}
-              okText="确定"
-              cancelText="取消"
-            >
-              <span className="control-btn red">
-                <Tooltip placement="top" title="删除">
-                  <DeleteOutlined />
-                </Tooltip>
-              </span>
-            </Popconfirm>,
-          );
-
         const result: JSX.Element[] = [];
         controls.forEach((item, index) => {
           if (index) {
@@ -442,11 +407,6 @@ function UserAdminContainer(): JSX.Element {
     },
   ];
 
-  // table列表所需数据
-  const tableData = useMemo(() => {
-    return data;
-  }, [page, data]);
-
   return (
     <div>
       <div className="g-search">
@@ -454,6 +414,7 @@ function UserAdminContainer(): JSX.Element {
           <li>
             <Button
               type="primary"
+              disabled
               icon={<PlusCircleOutlined />}
               onClick={() => onModalShow(null, 'add')}
             >
@@ -479,7 +440,7 @@ function UserAdminContainer(): JSX.Element {
               value={searchInfo.status}
             >
               <Option value={1}>启用</Option>
-              <Option value={-1}>禁用</Option>
+              <Option value={0}>禁用</Option>
             </Select>
           </li>
           <li>
@@ -492,9 +453,10 @@ function UserAdminContainer(): JSX.Element {
 
       <div className="diy-table">
         <Table
+          rowKey="id"
           columns={tableColumns}
           loading={loading}
-          dataSource={tableData}
+          dataSource={data}
           pagination={{
             total: page.total,
             current: page.pageNum,
@@ -597,13 +559,14 @@ function UserAdminContainer(): JSX.Element {
             label="状态"
             name="status"
             {...formItemLayout}
+            initialValue={1}
             rules={[{ required: true, message: '请选择状态' }]}
           >
             <Select disabled={modal.operateType === 'see'}>
               <Option key={1} value={1}>
                 启用
               </Option>
-              <Option key={-1} value={-1}>
+              <Option key={0} value={0}>
                 禁用
               </Option>
             </Select>

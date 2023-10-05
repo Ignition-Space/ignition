@@ -23,6 +23,8 @@ export class SystemController {
       ...dto,
       creatorName: user.name,
       creatorId: user.userId,
+      updateName: user.name,
+      updateId: user.userId,
     });
   }
 
@@ -30,15 +32,19 @@ export class SystemController {
     summary: '修改系统信息',
   })
   @Post('update')
-  async update(@Body() dto: UpdateSystemDto) {
-    console.log('===>foundSystem==>', dto);
+  async update(@Body() dto: UpdateSystemDto, @PayloadUser() user: Payload) {
     const foundSystem = await this.systemService.findById(dto.id);
 
     if (!foundSystem) {
       throw new BusinessException('未找到系统');
     }
 
-    return await this.systemService.update({ ...foundSystem, ...dto });
+    return await this.systemService.update({
+      ...foundSystem,
+      ...dto,
+      updateName: user.name,
+      updateId: user.userId,
+    });
   }
 
   @ApiOperation({

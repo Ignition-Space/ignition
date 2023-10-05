@@ -24,6 +24,7 @@ import {
 } from '@ant-design/icons';
 
 import tools from '@/util/tools'; // 工具
+import dayjs from 'dayjs';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -39,14 +40,7 @@ const formItemLayout = {
 };
 
 import { RootState, Dispatch } from '@/store';
-import {
-  Page,
-  operateType,
-  ModalType,
-  SearchInfo,
-  Role,
-  Res,
-} from './index.type';
+import { operateType, ModalType, SearchInfo, Role, Res } from './index.type';
 
 import './index.less';
 import { SystemParam } from '@/models/index.type';
@@ -58,13 +52,6 @@ const SystemContainer = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState<Role[]>([]); // 当前页面列表数据
   const [loading, setLoading] = useState<boolean>(false); // 数据是否正在加载中
-
-  // 分页相关参数控制
-  const [page, setPage] = useSetState<Page>({
-    pageNum: 1,
-    pageSize: 10,
-    total: 0,
-  });
 
   // 模态框相关参数控制
   const [modal, setModal] = useSetState<ModalType>({
@@ -82,15 +69,13 @@ const SystemContainer = () => {
 
   // 生命周期 - 首次加载组件时触发
   useMount(() => {
-    getData(page);
+    getData();
   });
 
   // 函数- 查询当前页面所需列表数据
-  const getData = async (page: { pageNum: number; pageSize: number }) => {
+  const getData = async () => {
     const params = {
-      pageNum: page.pageNum,
-      pageSize: page.pageSize,
-      name: searchInfo.name,
+      keyword: searchInfo.name,
       status: searchInfo.status,
     };
     setLoading(true);
@@ -120,7 +105,7 @@ const SystemContainer = () => {
 
   // 搜索
   const onSearch = () => {
-    getData(page);
+    getData();
   };
 
   /**
@@ -138,12 +123,7 @@ const SystemContainer = () => {
       if (type === 'add') {
         form.resetFields();
       } else {
-        form.setFieldsValue({
-          formstatus: data?.status,
-          formDesc: data?.description,
-          formSorts: data?.sorts,
-          formname: data?.name,
-        });
+        form.setFieldsValue(data);
       }
     });
   };
@@ -160,19 +140,14 @@ const SystemContainer = () => {
       setModal({
         modalLoading: true,
       });
-      const params: SystemParam = {
-        name: values.formname,
-        description: values.formDesc,
-        status: values.formstatus,
-      };
 
       if (modal.operateType === 'add') {
         // 新增
         try {
-          const res: Res = await dispatch.sys.addSystem(params);
+          const res: Res = await dispatch.sys.addSystem(values);
           if (res && res.status === 200) {
             message.success('添加成功');
-            getData(page);
+            getData();
             onClose();
           }
         } finally {
@@ -182,12 +157,12 @@ const SystemContainer = () => {
         }
       } else {
         // 修改
-        params.id = modal?.nowData?.id;
+        values.id = modal?.nowData?.id;
         try {
-          const res: Res = await dispatch.sys.upSystem(params);
+          const res: Res = await dispatch.sys.upSystem(values);
           if (res && res.status === 200) {
             message.success('修改成功');
-            getData(page);
+            getData();
             onClose();
           }
         } finally {
@@ -208,7 +183,7 @@ const SystemContainer = () => {
       const res = await dispatch.sys.delSystem({ id });
       if (res && res.status === 200) {
         message.success('删除成功');
-        getData(page);
+        getData();
       } else {
         message.error(res?.message ?? '操作失败');
       }
@@ -220,11 +195,6 @@ const SystemContainer = () => {
   /** 模态框关闭 **/
   const onClose = () => {
     setModal({ modalShow: false });
-  };
-
-  // 表单页码改变
-  const onTablePageChange = (pageNum: number, pageSize: number | undefined) => {
-    getData({ pageNum, pageSize: pageSize || page.pageSize });
   };
 
   // 构建字段
@@ -248,6 +218,18 @@ const SystemContainer = () => {
       title: '创建时间',
       dataIndex: 'createTime',
       key: 'createTime',
+      render: (text) => dayjs(text).format('YYYY-MM-DD hh:mm:ss'),
+    },
+    {
+      title: '更新人',
+      dataIndex: 'updateName',
+      key: 'updateName',
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime',
+      key: 'updateTime',
+      render: (text) => dayjs(text).format('YYYY-MM-DD hh:mm:ss'),
     },
     {
       title: '描述',
@@ -336,38 +318,32 @@ const SystemContainer = () => {
           </li>
         </ul>
         <Divider type="vertical" />
-        {p.includes('role:query') && (
-          <ul className="search-ul">
-            <li>
-              <Input
-                placeholder="请输入系统名"
-                onChange={searchnameChange}
-                value={searchInfo.name}
-              />
-            </li>
-            <li>
-              <Select
-                placeholder="请选择状态"
-                allowClear
-                style={{ width: '200px' }}
-                onChange={searchstatusChange}
-                value={searchInfo.status}
-              >
-                <Option value={1}>启用</Option>
-                <Option value={-1}>禁用</Option>
-              </Select>
-            </li>
-            <li>
-              <Button
-                type="primary"
-                icon={<SearchOutlined />}
-                onClick={onSearch}
-              >
-                搜索
-              </Button>
-            </li>
-          </ul>
-        )}
+        <ul className="search-ul">
+          <li>
+            <Input
+              placeholder="请输入系统名"
+              onChange={searchnameChange}
+              value={searchInfo.name}
+            />
+          </li>
+          <li>
+            <Select
+              placeholder="请选择状态"
+              allowClear
+              style={{ width: '200px' }}
+              onChange={searchstatusChange}
+              value={searchInfo.status}
+            >
+              <Option value={1}>启用</Option>
+              <Option value={-1}>禁用</Option>
+            </Select>
+          </li>
+          <li>
+            <Button type="primary" icon={<SearchOutlined />} onClick={onSearch}>
+              搜索
+            </Button>
+          </li>
+        </ul>
       </div>
       <div className="diy-table">
         <Table
@@ -376,12 +352,7 @@ const SystemContainer = () => {
           loading={loading}
           dataSource={data}
           pagination={{
-            total: page.total,
-            current: page.pageNum,
-            pageSize: page.pageSize,
-            showQuickJumper: true,
             showTotal: (total) => `共 ${total} 条数据`,
-            onChange: (page, pageSize) => onTablePageChange(page, pageSize),
           }}
         />
       </div>
@@ -402,7 +373,7 @@ const SystemContainer = () => {
         >
           <Form.Item
             label="系统名"
-            name="formname"
+            name="name"
             {...formItemLayout}
             rules={[
               { required: true, whitespace: true, message: '必填' },
@@ -416,7 +387,7 @@ const SystemContainer = () => {
           </Form.Item>
           <Form.Item
             label="描述"
-            name="formDesc"
+            name="description"
             {...formItemLayout}
             rules={[{ max: 100, message: '最多输入100个字符' }]}
           >
@@ -428,7 +399,8 @@ const SystemContainer = () => {
           </Form.Item>
           <Form.Item
             label="状态"
-            name="formstatus"
+            name="status"
+            initialValue={0}
             {...formItemLayout}
             rules={[{ required: true, message: '请选择状态' }]}
           >
@@ -436,7 +408,7 @@ const SystemContainer = () => {
               <Option key={1} value={1}>
                 启用
               </Option>
-              <Option key={-1} value={-1}>
+              <Option key={0} value={0}>
                 禁用
               </Option>
             </Select>

@@ -34,16 +34,15 @@ export class UserService {
   ) { }
 
   createOrSave(user: User) {
-    this.userRepository.save(user)
+    this.userRepository.save(user);
   }
 
-  async createOrUpdateByOAoth(feishuUserInfo: GithubUserInfo) {
-
+  async createOrUpdateByOAoth(userInfo: GithubUserInfo) {
     const findUser: User = await this.userRepository.findOne({
-      where: [{ email: feishuUserInfo.email }],
+      where: [{ email: userInfo.email }],
     });
 
-    return await this.userRepository.save({ ...findUser, ...feishuUserInfo });
+    return await this.userRepository.save({ ...findUser, ...userInfo });
   }
 
   profile(userId) {
@@ -80,31 +79,48 @@ export class UserService {
 
   // 获取用户权限列表
   async getPrivilegeListByUserId(userId: number, systemId: number) {
-    const userRoleList = await this.userRoleService.listByUserId(userId, systemId);
-    const roleIds = userRoleList.map(i => i.id);
-    const rolePrivilegeList = await this.rolePrivilegeService.listByRoleIds(roleIds);
-    const privilegeIds = rolePrivilegeList.map(rp => rp.privilegeId);
-    const privilegeList = await this.privilegeService.findByIds([...new Set(privilegeIds)]);
+    const userRoleList = await this.userRoleService.listByUserId(
+      userId,
+      systemId,
+    );
+    const roleIds = userRoleList.map((i) => i.id);
+    const rolePrivilegeList = await this.rolePrivilegeService.listByRoleIds(
+      roleIds,
+    );
+    const privilegeIds = rolePrivilegeList.map((rp) => rp.privilegeId);
+    const privilegeList = await this.privilegeService.findByIds([
+      ...new Set(privilegeIds),
+    ]);
     return privilegeList;
   }
 
   async getPrivilegeCodesByUserId(userId: number, systemId: number) {
-    const userRoleList = await this.userRoleService.listByUserId(userId, systemId);
-    const roleIds = userRoleList.map(i => i.roleId);
-    const rolePrivilegeList = await this.rolePrivilegeService.listByRoleIds(roleIds);
-    const privilegeIds = rolePrivilegeList.map(rp => rp.privilegeId);
-    const privilegeList = await this.privilegeService.findByIds([...new Set(privilegeIds)]);
+    const userRoleList = await this.userRoleService.listByUserId(
+      userId,
+      systemId,
+    );
+    const roleIds = userRoleList.map((i) => i.roleId);
+    const rolePrivilegeList = await this.rolePrivilegeService.listByRoleIds(
+      roleIds,
+    );
+    const privilegeIds = rolePrivilegeList.map((rp) => rp.privilegeId);
+    const privilegeList = await this.privilegeService.findByIds([
+      ...new Set(privilegeIds),
+    ]);
 
-    return privilegeList.map(p => ({
+    return privilegeList.map((p) => ({
       code: `${p.resourceKey}:${p.action}`,
-      status: p.status
+      status: p.status,
     }));
   }
 
   // 获取用户角色列表
   async getRolesById(userId: number, systemId: number) {
-    const userRoles: UserRole[] = await this.userRoleService.listByUserId(userId, systemId);
-    const roleIds = userRoles.map(ur => ur.roleId);
+    const userRoles: UserRole[] = await this.userRoleService.listByUserId(
+      userId,
+      systemId,
+    );
+    const roleIds = userRoles.map((ur) => ur.roleId);
     return await this.roleService.findByIds(roleIds);
   }
 
@@ -119,8 +135,8 @@ export class UserService {
   getUserByFeishuId(feishuUserId: string) {
     return this.userRepository.findOne({
       where: {
-        feishuUserId
-      }
+        feishuUserId,
+      },
     });
   }
 }

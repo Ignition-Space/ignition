@@ -38,13 +38,12 @@ export function AuthNoPower(props: Props) {
   const userinfo = useSelector((state: RootState) => state.app.userinfo);
 
   useEffect(() => {
-    console.log('userinfo.id====>', userinfo.id);
     if (!userinfo.id) {
       dispatch.app.getUserInfo();
     }
   }, []);
 
-  // // 判断当前用户是否有该路由权限，如果没有就跳转至401页
+  //  判断当前用户是否有该路由权限，如果没有就跳转至401页
   // const isHavePower = useMemo(() => {
   //   let menus: Menu[] = [];
   //   if (userinfo.menus && userinfo.menus.length) {

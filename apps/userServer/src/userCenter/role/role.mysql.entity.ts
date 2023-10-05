@@ -17,6 +17,21 @@ export class Role {
   @Column()
   systemId: number;
 
+  @Column()
+  systemName: string;
+
+  @Column()
+  creatorId?: number;
+
+  @Column()
+  creatorName?: string;
+
+  @Column()
+  updateId?: number;
+
+  @Column()
+  updateName?: string;
+
   @Column({ default: STATUS.enabled })
   status?: STATUS;
 

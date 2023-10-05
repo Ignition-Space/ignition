@@ -4,7 +4,6 @@ import { RolePrivilege } from './role-privilege.mysql.entity';
 
 @Injectable()
 export class RolePrivilegeService {
-
   constructor(
     @Inject('ROLE_PRIVILEGE_REPOSITORY')
     private rolePrivilegeRepository: Repository<RolePrivilege>,
@@ -13,15 +12,15 @@ export class RolePrivilegeService {
   listByRoleIds(roleIds: number[]) {
     return this.rolePrivilegeRepository.find({
       where: {
-        roleId: In(roleIds)
-      }
-    })
+        roleId: In(roleIds),
+      },
+    });
   }
 
   remove(roleId: number) {
     return this.rolePrivilegeRepository.delete({
-      roleId
-    })
+      roleId,
+    });
   }
 
   set(roleId: number, privilegeIds: number[], systemId: number) {
@@ -29,9 +28,9 @@ export class RolePrivilegeService {
       return {
         systemId,
         roleId,
-        privilegeId
-      }
-    })
+        privilegeId,
+      };
+    });
     return this.rolePrivilegeRepository.save(rolePrivileges);
   }
 }

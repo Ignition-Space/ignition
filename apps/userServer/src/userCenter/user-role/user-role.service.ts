@@ -13,28 +13,27 @@ export class UserRoleService {
     return this.userRoleRepository.find({
       where: {
         systemId,
-        userId
-      }
-    })
+        userId,
+      },
+    });
   }
 
   deleteByUserId(userId: number, systemId: number) {
     return this.userRoleRepository.delete({
       userId,
-      systemId
-    })
+      systemId,
+    });
   }
 
   async setUserRoles(userId: number, roleIds: number[], systemId: number) {
-    const userRoles: UserRole[] = roleIds.map(roleId => {
+    const userRoles: UserRole[] = roleIds.map((roleId) => {
       return {
         userId,
         roleId,
-        systemId
-      }
-    })
+        systemId,
+      };
+    });
     await this.deleteByUserId(userId, systemId);
-    return await this.userRoleRepository.save(userRoles)
+    return await this.userRoleRepository.save(userRoles);
   }
-
 }

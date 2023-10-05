@@ -1,6 +1,5 @@
 /** 菜单管理页 **/
 
-
 import React, { useState, useCallback, useMemo } from 'react';
 import { useSetState, useMount } from 'react-use';
 import { useSelector, useDispatch } from 'react-redux';
@@ -54,9 +53,6 @@ import {
 import { RootState, Dispatch } from '@/store';
 import type { EventDataNode, DataNode } from 'rc-tree/lib/interface';
 
-// ==================
-// CSS
-// ==================
 import './index.less';
 
 function MenuAdminContainer() {
@@ -269,9 +265,7 @@ function MenuAdminContainer() {
     }
   };
 
-  // ==================
-  // 属性 和 memo
-  // ==================
+  dispatch.role;
 
   /** 处理原始数据，将原始数据处理为层级关系 **/
   const sourceData = useMemo(() => {
