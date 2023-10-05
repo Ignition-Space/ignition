@@ -62,6 +62,7 @@ function PowerAdminContainer() {
   const p = useSelector((state: RootState) => state.app.powersCode);
   const roles = useSelector((state: RootState) => state.sys.roles);
   const userinfo = useSelector((state: RootState) => state.app.userinfo);
+  const [systemOptions, setSystemOptions] = useState([]);
 
   const [form] = Form.useForm();
   const [data, setData] = useState<Power[]>([]); // 当前所选菜单下的权限数据
@@ -76,16 +77,29 @@ function PowerAdminContainer() {
   });
   const [rolesCheckboxChose, setRolesCheckboxChose] = useState<number[]>([]); // 表单 - 赋予项选中的值
 
-  // 左侧菜单树相关参数 当前Menu树被选中的节点数据
-  const [treeSelect, setTreeSelect] = useState<{ title?: string; id?: number }>(
-    {},
-  );
-
   // 生命周期 - 首次加载组件时触发
   useMount(() => {
-    dispatch.role.getAllRoles();
     getData();
+    getSysTemOpt();
   });
+
+  const getSysTemOpt = async () => {
+    try {
+      const res: Res = await dispatch.sys.getSysTem({ status: 1 });
+      if (res && res.status === 200) {
+        setSystemOptions(
+          res.data.map((d) => ({
+            value: d.id,
+            label: d.name,
+          })),
+        );
+      } else {
+        message.error(res?.message ?? '获取系统失败');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 根据所选菜单id获取其下权限数据
   const getData = async (menuId: string | number | null = null) => {
@@ -95,10 +109,10 @@ function PowerAdminContainer() {
     };
 
     try {
-      const res: Res = await dispatch.sys.getPowerDataByMenuId(params);
+      const res: Res = await dispatch.privilege.getPrivilege(params);
 
       if (res && res.status === 200) {
-        setData(res.data);
+        setData(res.data.items);
       }
     } finally {
       setLoading(false);
@@ -160,15 +174,11 @@ function PowerAdminContainer() {
       if (modal.operateType === 'add') {
         // 新增
         try {
-          const res: Res = await dispatch.sys.addPower(values);
+          const res: Res = await dispatch.privilege.addPrivilege(values);
           if (res && res.status === 200) {
             message.success('添加成功');
-            getData(treeSelect.id);
+            getData();
             onClose();
-
-            await setPowersByRoleIds(res.data.id, rolesCheckboxChose);
-            dispatch.app.updateUserInfo(null);
-            dispatch.role.getAllRoles();
           } else {
             message.error('添加失败');
           }
@@ -186,15 +196,11 @@ function PowerAdminContainer() {
           }
           values.id = modal.nowData.id;
 
-          const res: Res = await dispatch.sys.upPower(values);
+          const res: Res = await dispatch.privilege.upPrivilege(values);
           if (res && res.status === 200) {
             message.success('修改成功');
-            getData(treeSelect.id);
+            getData();
             onClose();
-
-            await setPowersByRoleIds(values.id, rolesCheckboxChose);
-            dispatch.role.getAllRoles();
-            dispatch.app.updateUserInfo(null);
           } else {
             message.error('修改失败');
           }
@@ -213,9 +219,9 @@ function PowerAdminContainer() {
   const onDel = async (record: TableRecordData) => {
     const params = { id: record.id };
     setLoading(true);
-    const res = await dispatch.sys.delPower(params);
+    const res = await dispatch.privilege.delPrivilege(params);
     if (res && res.status === 200) {
-      getData(treeSelect.id);
+      getData();
       dispatch.app.updateUserInfo(null);
       message.success('删除成功');
     } else {
@@ -250,43 +256,27 @@ function PowerAdminContainer() {
     dispatch.sys.setPowersByRoleIds(params);
   };
 
-  dispatch.role;
-
-  // 处理原始数据，将原始数据处理为层级关系
-  // const sourceData: TreeSourceData[] = useMemo(() => {
-  //   const menuData: Menu[] = cloneDeep(userinfo.menus);
-
-  //   // 这应该递归，把children数据也赋值key
-  //   const d: TreeSourceData[] = makeKey(menuData);
-
-  //   // 按照sort排序
-  //   d.sort((a, b) => {
-  //     return a.sorts - b.sorts;
-  //   });
-  //   return dataToJson(null, d) || ([] as TreeSourceData[]);
-  // }, [userinfo.menus, dataToJson]);
-
   // 构建表格字段
   const tableColumns = [
     {
-      title: '序号',
-      dataIndex: 'serial',
-      key: 'serial',
+      title: 'id',
+      dataIndex: 'id',
+      key: 'id',
     },
     {
       title: '权限名称',
-      dataIndex: 'title',
-      key: 'title',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: 'Code',
-      dataIndex: 'code',
-      key: 'code',
+      title: '权限 CODE',
+      dataIndex: 'resourceKey',
+      key: 'resourceKey',
     },
     {
       title: '描述',
-      dataIndex: 'desc',
-      key: 'desc',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
       title: '状态',
@@ -354,32 +344,6 @@ function PowerAdminContainer() {
     },
   ];
 
-  // 构建表格数据
-  const tableData = useMemo(() => {
-    return data.map((item, index) => {
-      return {
-        key: index,
-        id: item.id,
-        menu: item.menu,
-        title: item.title,
-        code: item.code,
-        desc: item.desc,
-        sorts: item.sorts,
-        status: item.status,
-        serial: index + 1,
-        control: item.id,
-      };
-    });
-  }, [data]);
-
-  // 新增或修改时 构建‘赋予’项数据
-  const rolesCheckboxData = useMemo(() => {
-    return roles.map((item) => ({
-      label: item.title,
-      value: item.id,
-    }));
-  }, [roles]);
-
   return (
     <div className="page-power-admin">
       <div className="r">
@@ -391,7 +355,7 @@ function PowerAdminContainer() {
                 icon={<PlusCircleOutlined />}
                 onClick={() => onModalShow(null, 'add')}
               >
-                {`添加${treeSelect.title || ''}权限`}
+                {`添加权限`}
               </Button>
             </li>
           </ul>
@@ -400,7 +364,7 @@ function PowerAdminContainer() {
           className="diy-table"
           columns={tableColumns}
           loading={loading}
-          dataSource={tableData}
+          dataSource={data}
           pagination={{
             showQuickJumper: true,
             showTotal: (total) => `共 ${total} 条数据`,
@@ -409,17 +373,16 @@ function PowerAdminContainer() {
       </div>
       {/** 查看&新增&修改用户模态框 **/}
       <Modal
-        title={`${{ add: '新增', up: '修改', see: '查看' }[modal.operateType]
-          }权限: ${treeSelect.title}->${modal.nowData?.title ?? ''}`}
+        title={`${{ add: '新增', up: '修改', see: '查看' }[modal.operateType]}`}
         open={modal.modalShow}
         onOk={onOk}
         onCancel={onClose}
         confirmLoading={modal.modalLoading}
       >
-        <Form form={form} initialValues={{ formstatus: 1 }}>
+        <Form form={form} initialValues={{ status: 1 }}>
           <Form.Item
             label="权限名"
-            name="formTitle"
+            name="name"
             {...formItemLayout}
             rules={[
               { required: true, whitespace: true, message: '必填' },
@@ -433,7 +396,7 @@ function PowerAdminContainer() {
           </Form.Item>
           <Form.Item
             label="Code"
-            name="formCode"
+            name="resourceKey"
             {...formItemLayout}
             rules={[
               { required: true, whitespace: true, message: '必填' },
@@ -447,9 +410,12 @@ function PowerAdminContainer() {
           </Form.Item>
           <Form.Item
             label="描述"
-            name="formDesc"
+            name="description"
             {...formItemLayout}
-            rules={[{ max: 100, message: '最多输入100位字符' }]}
+            rules={[
+              { required: true, whitespace: true, message: '必填' },
+              { max: 100, message: '最多输入100位字符' },
+            ]}
           >
             <TextArea
               rows={4}
@@ -458,21 +424,39 @@ function PowerAdminContainer() {
             />
           </Form.Item>
           <Form.Item
-            label="排序"
-            name="formSorts"
+            label="系统"
+            name="systemId"
             {...formItemLayout}
-            rules={[{ required: true, message: '请输入排序号' }]}
+            rules={[{ required: true, message: '请选择系统' }]}
           >
-            <InputNumber
-              min={0}
-              max={99999}
-              style={{ width: '100%' }}
-              disabled={modal.operateType === 'see'}
+            <Select
+              showSearch
+              placeholder="请选择系统"
+              filterOption={false}
+              notFoundContent={null}
+              options={systemOptions}
+            />
+          </Form.Item>
+          <Form.Item
+            label="权限类型"
+            name="action"
+            {...formItemLayout}
+            rules={[{ required: true, message: '请选择权限类型' }]}
+          >
+            <Select
+              options={[
+                { value: 'manage', label: '管理权限' },
+                { value: 'create', label: '创建' },
+                { value: 'read', label: '只读' },
+                { value: 'update', label: '更新' },
+                { value: 'delete', label: '删除' },
+                { value: 'menu', label: '菜单' },
+              ]}
             />
           </Form.Item>
           <Form.Item
             label="状态"
-            name="formstatus"
+            name="status"
             {...formItemLayout}
             rules={[{ required: true, message: '请选择状态' }]}
           >
@@ -480,20 +464,10 @@ function PowerAdminContainer() {
               <Option key={1} value={1}>
                 启用
               </Option>
-              <Option key={-1} value={-1}>
+              <Option key={1} value={0}>
                 禁用
               </Option>
             </Select>
-          </Form.Item>
-          <Form.Item label="赋予" {...formItemLayout}>
-            <Checkbox.Group
-              disabled={modal.operateType === 'see'}
-              options={rolesCheckboxData}
-              value={rolesCheckboxChose}
-              onChange={(v: CheckboxValueType[]) =>
-                setRolesCheckboxChose(v as number[])
-              }
-            />
           </Form.Item>
         </Form>
       </Modal>

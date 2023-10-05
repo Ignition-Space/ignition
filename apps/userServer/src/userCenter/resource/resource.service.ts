@@ -3,22 +3,21 @@ import { isNotEmpty } from 'class-validator';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { getPaginationOptions, CustomPaginationMeta } from '@app/common';
 import { Repository } from 'typeorm';
-import { CreateResourceDto, ResourceListWithPaginationDto, UpdateResourceDto } from './resource.dto';
+import { ResourceListWithPaginationDto } from './resource.dto';
 import { Resource } from './resource.mysql.entity';
 
 @Injectable()
 export class ResourceService {
   constructor(
-    @Inject('RESOURCE_REPOSITORY') private resourceRepository: Repository<Resource>,
-  ) {
-
-  }
+    @Inject('RESOURCE_REPOSITORY')
+    private resourceRepository: Repository<Resource>,
+  ) { }
   create(resource: Resource) {
-    return this.resourceRepository.save(resource)
+    return this.resourceRepository.save(resource);
   }
 
   update(resource: Resource) {
-    return this.resourceRepository.save(resource)
+    return this.resourceRepository.save(resource);
   }
 
   delete(id: number) {
@@ -26,15 +25,15 @@ export class ResourceService {
   }
 
   findById(id) {
-    return this.resourceRepository.findOneBy(id)
+    return this.resourceRepository.findOneBy(id);
   }
 
   findByKey(key: string) {
     return this.resourceRepository.findOne({
       where: {
-        key
-      }
-    })
+        key,
+      },
+    });
   }
 
   async paginate(
@@ -60,8 +59,8 @@ export class ResourceService {
   listBySystemId(systemId: number) {
     return this.resourceRepository.find({
       where: {
-        systemId
-      }
+        systemId,
+      },
     });
   }
 }

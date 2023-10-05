@@ -106,22 +106,6 @@ export default {
       }
       return;
     },
-
-    /**
-     * 根据菜单ID查询其下的权限数据
-     * **/
-    async getPowerDataByMenuId(params: { menuId: number | null }) {
-      try {
-        const res: Res = await axios.get(
-          `/getpowerbymenuid?${qs.stringify(params)}`,
-        );
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
-
     /**
      * 根据权限ID查询对应的权限数据
      * @param id 可以是一个数字也可以是一个数组
@@ -129,44 +113,6 @@ export default {
     async getPowerById(params: { id: number | number[] }) {
       try {
         const res: Res = await axios.post(`/getPowerById`, params);
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
-    /**
-     * 添加权限
-     * **/
-    async addPower(params: PowerParam) {
-      try {
-        const res: Res = await axios.post('/addpower', params);
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
-
-    /**
-     * 修改权限
-     * **/
-    async upPower(params: PowerParam) {
-      try {
-        const res: Res = await axios.post('/uppower', params);
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
-
-    /**
-     * 删除权限
-     * **/
-    async delPower(params: { id: number }) {
-      try {
-        const res: Res = await axios.post('/delpower', params);
         return res;
       } catch (err) {
         message.error('网络错误，请重试');

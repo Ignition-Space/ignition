@@ -35,6 +35,9 @@ export class Privilege {
   pid?: number;
 
   @Column()
+  sort?: number;
+
+  @Column()
   name: string;
 
   @Column({ type: 'text', default: null })

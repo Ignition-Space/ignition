@@ -36,7 +36,7 @@ const [
   () => import('../pages/Login'),
   () => import('../pages/Home'),
   () => import('../pages/System/MenuAdmin'),
-  () => import('../pages/System/PowerAdmin'),
+  () => import('../pages/System/PrivilegeAdmin'),
   () => import('../pages/System/RoleAdmin'),
   () => import('../pages/System/UserAdmin'),
   () => import('../pages/System/System'),
@@ -94,7 +94,7 @@ function RouterCom(): JSX.Element {
           }
         />
         <Route
-          path="system/power"
+          path="system/privilege"
           element={
             <AuthNoPower>
               <PowerAdmin />

@@ -265,8 +265,6 @@ function MenuAdminContainer() {
     }
   };
 
-  dispatch.role;
-
   /** 处理原始数据，将原始数据处理为层级关系 **/
   const sourceData = useMemo(() => {
     const menuData: Menu[] = cloneDeep(data);
@@ -389,27 +387,6 @@ function MenuAdminContainer() {
     },
   ];
 
-  /** 构建表格数据 **/
-  const tableData = useMemo(() => {
-    return data
-      .filter((item: Menu) => item.parent === (Number(treeSelect.id) || null))
-      .map((item, index) => {
-        return {
-          key: index,
-          id: item.id,
-          icon: item.icon,
-          parent: item.parent,
-          title: item.title,
-          url: item.url,
-          desc: item.desc,
-          sorts: item.sorts,
-          status: item.status,
-          serial: index + 1,
-          control: item.id,
-        };
-      });
-  }, [data, treeSelect.id]);
-
   return (
     <div className="page-menu-admin">
       <div className="l">
@@ -437,7 +414,7 @@ function MenuAdminContainer() {
           className="diy-table"
           columns={tableColumns}
           loading={loading}
-          dataSource={tableData}
+          dataSource={data}
           pagination={{
             showQuickJumper: true,
             showTotal: (total) => `共 ${total} 条数据`,
