@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
-import { PaginationParams } from "types/type";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
+import { PaginationParams } from 'types/type';
 
 export class CreateResourceDto {
   @IsNotEmpty()
@@ -24,6 +24,14 @@ export class ListBySystemIdDto {
   systemId: number;
 }
 
+export class ListWithPaginationDto {
+  @ApiProperty({ example: '' })
+  keyword?: string;
+
+  @ApiProperty({ example: { pageSize: 10, currentPage: 1 } })
+  page?: PaginationParams;
+}
+
 export class DeleteResourceDto {
   @IsNotEmpty()
   @ApiProperty({ example: '1', description: '资源ID' })
@@ -35,7 +43,6 @@ export class UpdateResourceDto extends CreateResourceDto {
   @ApiProperty({ example: '1', description: '资源ID' })
   id: number;
 }
-
 
 export class ResourceListWithPaginationDto {
   @ApiProperty({ example: '', description: '查询关键词' })

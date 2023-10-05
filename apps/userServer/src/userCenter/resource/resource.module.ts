@@ -3,11 +3,12 @@ import { ResourceService } from './resource.service';
 import { ResourceController } from './resource.controller';
 import { DatabaseModule } from '@app/common';
 import { ResourceProviders } from './resource.providers';
+import { SystemModule } from '../system/system.module';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, SystemModule],
   providers: [ResourceService, ...ResourceProviders],
   controllers: [ResourceController],
-  exports: [ResourceService]
+  exports: [ResourceService],
 })
 export class ResourceModule { }

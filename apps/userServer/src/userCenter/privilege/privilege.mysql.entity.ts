@@ -32,12 +32,6 @@ export class Privilege {
   resourceKey: string;
 
   @Column()
-  pid?: number;
-
-  @Column()
-  sort?: number;
-
-  @Column()
   name: string;
 
   @Column({ type: 'text', default: null })

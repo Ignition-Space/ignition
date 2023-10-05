@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
-import { PaginationParams } from "types/type";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
+import { PaginationParams } from 'types/type';
 
 export class CreateRoleDto {
   @IsNotEmpty()

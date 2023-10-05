@@ -1,14 +1,22 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BusinessException } from '@app/common';
-import { CreateResourceDto, DeleteResourceDto, ListBySystemIdDto, ResourceListWithPaginationDto, UpdateResourceDto } from './resource.dto';
+import {
+  CreateResourceDto,
+  DeleteResourceDto,
+  ListBySystemIdDto,
+  ListWithPaginationDto,
+  UpdateResourceDto,
+} from './resource.dto';
 import { ResourceService } from './resource.service';
+import { SystemService } from '../system/system.service';
 
 @Controller('resource')
 @ApiTags('资源')
 export class ResourceController {
   constructor(
-    private readonly resourceService: ResourceService
+    private readonly resourceService: ResourceService,
+    private readonly systemService: SystemService,
   ) { }
 
   @ApiOperation({
@@ -16,7 +24,7 @@ export class ResourceController {
   })
   @Post('create')
   async create(@Body() dto: CreateResourceDto) {
-    const foundResource = await this.resourceService.findByKey(dto.key)
+    const foundResource = await this.resourceService.findByKey(dto.key);
 
     if (foundResource) {
       throw new BusinessException('资源 Key 已存在');
@@ -30,17 +38,19 @@ export class ResourceController {
   })
   @Post('update')
   async update(@Body() dto: UpdateResourceDto) {
-
-    const foundResource = await this.resourceService.findById(dto.id)
+    const foundResource = await this.resourceService.findById(dto.id);
 
     if (!foundResource) {
       throw new BusinessException('未找到资源');
     }
     const allowUpdateFields = {
       name: dto.name,
-    }
+    };
 
-    return await this.resourceService.update({ ...foundResource, ...allowUpdateFields });
+    return await this.resourceService.update({
+      ...foundResource,
+      ...allowUpdateFields,
+    });
   }
 
   @ApiOperation({
@@ -56,9 +66,27 @@ export class ResourceController {
     summary: '资源列表',
     description: '根据角色名称查询',
   })
-  @Post('/listBySystemId')
-  async listBySystemId(@Body() dto: ListBySystemIdDto) {
-    return await this.resourceService.listBySystemId(dto.systemId)
+  @Post('/list/paginate')
+  async list(@Body() dto: ListWithPaginationDto) {
+    const { page, ...searchParams } = dto;
+    const rourceData = await this.resourceService.paginate(searchParams, page);
+    const systemIds = rourceData.items.map((role) => role.systemId);
+    const systemList = await this.systemService.findByIds(systemIds);
+    const systemMap = {};
+    systemList.forEach((system) => (systemMap[system.id] = system));
+    const newRource = rourceData.items.map((role) => {
+      role['systemName'] = systemMap[role.systemId].name;
+      return role;
+    });
+    return { ...rourceData, items: newRource };
   }
 
+  @ApiOperation({
+    summary: '资源列表',
+    description: '根据角色名称查询',
+  })
+  @Post('/listBySystemId')
+  async listBySystemId(@Body() dto: ListBySystemIdDto) {
+    return await this.resourceService.listBySystemId(dto.systemId);
+  }
 }

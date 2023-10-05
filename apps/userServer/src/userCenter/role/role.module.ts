@@ -11,6 +11,6 @@ import { SystemModule } from '../system/system.module';
   imports: [DatabaseModule, RolePrivilegeModule, PrivilegeModule, SystemModule],
   providers: [RoleService, ...RoleProviders],
   controllers: [RoleController],
-  exports: [RoleService]
+  exports: [RoleService],
 })
 export class RoleModule { }

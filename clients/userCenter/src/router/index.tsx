@@ -35,7 +35,7 @@ const [
   () => import('../pages/ErrorPages/401'),
   () => import('../pages/Login'),
   () => import('../pages/Home'),
-  () => import('../pages/System/MenuAdmin'),
+  () => import('../pages/System/ResourceAdmin'),
   () => import('../pages/System/PrivilegeAdmin'),
   () => import('../pages/System/RoleAdmin'),
   () => import('../pages/System/UserAdmin'),
@@ -86,7 +86,7 @@ function RouterCom(): JSX.Element {
         <Route path="/" element={<Navigate to="home" />} />
         <Route path="home" element={<Home />} />
         <Route
-          path="system/menuadmin"
+          path="system/resource"
           element={
             <AuthNoPower>
               <MenuAdmin />

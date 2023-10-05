@@ -1,4 +1,4 @@
-/** 菜单管理页 **/
+/** 资源管理页 **/
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { useSetState, useMount } from 'react-use';
@@ -51,17 +51,31 @@ import {
   TreeSourceData,
 } from './index.type';
 import { RootState, Dispatch } from '@/store';
-import type { EventDataNode, DataNode } from 'rc-tree/lib/interface';
 
 import './index.less';
+import { Page, Res } from '../UserAdmin/index.type';
+import { SearchInfo } from '../RoleAdmin/index.type';
 
 function MenuAdminContainer() {
   const p = useSelector((state: RootState) => state.app.powersCode);
   const dispatch = useDispatch<Dispatch>();
 
   const [form] = Form.useForm();
-  const [data, setData] = useState<Menu[]>([]); // 所有的菜单数据（未分层级）
+  const [data, setData] = useState<Menu[]>([]); // 所有的资源数据（未分层级）
   const [loading, setLoading] = useState<boolean>(false); // 数据是否正在加载中
+  const [systemOptions, setSystemOptions] = useState([]);
+  // 搜索相关参数
+  const [searchInfo, setSearchInfo] = useSetState<SearchInfo>({
+    name: undefined, // 角色名
+    status: undefined, // 状态
+  });
+
+  // 分页相关参数控制
+  const [page, setPage] = useSetState<Page>({
+    pageNum: 1,
+    pageSize: 10,
+    total: 0,
+  });
 
   // 模态框相关参数控制
   const [modal, setModal] = useSetState<ModalType>({
@@ -78,18 +92,45 @@ function MenuAdminContainer() {
   // 生命周期 - 首次加载组件时触发
   useMount(() => {
     getData();
+    getSysTemOpt();
   });
+
+  const getSysTemOpt = async () => {
+    try {
+      const res: Res = await dispatch.sys.getSysTem({ status: 1 });
+      if (res && res.status === 200) {
+        setSystemOptions(
+          res.data.map((d) => ({
+            value: d.id,
+            label: d.name,
+          })),
+        );
+      } else {
+        message.error(res?.message ?? '获取系统失败');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 获取本页面所需数据
   const getData = async () => {
-    if (!p.includes('menu:query')) {
-      return;
-    }
     setLoading(true);
+    const params = {
+      pageNum: page.pageNum,
+      pageSize: page.pageSize,
+      keyword: searchInfo.name,
+      status: searchInfo.status,
+    };
     try {
-      const res = await dispatch.sys.getMenus();
+      const res = await dispatch.resource.getResource(params);
       if (res && res.status === 200) {
-        setData(res.data);
+        setData(res.data.items);
+        setPage({
+          total: res.data.meta.totalCounts,
+          pageNum: res.data.meta.currentPage,
+          pageSize: res.data.meta.pageSize,
+        });
       }
     } finally {
       setLoading(false);
@@ -114,51 +155,6 @@ function MenuAdminContainer() {
     [],
   );
 
-  // 工具 - 赋值Key
-  const makeKey = useCallback((data: Menu[]) => {
-    const newData: TreeSourceData[] = [];
-    for (let i = 0; i < data.length; i++) {
-      const item: any = { ...data[i] };
-      if (item.children) {
-        item.children = makeKey(item.children);
-      }
-      const treeItem: TreeSourceData = {
-        ...(item as TreeSourceData),
-        key: item.id,
-      };
-      newData.push(treeItem);
-    }
-    return newData;
-  }, []);
-
-  /** 点击树目录时触发 **/
-  const onTreeSelect = useCallback(
-    (
-      keys: React.Key[],
-      info: {
-        event: 'select';
-        selected: boolean;
-        node: EventDataNode<DataNode> & { id: number; title: string };
-        selectedNodes: DataNode[];
-        nativeEvent: MouseEvent;
-      },
-    ) => {
-      let treeSelect = {};
-      if (info.selected) {
-        // 选中
-        treeSelect = { title: info.node.title, id: info.node.id };
-      }
-      setTreeSelect(treeSelect);
-    },
-    [],
-  );
-
-  /** 工具 - 根据parentID返回parentName **/
-  const getNameByParentId = (id: number | null) => {
-    const p = data.find((item) => item.id === id);
-    return p ? p.title : undefined;
-  };
-
   /** 新增&修改 模态框出现 **/
   const onModalShow = (data: TableRecordData | null, type: operateType) => {
     setModal({
@@ -172,14 +168,7 @@ function MenuAdminContainer() {
         form.resetFields();
       } else {
         if (data) {
-          form.setFieldsValue({
-            formstatus: data.status,
-            formDesc: data.desc,
-            formIcon: data.icon,
-            formSorts: data.sorts,
-            formTitle: data.title,
-            formUrl: data.url,
-          });
+          form.setFieldsValue(data);
         }
       }
     });
@@ -201,26 +190,16 @@ function MenuAdminContainer() {
     try {
       const values = await form.validateFields();
 
-      const params: MenuParam = {
-        title: values.formTitle,
-        url: values.formUrl,
-        icon: values.formIcon,
-        parent: Number(treeSelect.id) || null,
-        sorts: values.formSorts,
-        desc: values.formDesc,
-        status: values.formstatus,
-      };
       setModal({
         modalLoading: true,
       });
       if (modal.operateType === 'add') {
         try {
-          const res = await dispatch.sys.addMenu(params);
+          const res = await dispatch.resource.addReource(values);
           if (res && res.status === 200) {
             message.success('添加成功');
             getData();
             onClose();
-            dispatch.app.updateUserInfo(null);
           } else {
             message.error('添加失败');
           }
@@ -231,13 +210,12 @@ function MenuAdminContainer() {
         }
       } else {
         try {
-          params.id = modal?.nowData?.id;
-          const res = await dispatch.sys.upMenu(params);
+          values.id = modal?.nowData?.id;
+          const res = await dispatch.resource.upReource(values);
           if (res && res.status === 200) {
             message.success('修改成功');
             getData();
             onClose();
-            dispatch.app.updateUserInfo(null);
           } else {
             message.error('修改失败');
           }
@@ -265,57 +243,32 @@ function MenuAdminContainer() {
     }
   };
 
-  /** 处理原始数据，将原始数据处理为层级关系 **/
-  const sourceData = useMemo(() => {
-    const menuData: Menu[] = cloneDeep(data);
-    // 这应该递归，把children数据也赋值key
-    const d: TreeSourceData[] = makeKey(menuData);
-
-    // 按照sort排序
-    d.sort((a, b) => {
-      return a.sorts - b.sorts;
-    });
-    return dataToJson(null, d) || [];
-  }, [data, dataToJson]);
-
   /** 构建表格字段 **/
   const tableColumns = [
     {
-      title: '序号',
-      dataIndex: 'serial',
-      key: 'serial',
+      title: 'id',
+      dataIndex: 'id',
+      key: 'id',
     },
     {
-      title: '图标',
-      dataIndex: 'icon',
-      key: 'icon',
-      render: (v: string | null) => {
-        return v ? <Icon type={v} /> : '';
-      },
+      title: '资源名称',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: '菜单名称',
-      dataIndex: 'title',
-      key: 'title',
-    },
-    {
-      title: '路径',
-      dataIndex: 'url',
-      key: 'url',
-      render: (v: string | null) => {
-        return v ? `/${v.replace(/^\//, '')}` : '';
-      },
+      title: '资源 KEY',
+      dataIndex: 'key',
+      key: 'key',
     },
     {
       title: '描述',
-      dataIndex: 'desc',
-      key: 'desc',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
       title: '父级',
-      dataIndex: 'parent',
-      key: 'parent',
-      render: (v: number | null) => getNameByParentId(v),
+      dataIndex: 'parentId',
+      key: 'parentId',
     },
     {
       title: '状态',
@@ -335,46 +288,43 @@ function MenuAdminContainer() {
       render: (v: number, record: TableRecordData) => {
         const controls = [];
 
-        p.includes('menu:query') &&
-          controls.push(
-            <span
-              key="0"
-              className="control-btn green"
-              onClick={() => onModalShow(record, 'see')}
-            >
-              <Tooltip placement="top" title="查看">
-                <EyeOutlined />
+        controls.push(
+          <span
+            key="0"
+            className="control-btn green"
+            onClick={() => onModalShow(record, 'see')}
+          >
+            <Tooltip placement="top" title="查看">
+              <EyeOutlined />
+            </Tooltip>
+          </span>,
+        );
+        controls.push(
+          <span
+            key="1"
+            className="control-btn blue"
+            onClick={() => onModalShow(record, 'up')}
+          >
+            <Tooltip placement="top" title="修改">
+              <ToolOutlined />
+            </Tooltip>
+          </span>,
+        );
+        controls.push(
+          <Popconfirm
+            key="2"
+            title="确定删除吗?"
+            okText="确定"
+            cancelText="取消"
+            onConfirm={() => onDel(record)}
+          >
+            <span className="control-btn red">
+              <Tooltip placement="top" title="删除">
+                <DeleteOutlined />
               </Tooltip>
-            </span>,
-          );
-        p.includes('menu:up') &&
-          controls.push(
-            <span
-              key="1"
-              className="control-btn blue"
-              onClick={() => onModalShow(record, 'up')}
-            >
-              <Tooltip placement="top" title="修改">
-                <ToolOutlined />
-              </Tooltip>
-            </span>,
-          );
-        p.includes('menu:del') &&
-          controls.push(
-            <Popconfirm
-              key="2"
-              title="确定删除吗?"
-              okText="确定"
-              cancelText="取消"
-              onConfirm={() => onDel(record)}
-            >
-              <span className="control-btn red">
-                <Tooltip placement="top" title="删除">
-                  <DeleteOutlined />
-                </Tooltip>
-              </span>
-            </Popconfirm>,
-          );
+            </span>
+          </Popconfirm>,
+        );
         const result: JSX.Element[] = [];
         controls.forEach((item, index) => {
           if (index) {
@@ -389,12 +339,6 @@ function MenuAdminContainer() {
 
   return (
     <div className="page-menu-admin">
-      <div className="l">
-        <div className="title">目录结构</div>
-        <div>
-          <Tree onSelect={onTreeSelect} treeData={sourceData} />
-        </div>
-      </div>
       <div className="r">
         <div className="searchBox">
           <ul>
@@ -403,9 +347,8 @@ function MenuAdminContainer() {
                 type="primary"
                 icon={<PlusCircleOutlined />}
                 onClick={() => onModalShow(null, 'add')}
-                disabled={!p.includes('menu:add')}
               >
-                {`添加${treeSelect.title || '根级'}子菜单`}
+                {`添加${treeSelect.title || '根级'}子资源`}
               </Button>
             </li>
           </ul>
@@ -416,8 +359,12 @@ function MenuAdminContainer() {
           loading={loading}
           dataSource={data}
           pagination={{
+            total: page.total,
+            current: page.pageNum,
+            pageSize: page.pageSize,
             showQuickJumper: true,
             showTotal: (total) => `共 ${total} 条数据`,
+            onChange: (page, pageSize) => onTablePageChange(page, pageSize),
           }}
         />
       </div>
@@ -429,10 +376,10 @@ function MenuAdminContainer() {
         onCancel={onClose}
         confirmLoading={modal.modalLoading}
       >
-        <Form form={form} initialValues={{ formstatus: 1 }}>
+        <Form form={form} initialValues={{ status: 1 }}>
           <Form.Item
-            label="菜单名"
-            name="formTitle"
+            label="资源名称"
+            name="name"
             {...formItemLayout}
             rules={[
               { required: true, whitespace: true, message: '必填' },
@@ -440,40 +387,32 @@ function MenuAdminContainer() {
             ]}
           >
             <Input
-              placeholder="请输入菜单名"
+              placeholder="请输入资源名"
               disabled={modal.operateType === 'see'}
             />
           </Form.Item>
           <Form.Item
-            label="菜单链接"
-            name="formUrl"
+            label="资源 KEY"
+            name="key"
             {...formItemLayout}
-            rules={[{ required: true, whitespace: true, message: '必填' }]}
+            rules={[
+              { required: true, whitespace: true, message: '必填' },
+              { max: 12, message: '最多输入12位字符' },
+            ]}
           >
             <Input
-              placeholder="请输入菜单链接"
+              placeholder="请输入资源 KEY"
               disabled={modal.operateType === 'see'}
             />
-          </Form.Item>
-          <Form.Item label="图标" name="formIcon" {...formItemLayout}>
-            <Select
-              dropdownClassName="iconSelect"
-              disabled={modal.operateType === 'see'}
-            >
-              {IconsData.map((item, index) => {
-                return (
-                  <Option key={index} value={item}>
-                    <Icon type={item} />
-                  </Option>
-                );
-              })}
-            </Select>
           </Form.Item>
           <Form.Item
             label="描述"
-            name="formDesc"
+            name="description"
             {...formItemLayout}
-            rules={[{ max: 100, message: '最多输入100位字符' }]}
+            rules={[
+              { required: true, whitespace: true, message: '必填' },
+              { max: 100, message: '最多输入100位字符' },
+            ]}
           >
             <TextArea
               rows={4}
@@ -482,6 +421,20 @@ function MenuAdminContainer() {
             />
           </Form.Item>
           <Form.Item
+            label="系统"
+            name="systemId"
+            {...formItemLayout}
+            rules={[{ required: true, message: '请选择系统' }]}
+          >
+            <Select
+              showSearch
+              placeholder="请选择系统"
+              filterOption={false}
+              notFoundContent={null}
+              options={systemOptions}
+            />
+          </Form.Item>
+          {/* <Form.Item
             label="排序"
             name="formSorts"
             {...formItemLayout}
@@ -493,10 +446,10 @@ function MenuAdminContainer() {
               style={{ width: '100%' }}
               disabled={modal.operateType === 'see'}
             />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             label="状态"
-            name="formstatus"
+            name="status"
             {...formItemLayout}
             rules={[{ required: true, message: '请选择状态' }]}
           >
@@ -504,18 +457,11 @@ function MenuAdminContainer() {
               <Option key={1} value={1}>
                 启用
               </Option>
-              <Option key={-1} value={-1}>
+              <Option key={0} value={0}>
                 禁用
               </Option>
             </Select>
           </Form.Item>
-          {modal.operateType === 'add' ? (
-            <Form.Item label="赋予" {...formItemLayout}>
-              <span style={{ color: 'green' }}>
-                新增菜单后请前往角色管理将菜单授权给相关角色
-              </span>
-            </Form.Item>
-          ) : null}
         </Form>
       </Modal>
     </div>

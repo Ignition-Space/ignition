@@ -41,65 +41,12 @@ export default {
 
   effects: (dispatch: Dispatch) => ({
     /**
-     * 获取所有菜单
-     * **/
-    async getMenus(): Promise<Res> {
-      try {
-        const res: Res = await axios.get('/getmenus');
-        if (res && res.status === 200) {
-          dispatch.sys.reducerSetMenus(res.data);
-        }
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
-    /**
      * 根据菜单ID获取对应的菜单信息
      * @param {number} id 可以是一个数字也可以是一个数组
      * **/
     async getMenusById(params: { id: number | number[] }) {
       try {
         const res: Res = await axios.post(`/getMenusById`, params);
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
-
-    /**
-     * 添加菜单
-     * @param params MenuParam
-     */
-    async addMenu(params: MenuParam) {
-      try {
-        const res: Res = await axios.post('/addmenu', params);
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
-    /**
-     * 修改菜单
-     * **/
-    async upMenu(params: MenuParam) {
-      try {
-        const res: Res = await axios.post('/upmenu', params);
-        return res;
-      } catch (err) {
-        message.error('网络错误，请重试');
-      }
-      return;
-    },
-    /**
-     * 删除菜单
-     * **/
-    async delMenu(params: { id: number }) {
-      try {
-        const res: Res = await axios.post('/delmenu', params);
         return res;
       } catch (err) {
         message.error('网络错误，请重试');

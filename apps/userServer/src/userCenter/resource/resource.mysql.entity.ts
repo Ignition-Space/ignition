@@ -17,11 +17,17 @@ export class Resource {
   @Column()
   key: string;
 
+  @Column()
+  sort?: number;
+
   @Column({ default: null })
   parentId?: number;
 
   @Column()
   systemId: number;
+
+  @Column({ type: 'text', default: null })
+  description?: string;
 
   @CreateDateColumn()
   createTime?: string;
