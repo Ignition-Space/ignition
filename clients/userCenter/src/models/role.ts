@@ -95,6 +95,30 @@ export default {
       return;
     },
     /**
+     * 给角色分配权限
+     * **/
+    async setRoleResource(params) {
+      try {
+        const res: Res = await axios.post('/role/set', params);
+        return res;
+      } catch (err) {
+        message.error('网络错误，请重试');
+      }
+      return;
+    },
+    /**
+     * 根据角色查询权限
+     * **/
+    async getPrivilegeListById(params) {
+      try {
+        const res: Res = await axios.post('/role/getPrivilegeListById', params);
+        return res;
+      } catch (err) {
+        message.error('网络错误，请重试');
+      }
+      return;
+    },
+    /**
      * 给用户分配角色
      * **/
     async setUserRoles(params) {

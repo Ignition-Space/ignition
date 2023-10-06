@@ -9,7 +9,8 @@ import { Privilege } from './privilege.mysql.entity';
 @Injectable()
 export class PrivilegeService {
   constructor(
-    @Inject('PRIVILEGE_REPOSITORY') private privilegeRepository: Repository<Privilege>,
+    @Inject('PRIVILEGE_REPOSITORY')
+    private privilegeRepository: Repository<Privilege>,
   ) { }
 
   createOrUpdate(privilege: Privilege) {
@@ -19,32 +20,45 @@ export class PrivilegeService {
   list(systemId: number) {
     return this.privilegeRepository.find({
       where: {
-        systemId
-      }
+        systemId,
+      },
+    });
+  }
+
+  listByResourceKey(resourceKey: string) {
+    return this.privilegeRepository.find({
+      where: {
+        resourceKey,
+      },
     });
   }
 
   findById(id) {
-    return this.privilegeRepository.findOne(id);
+    return this.privilegeRepository.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
   findByIds(ids: number[]) {
     return this.privilegeRepository.find({
       where: {
-        id: In(ids)
-      }
+        id: In(ids),
+      },
     });
   }
 
   delete(id: number) {
-    return this.privilegeRepository.delete(id)
+    return this.privilegeRepository.delete(id);
   }
 
   async paginate(
     searchParams: PrivilegeListWithPaginationDto,
     page: PaginationParams,
   ): Promise<Pagination<Privilege, CustomPaginationMeta>> {
-    const queryBuilder = this.privilegeRepository.createQueryBuilder('privilege');
+    const queryBuilder =
+      this.privilegeRepository.createQueryBuilder('privilege');
     queryBuilder.orderBy('privilege.createTime', 'DESC');
 
     // 关键字

@@ -91,7 +91,7 @@ function MenuAdminContainer() {
 
   // 生命周期 - 首次加载组件时触发
   useMount(() => {
-    getData();
+    getData(page);
     getSysTemOpt();
   });
 
@@ -114,7 +114,7 @@ function MenuAdminContainer() {
   };
 
   // 获取本页面所需数据
-  const getData = async () => {
+  const getData = async (page: { pageNum: number; pageSize: number }) => {
     setLoading(true);
     const params = {
       pageNum: page.pageNum,
@@ -198,7 +198,7 @@ function MenuAdminContainer() {
           const res = await dispatch.resource.addReource(values);
           if (res && res.status === 200) {
             message.success('添加成功');
-            getData();
+            getData(page);
             onClose();
           } else {
             message.error('添加失败');
@@ -214,7 +214,7 @@ function MenuAdminContainer() {
           const res = await dispatch.resource.upReource(values);
           if (res && res.status === 200) {
             message.success('修改成功');
-            getData();
+            getData(page);
             onClose();
           } else {
             message.error('修改失败');
@@ -233,9 +233,9 @@ function MenuAdminContainer() {
   /** 删除一条数据 **/
   const onDel = async (record: TableRecordData) => {
     const params = { id: record.id };
-    const res = await dispatch.sys.delMenu(params);
+    const res = await dispatch.resource.delReource(params);
     if (res && res.status === 200) {
-      getData();
+      getData(page);
       dispatch.app.updateUserInfo(null);
       message.success('删除成功');
     } else {
@@ -337,6 +337,11 @@ function MenuAdminContainer() {
     },
   ];
 
+  // 表单页码改变
+  const onTablePageChange = (pageNum: number, pageSize: number | undefined) => {
+    getData({ pageNum, pageSize: pageSize || page.pageSize });
+  };
+
   return (
     <div className="page-menu-admin">
       <div className="r">
@@ -418,6 +423,19 @@ function MenuAdminContainer() {
               rows={4}
               disabled={modal.operateType === 'see'}
               autoSize={{ minRows: 2, maxRows: 6 }}
+            />
+          </Form.Item>
+          <Form.Item
+            label="资源类型"
+            name="type"
+            {...formItemLayout}
+            rules={[{ required: true, message: '请选择资源类型' }]}
+          >
+            <Select
+              options={[
+                { value: 'nomal', label: '普通' },
+                { value: 'menu', label: '菜单' },
+              ]}
             />
           </Form.Item>
           <Form.Item

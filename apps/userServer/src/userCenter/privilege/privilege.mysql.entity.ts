@@ -12,7 +12,6 @@ export enum PrivilegeStatus {
 }
 
 export enum Action {
-  Menu = 'menu',
   Manage = 'manage',
   Create = 'create',
   Read = 'read',

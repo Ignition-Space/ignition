@@ -5,6 +5,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { STATUS } from '../system/system.mysql.entity';
+
+export enum ResourceType {
+  Menu = 'menu',
+  Nomal = 'nomal',
+}
 
 @Entity()
 export class Resource {
@@ -17,7 +23,7 @@ export class Resource {
   @Column()
   key: string;
 
-  @Column()
+  @Column({ default: 0 })
   sort?: number;
 
   @Column({ default: null })
@@ -25,6 +31,12 @@ export class Resource {
 
   @Column()
   systemId: number;
+
+  @Column({ default: ResourceType.Nomal })
+  type: ResourceType;
+
+  @Column({ default: STATUS.enabled })
+  status?: STATUS;
 
   @Column({ type: 'text', default: null })
   description?: string;

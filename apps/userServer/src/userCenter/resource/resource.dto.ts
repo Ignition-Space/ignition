@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import { PaginationParams } from 'types/type';
+import { ResourceType } from './resource.mysql.entity';
 
 export class CreateResourceDto {
   @IsNotEmpty()
@@ -16,6 +17,12 @@ export class CreateResourceDto {
 
   @ApiProperty({ example: 'test', description: '系统标识' })
   key: string;
+
+  @ApiProperty({ description: '系统类型', enum: ResourceType })
+  type: ResourceType;
+
+  @ApiProperty({ example: '查看', description: '系统描述' })
+  description?: string;
 }
 
 export class ListBySystemIdDto {

@@ -12,6 +12,7 @@ export class ResourceService {
     @Inject('RESOURCE_REPOSITORY')
     private resourceRepository: Repository<Resource>,
   ) { }
+
   create(resource: Resource) {
     return this.resourceRepository.save(resource);
   }
@@ -25,7 +26,11 @@ export class ResourceService {
   }
 
   findById(id) {
-    return this.resourceRepository.findOneBy(id);
+    return this.resourceRepository.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
   findByKey(key: string) {

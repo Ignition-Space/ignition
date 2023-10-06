@@ -1,6 +1,6 @@
 /** 当前页面所需所有类型声明 **/
 
-import { PowerTreeDefault } from '@/components/TreeChose/PowerTreeTable';
+import { PowerTreeDefault } from '@/components/TreeChose/PrivilegeTreeTable';
 import { Role } from '@/models/index.type';
 export type { PowerTree, RoleParam, Role, Res } from '@/models/index.type';
 

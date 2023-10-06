@@ -38,10 +38,6 @@ export default function MenuCom(props: Props): JSX.Element {
     setOpenKeys(paths.map((item) => `/${item}`));
   }, [location]);
 
-  // ==================
-  // 私有方法
-  // ==================
-
   // 菜单被选择
   const onSelect = (e: any) => {
     if (e?.key) {

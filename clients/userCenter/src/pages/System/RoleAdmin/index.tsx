@@ -26,7 +26,7 @@ import {
 
 import tools from '@/util/tools'; // 工具
 
-import PowerTreeCom from '@/components/TreeChose/PowerTreeTable';
+import PrivilegeTreeCom from '@/components/TreeChose/PrivilegeTreeTable';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -42,12 +42,12 @@ const formItemLayout = {
 };
 
 import { RootState, Dispatch } from '@/store';
-import { PowerTreeDefault } from '@/components/TreeChose/PowerTreeTable';
+import { privilegeTreeDefault } from '@/components/TreeChose/PrivilegeTreeTable';
 import {
   Page,
   operateType,
   ModalType,
-  PowerTreeInfo,
+  privilegeTreeInfo,
   SearchInfo,
   Role,
   Res,
@@ -58,10 +58,6 @@ import dayjs from 'dayjs';
 
 const RoleAdminContainer = () => {
   const dispatch = useDispatch<Dispatch>();
-  const p = useSelector((state: RootState) => state.app.powersCode);
-  const powerTreeData = useSelector(
-    (state: RootState) => state.sys.powerTreeData,
-  );
 
   const [systemOptions, setSystemOptions] = useState([]);
 
@@ -91,10 +87,11 @@ const RoleAdminContainer = () => {
   });
 
   // 权限树相关参数
-  const [power, setPower] = useSetState<PowerTreeInfo>({
+  const [privilege, setPrivilege] = useSetState<privilegeTreeInfo>({
     treeOnOkLoading: false,
-    powerTreeShow: false,
-    powerTreeDefault: { menus: [], powers: [] },
+    privilegeTreeShow: false,
+    data: [],
+    defaultKeys: [],
   });
 
   // 生命周期 - 首次加载组件时触发
@@ -242,7 +239,6 @@ const RoleAdminContainer = () => {
       if (res && res.status === 200) {
         message.success('删除成功');
         getData(page);
-        dispatch.app.updateUserInfo(null);
       } else {
         message.error(res?.message ?? '操作失败');
       }
@@ -257,51 +253,65 @@ const RoleAdminContainer = () => {
   };
 
   /** 分配权限按钮点击，权限控件出现 **/
-  const onAllotPowerClick = (record) => {
-    const menus = record.menuAndPowers.map((item) => item.menuId); // 需默认选中的菜单项ID
-    // 需默认选中的权限ID
-    const powers = record.menuAndPowers.reduce(
-      (v1, v2) => [...v1, ...v2.powers],
-      [] as number[],
-    );
+  const onAllotprivilegeClick = async (record) => {
+    const resource = await dispatch.resource.getReourcBySystemId({
+      systemId: record.systemId,
+    });
+
+    const defaultResource = await dispatch.role.getPrivilegeListById({
+      roleId: record.id,
+    });
+
     setModal({ nowData: record });
-    setPower({
-      powerTreeShow: true,
-      powerTreeDefault: { menus, powers },
+
+    setPrivilege({
+      privilegeTreeShow: true,
+      data: resource.data,
+      defaultKeys: defaultResource.data.map(
+        (p) => `privilege_res_${p.resourceKey}_${p.id}`,
+      ),
     });
   };
 
   // 权限树确定 给角色分配菜单和权限
-  const onPowerTreeOk = async (arr: PowerTreeDefault) => {
+  const onprivilegeTreeOk = async (arr, tree) => {
     if (!modal?.nowData?.id) {
       message.error('该数据没有ID');
       return;
     }
-    const params = {
-      id: modal.nowData.id,
-      menus: arr.menus,
-      powers: arr.powers,
-    };
 
-    setPower({ treeOnOkLoading: true });
+    setPrivilege({ treeOnOkLoading: true });
+
+    let privilegeIds: any = [];
+
+    Object.keys(tree).forEach((key) => {
+      privilegeIds = [
+        ...privilegeIds,
+        ...tree[key].map((r) => Number(r.replace(`privilege_${key}_`, ''))),
+      ];
+    });
+
     try {
-      const res: Res = await dispatch.sys.setPowersByRoleId(params);
+      const res: Res = await dispatch.role.setRoleResource({
+        roleId: modal.nowData.id,
+        privilegeIds,
+        systemId: modal.nowData.systemId,
+      });
       if (res && res.status === 200) {
         getData(page);
-        dispatch.app.updateUserInfo(null);
-        onPowerTreeClose();
+        onprivilegeTreeClose();
       } else {
         message.error(res?.message ?? '权限分配失败');
       }
     } finally {
-      setPower({ treeOnOkLoading: false });
+      setPrivilege({ treeOnOkLoading: false });
     }
   };
 
   // 关闭菜单树
-  const onPowerTreeClose = () => {
-    setPower({
-      powerTreeShow: false,
+  const onprivilegeTreeClose = () => {
+    setPrivilege({
+      privilegeTreeShow: false,
     });
   };
 
@@ -397,7 +407,7 @@ const RoleAdminContainer = () => {
           <span
             key="2"
             className="control-btn blue"
-            onClick={() => onAllotPowerClick(record)}
+            onClick={() => onAllotprivilegeClick(record)}
           >
             <Tooltip placement="top" title="分配权限">
               <EditOutlined />
@@ -541,6 +551,7 @@ const RoleAdminContainer = () => {
           >
             <Select
               showSearch
+              disabled={modal.operateType === 'see'}
               placeholder="请选择系统"
               filterOption={false}
               notFoundContent={null}
@@ -564,14 +575,14 @@ const RoleAdminContainer = () => {
           </Form.Item>
         </Form>
       </Modal>
-      <PowerTreeCom
-        title={modal.nowData ? `分配权限：${modal.nowData.title}` : '分配权限'}
-        data={powerTreeData}
-        defaultChecked={power.powerTreeDefault}
-        loading={power.treeOnOkLoading}
-        modalShow={power.powerTreeShow}
-        onOk={onPowerTreeOk}
-        onClose={onPowerTreeClose}
+      <PrivilegeTreeCom
+        title={modal.nowData ? `分配权限：${modal.nowData.name}` : '分配权限'}
+        data={privilege.data}
+        defaultKeys={privilege.defaultKeys}
+        loading={privilege.treeOnOkLoading}
+        modalShow={privilege.privilegeTreeShow}
+        onOk={onprivilegeTreeOk}
+        onClose={onprivilegeTreeClose}
       />
     </div>
   );

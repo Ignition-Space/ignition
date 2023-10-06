@@ -49,7 +49,7 @@ export class UserController {
   }
 
   @ApiOperation({
-    summary: '通过用户 ID 获取角色列表',
+    summary: '通过用户 ID 获取所有角色列表',
   })
   @Post('/getAllRolesById')
   getAllRolesById(@Body() dto: GetRolesByIdDto) {
@@ -57,7 +57,7 @@ export class UserController {
   }
 
   @ApiOperation({
-    summary: '通过用户 ID 获取角色列表',
+    summary: '通过用户 ID 与系统 ID 获取角色列表',
   })
   @Post('/getRolesById')
   getRolesById(@Body() dto: GetRolesByIdDto) {

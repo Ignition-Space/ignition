@@ -47,11 +47,23 @@ export default {
       return;
     },
     /**
-     * 删除资源
+     * 修改资源
      * **/
-    async delReource(params: { id: number }) {
+    async delReource(params) {
       try {
         const res: Res = await axios.post('/resource/delete', params);
+        return res;
+      } catch (err) {
+        message.error('网络错误，请重试');
+      }
+      return;
+    },
+    /**
+     * 删除资源
+     * **/
+    async getReourcBySystemId(params: { systemId: number }) {
+      try {
+        const res: Res = await axios.post('/resource/listBySystemId', params);
         return res;
       } catch (err) {
         message.error('网络错误，请重试');

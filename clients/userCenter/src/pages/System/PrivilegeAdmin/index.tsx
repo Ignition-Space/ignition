@@ -41,28 +41,16 @@ const formItemLayout = {
   },
 };
 
-import {
-  TableRecordData,
-  ModalType,
-  operateType,
-  Menu,
-  Power,
-  PowerParam,
-  Res,
-  TreeSourceData,
-} from './index.type';
+import { ModalType, operateType, Power, Res } from './index.type';
 import { RootState, Dispatch } from '@/store';
-import { CheckboxValueType } from 'antd/lib/checkbox/Group';
-import type { EventDataNode, DataNode } from 'rc-tree/lib/interface';
 
 import './index.less';
 
 function PowerAdminContainer() {
   const dispatch = useDispatch<Dispatch>();
-  const p = useSelector((state: RootState) => state.app.powersCode);
   const roles = useSelector((state: RootState) => state.sys.roles);
-  const userinfo = useSelector((state: RootState) => state.app.userinfo);
   const [systemOptions, setSystemOptions] = useState([]);
+  const [reourceOptions, setReourceOptions] = useState([]);
 
   const [form] = Form.useForm();
   const [data, setData] = useState<Power[]>([]); // 当前所选菜单下的权限数据
@@ -75,7 +63,6 @@ function PowerAdminContainer() {
     modalShow: false,
     modalLoading: false,
   });
-  const [rolesCheckboxChose, setRolesCheckboxChose] = useState<number[]>([]); // 表单 - 赋予项选中的值
 
   // 生命周期 - 首次加载组件时触发
   useMount(() => {
@@ -120,27 +107,12 @@ function PowerAdminContainer() {
   };
 
   // 新增&修改 模态框出现
-  const onModalShow = (data: TableRecordData | null, type: operateType) => {
+  const onModalShow = (data, type: operateType) => {
     setModal({
       modalShow: true,
       nowData: data,
       operateType: type,
     });
-    setRolesCheckboxChose(
-      data && data.id
-        ? roles
-          .filter((item) => {
-            const theMenuPower = item.menuAndPowers?.find(
-              (item2) => item2.menuId === data.menu,
-            );
-            if (theMenuPower) {
-              return theMenuPower.powers.includes(data.id);
-            }
-            return false;
-          })
-          .map((item) => item.id)
-        : [],
-    );
     setTimeout(() => {
       if (type === 'add') {
         // 新增，需重置表单各控件的值
@@ -215,6 +187,26 @@ function PowerAdminContainer() {
     }
   };
 
+  const onChangeSys = (value) => {
+    getReourcBySystemId(value);
+  };
+
+  const getReourcBySystemId = async (systemId: number) => {
+    const res = await dispatch.resource.getReourcBySystemId({ systemId });
+    if (res && res.status === 200) {
+      setReourceOptions(
+        res.data.map((d) => {
+          return {
+            label: d.name,
+            value: d.key,
+          };
+        }),
+      );
+    } else {
+      message.error(res?.message ?? '操作失败');
+    }
+  };
+
   // 删除一条数据
   const onDel = async (record: TableRecordData) => {
     const params = { id: record.id };
@@ -222,7 +214,6 @@ function PowerAdminContainer() {
     const res = await dispatch.privilege.delPrivilege(params);
     if (res && res.status === 200) {
       getData();
-      dispatch.app.updateUserInfo(null);
       message.success('删除成功');
     } else {
       message.error(res?.message ?? '操作失败');
@@ -364,6 +355,7 @@ function PowerAdminContainer() {
           className="diy-table"
           columns={tableColumns}
           loading={loading}
+          rowKey="id"
           dataSource={data}
           pagination={{
             showQuickJumper: true,
@@ -395,20 +387,6 @@ function PowerAdminContainer() {
             />
           </Form.Item>
           <Form.Item
-            label="Code"
-            name="resourceKey"
-            {...formItemLayout}
-            rules={[
-              { required: true, whitespace: true, message: '必填' },
-              { max: 12, message: '最多输入12位字符' },
-            ]}
-          >
-            <Input
-              placeholder="请输入权限Code"
-              disabled={modal.operateType === 'see'}
-            />
-          </Form.Item>
-          <Form.Item
             label="描述"
             name="description"
             {...formItemLayout}
@@ -433,9 +411,21 @@ function PowerAdminContainer() {
               showSearch
               placeholder="请选择系统"
               filterOption={false}
+              onChange={onChangeSys}
               notFoundContent={null}
               options={systemOptions}
             />
+          </Form.Item>
+          <Form.Item
+            label="Code"
+            name="resourceKey"
+            {...formItemLayout}
+            rules={[
+              { required: true, whitespace: true, message: '必填' },
+              { max: 12, message: '最多输入12位字符' },
+            ]}
+          >
+            <Select placeholder="请输入选择资源 key" options={reourceOptions} />
           </Form.Item>
           <Form.Item
             label="权限类型"
@@ -444,13 +434,13 @@ function PowerAdminContainer() {
             rules={[{ required: true, message: '请选择权限类型' }]}
           >
             <Select
+              placeholder="请选择权限类型"
               options={[
                 { value: 'manage', label: '管理权限' },
                 { value: 'create', label: '创建' },
                 { value: 'read', label: '只读' },
                 { value: 'update', label: '更新' },
                 { value: 'delete', label: '删除' },
-                { value: 'menu', label: '菜单' },
               ]}
             />
           </Form.Item>

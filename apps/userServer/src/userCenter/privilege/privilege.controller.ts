@@ -118,7 +118,7 @@ export class PrivilegeController {
   @ApiOperation({
     summary: '获取所有权限',
   })
-  @Post('list')
+  @Post('listBySys')
   async list(@Body() dto: ListAllPrivilegeDto) {
     return await this.privilegeService.list(dto.systemId);
   }

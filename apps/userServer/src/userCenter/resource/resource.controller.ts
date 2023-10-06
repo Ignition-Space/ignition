@@ -10,6 +10,7 @@ import {
 } from './resource.dto';
 import { ResourceService } from './resource.service';
 import { SystemService } from '../system/system.service';
+import { PrivilegeService } from '../privilege/privilege.service';
 
 @Controller('resource')
 @ApiTags('资源')
@@ -17,6 +18,7 @@ export class ResourceController {
   constructor(
     private readonly resourceService: ResourceService,
     private readonly systemService: SystemService,
+    private readonly privilegeService: PrivilegeService,
   ) { }
 
   @ApiOperation({
@@ -45,6 +47,7 @@ export class ResourceController {
     }
     const allowUpdateFields = {
       name: dto.name,
+      description: dto.description,
     };
 
     return await this.resourceService.update({
@@ -83,10 +86,24 @@ export class ResourceController {
 
   @ApiOperation({
     summary: '资源列表',
-    description: '根据角色名称查询',
+    description: '根据系统 id 查询',
   })
   @Post('/listBySystemId')
   async listBySystemId(@Body() dto: ListBySystemIdDto) {
-    return await this.resourceService.listBySystemId(dto.systemId);
+    const resourceList = await this.resourceService.listBySystemId(
+      dto.systemId,
+    );
+    const newResource = [];
+
+    for (const resource of resourceList) {
+      const privileges = await this.privilegeService.listByResourceKey(
+        resource.key,
+      );
+      newResource.push({
+        ...resource,
+        privileges,
+      });
+    }
+    return newResource;
   }
 }
