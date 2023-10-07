@@ -11,11 +11,29 @@
   "projects": {
     "ignition-server": {
       "type": "application",
-      "root": "apps/ignition-server",
+      "root": "apps/ignitionServer",
       "entryFile": "main",
-      "sourceRoot": "apps/ignition-server/src",
+      "sourceRoot": "apps/ignitionServer/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/ignition-server/tsconfig.app.json"
+        "tsConfigPath": "apps/ignitionServer/tsconfig.app.json"
+      }
+    },
+    "user-server": {
+      "type": "application",
+      "root": "apps/userServer",
+      "entryFile": "main",
+      "sourceRoot": "apps/userServer/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/userServer/tsconfig.app.json"
+      }
+    },
+    "common": {
+      "type": "library",
+      "root": "libs/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/common/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
     }
   }

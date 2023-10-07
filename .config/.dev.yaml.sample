@@ -1,0 +1,22 @@
+MONGODB_CONFIG:
+  name: 'ignition_test'
+  type: 'mongodb'
+  url: 'mongodb://ignition_test:123456@127.0.0.1:27017'
+  database: 'ignition_test'
+  entities: 'mongo'
+  logging: false
+  synchronize: true
+  authSource: 'admin'
+MYSQL_CONFIG:
+  name: 'material_test'
+  type: 'mysql'
+  host: '127.0.0.1'
+  port: 3306
+  database: 'material_test'
+  username: 'unroot'
+  password: '123456'
+  entities: 'mysql'
+  synchronize: true
+GITGUB_CONFIG:
+  CLIENT_ID: 
+  CLIENT_SECRETS: 

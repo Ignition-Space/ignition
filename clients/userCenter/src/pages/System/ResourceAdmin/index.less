@@ -1,0 +1,34 @@
+.page-menu-admin {
+  display: flex;
+  .l {
+    width: 256px;
+    border: solid 1px #f0f0f0;
+    flex: none;
+    .title {
+      height: 44px;
+      line-height: 44px;
+      box-sizing: border-box;
+      font-size: 14px;
+      padding: 0 10px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+  }
+  .r {
+    border: solid 1px #f0f0f0;
+    margin-left: 16px;
+    flex: auto;
+    .searchBox {
+      padding: 8px;
+      & > ul {
+        display: flex;
+        & > li + li {
+          margin-left: 4px;
+          flex: none;
+        }
+      }
+    }
+    .ant-table-pagination.ant-pagination {
+      margin-right: 10px;
+    }
+  }
+}
