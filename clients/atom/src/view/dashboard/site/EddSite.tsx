@@ -1,5 +1,5 @@
 import { ISite, setSite } from '@/services';
-import { ModalForm, ProFormInstance, ProFormText } from '@ant-design/pro-form';
+import { ModalForm, ProFormInstance, ProFormText } from '@ant-design/pro-components';
 import { message } from 'antd';
 import { ReactNode, useRef } from 'react';
 
@@ -22,7 +22,7 @@ const EddSite = (props: IEddSiteProps) => {
     <ModalForm
       title="编辑站点"
       formRef={editRef}
-      onVisibleChange={initFrom}
+      onOpenChange={initFrom}
       trigger={props.children}
       onFinish={async (values) => {
         await setSite({

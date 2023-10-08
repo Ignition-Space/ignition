@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import dayjs from 'dayjs';
 import _ from 'lodash';
-import { PageContainer } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-components';
 import EddSite from '../site/EddSite';
 import SyncInterface from '../site/SyncInterface';
 import CodeEdit from './CodeEdit';

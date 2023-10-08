@@ -5,12 +5,12 @@ import {
 } from '@ant-design/icons';
 import React, { useEffect, useRef, useState } from 'react';
 import type { ProFormInstance } from '@ant-design/pro-components';
-import { Avatar, Card, Button, Col, Row, message, Popconfirm } from 'antd';
-import { PageContainer } from '@ant-design/pro-layout';
+import { Avatar, Card, Button, Col, Row, message, } from 'antd';
+import { PageContainer } from '@ant-design/pro-components';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
-import { getSiteList, setSite, ISite, analysisInterface } from '@/services';
+import { getSiteList, setSite, ISite, } from '@/services';
 import SyncInterface from './SyncInterface';
-import ProCard from '@ant-design/pro-card';
+import { ProCard } from '@ant-design/pro-components';
 import profileImg from '@/assets/profile.jpeg';
 import { useNavigate } from 'react-router';
 import EddSite from './EddSite';

@@ -16,7 +16,8 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import defaultProps from './_defaultProps';
 import profileImg from '@/assets/profile.jpeg';
 
-export default () => {
+const Dashbord = () => {
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -171,3 +172,5 @@ export default () => {
     </div>
   );
 };
+
+export default Dashbord
