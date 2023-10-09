@@ -32,6 +32,12 @@ MYSQL_CONFIG:
   password: "123456"
   entities: "mysql"
   synchronize: true
+GITGUB_CONFIG:
+  CLIENT_ID: ''
+  CLIENT_SECRETS: ''
+FEISHU_CONFIG:
+  FEISHU_APP_ID: ''
+  FEISHU_APP_SECRET: ''
 ```
 
 2. 启动项目
@@ -49,7 +55,7 @@ pnpm dev
 ```
 pnpm dev:user
 ```
-> 用户系统先要体验完成的流程需要绑定本地域名
+> 用户系统先要体验完成的流程需要[绑定本地域名](./docs/addLocalHost.md)
 
 ![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5c4a613a1c774e14a1d70fa8a0f431b3~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=2560&h=426&s=62805&e=png&b=fefefe)
 
