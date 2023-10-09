@@ -18,5 +18,8 @@ MYSQL_CONFIG:
   entities: 'mysql'
   synchronize: true
 GITGUB_CONFIG:
-  CLIENT_ID: 
-  CLIENT_SECRETS: 
+  CLIENT_ID:
+  CLIENT_SECRETS:
+FEISHU_CONFIG:
+  FEISHU_APP_ID: ''
+  FEISHU_APP_SECRET: ''
