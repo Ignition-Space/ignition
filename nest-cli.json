@@ -18,6 +18,15 @@
         "tsConfigPath": "apps/ignitionServer/tsconfig.app.json"
       }
     },
+    "materials-server": {
+      "type": "application",
+      "root": "apps/materialsServer",
+      "entryFile": "main",
+      "sourceRoot": "apps/materialsServer/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/materialsServer/tsconfig.app.json"
+      }
+    },
     "user-server": {
       "type": "application",
       "root": "apps/userServer",
