@@ -10,14 +10,14 @@ export class MaterialConfigService {
   ) { }
 
   save(materialConfig) {
-    return this.materialConfigServer.save(materialConfig)
+    return this.materialConfigServer.save(materialConfig);
   }
 
   getList(params) {
-    return this.materialConfigServer.find(params)
+    return this.materialConfigServer.find(params);
   }
 
   findOne(id) {
-    return this.materialConfigServer.findOne(id)
+    return this.materialConfigServer.findOne(id);
   }
 }

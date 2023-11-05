@@ -2,11 +2,7 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
-import {
-  AllExceptionsFilter,
-  HttpExceptionFilter,
-  TransformInterceptor,
-} from './core';
+import { AllExceptionsFilter, HttpExceptionFilter } from './core';
 import { generateDocument } from './doc';
 
 async function bootstrap() {
@@ -17,9 +13,6 @@ async function bootstrap() {
 
   // 设置全局接口前缀
   app.setGlobalPrefix('api');
-
-  // 统一响应体格式
-  // app.useGlobalInterceptors(new TransformInterceptor());
 
   // 开启跨域
   app.enableCors({

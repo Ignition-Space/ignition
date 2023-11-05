@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsEnum } from 'class-validator';
 import { MATERIAL_TYPE } from './physical.mongo.entity';
 
-
 export enum ProcessNodes {
   'development' = 0, // 已创建 开发环境任务（Task）
   'testing' = 1, // 已创建 测试环境任务
@@ -29,19 +28,12 @@ export const versionMap = {
   [ProcessNodes.fix]: 'gammaVersion',
 };
 
-export const staticMap = {
-  0: '//dev.static.xyb2b.com.cn',
-  1: '//test.static.xyb2b.com.cn',
-  2: '//fix.static.xyb2b.com.cn',
-  3: '//static.xyb2b.com',
-}
-
 export const ProcessMap = {
   0: 'devVersion',
   1: 'testVersion',
   2: 'fixVersion',
   3: 'releaseVersion',
-}
+};
 
 export class CreateProjectDto {
   @ApiProperty({ example: 'hello', title: '项目中文名' })
@@ -67,7 +59,6 @@ export class CreateProjectDto {
 }
 
 export class addMaterialDto extends CreateProjectDto {
-
   @ApiProperty({ example: [MATERIAL_TYPE.npm], enum: MATERIAL_TYPE })
   type?: MATERIAL_TYPE[];
 

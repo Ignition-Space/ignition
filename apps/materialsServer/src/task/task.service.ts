@@ -18,10 +18,10 @@ export class TaskService {
 
   updateById(id, task: Task) {
     return this.taskRepository.findOneAndUpdate(
-      { "_id": new ObjectId(id) },
+      { _id: new ObjectId(id) },
       { $set: { ...task } },
-      { upsert: true }
-    )
+      { upsert: true },
+    );
   }
 
   findById(id) {
@@ -82,5 +82,4 @@ export class TaskService {
       getPaginationOptions(page),
     );
   }
-
 }

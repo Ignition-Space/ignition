@@ -4,7 +4,7 @@ import {
   CreateDateColumn,
   ObjectIdColumn,
   ObjectId,
-  UpdateDateColumn
+  UpdateDateColumn,
 } from 'typeorm';
 
 export enum MATERIAL_TYPE {
@@ -20,9 +20,6 @@ export class PhysicalMaterial {
 
   @Column()
   groupId: string;
-
-  @Column()
-  projectId: number;
 
   @Column()
   type: string;

@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { MongoRepository, ObjectId } from 'typeorm';
+import { MongoRepository } from 'typeorm';
 import { CodeGroup } from './code.mongo.entity';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class CodeGroupService {

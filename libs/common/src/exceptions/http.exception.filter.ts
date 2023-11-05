@@ -1,6 +1,6 @@
 /*
  * @Author: Cookie
- * @Description: 
+ * @Description:
  */
 import {
   ExceptionFilter,
@@ -22,7 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest();
     const status = exception.getStatus();
 
-    console.log(exception)
+    console.log(exception);
 
     // 处理业务异常
     if (exception instanceof BusinessException) {

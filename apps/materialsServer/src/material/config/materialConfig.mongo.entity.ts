@@ -1,10 +1,4 @@
-import {
-  Entity,
-  Column,
-  CreateDateColumn,
-  ObjectIdColumn,
-  ObjectId,
-} from 'typeorm';
+import { Entity, Column, ObjectIdColumn, ObjectId } from 'typeorm';
 import { ProcessNodes } from '../physical/physical.dto';
 
 export enum MATERIAL_TYPE {

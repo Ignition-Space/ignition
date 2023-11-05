@@ -16,12 +16,6 @@ export class CodeGroup {
   name: string;
 
   @Column({ default: null })
-  bizId: string;
-
-  @Column({ default: null })
-  bizTitle: string;
-
-  @Column({ default: null })
   desc: string;
 
   @Column()

@@ -31,9 +31,6 @@ export class Task {
   deployNum: number;
 
   @Column()
-  projectId: number;
-
-  @Column()
   branch: string;
 
   @Column()
@@ -50,9 +47,6 @@ export class Task {
 
   @Column()
   env: ProcessNodes;
-
-  @Column()
-  projectType: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   startTime?: string;

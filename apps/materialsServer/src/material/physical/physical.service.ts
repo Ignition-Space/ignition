@@ -10,31 +10,30 @@ export class PhysicalMaterialService {
   ) { }
 
   save(PhysicalMaterial) {
-    return this.PhysicalMaterialRepository.save(PhysicalMaterial)
+    return this.PhysicalMaterialRepository.save(PhysicalMaterial);
   }
 
   findOne(id) {
-    return this.PhysicalMaterialRepository.findOne(id)
+    return this.PhysicalMaterialRepository.findOne(id);
   }
 
   findOneByProjectId(projectId) {
     return this.PhysicalMaterialRepository.findOne({
       where: {
-        projectId
-      }
-    })
+        projectId,
+      },
+    });
   }
 
   getList(params) {
-    return this.PhysicalMaterialRepository.find(params)
+    return this.PhysicalMaterialRepository.find(params);
   }
 
   updateOne(id, params) {
     return this.PhysicalMaterialRepository.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: { ...params } },
-      { upsert: true }
-    )
+      { upsert: true },
+    );
   }
-
 }
