@@ -47,19 +47,6 @@ FEISHU_CONFIG:
 pnpm dev
 ```
 
-#### 用户权限系统
-
-基于 Github 作为三方登录的 RBAC 用户权限管理系统
-
-- 启动用户服务
-```
-pnpm dev:user
-```
-> 用户系统先要体验完成的流程需要[绑定本地域名](./docs/addLocalHost.md)
-
-![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5c4a613a1c774e14a1d70fa8a0f431b3~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=2560&h=426&s=62805&e=png&b=fefefe)
-
-
 #### 火石基础系统
 3. 浏览器打开链接
 ```
@@ -67,24 +54,19 @@ http://localhost:3000/doc // 服务端 Api 地址
 http://localhost:8000/siteList // 客户端界面
 ```
 
-
 ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d1101a963c784de8b9f970bf86545095~tplv-k3u1fbpfcp-watermark.image?)
 
 4. 创建 Demo 项目
 
 解析 URL 可以填入 http://localhost:3000/doc-json，将 ignition-server 的服务作为 Demo 演示。
 
-
+## 子项目文档请点击
+#### [用户系统](https://github.com/Ignition-Space/ignition/blob/main/docs/user-center.md)
 
 ## 技术
 
 服务端：NestJS
 客户端：ReactJS + AntD
-
-
-## 特别声明
-
-用户系统的模板是基于 https://github.com/javaLuo/react-admin 这个项目，有疑问可以与我联系
 
 ## 支持
 

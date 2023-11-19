@@ -6,6 +6,7 @@ import store from './store';
 import Router from './router';
 
 import 'normalize.css';
+import 'antd/dist/antd.css';
 import '@/assets/styles/default.less';
 import '@/assets/styles/global.less';
 

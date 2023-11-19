@@ -1,9 +1,8 @@
 import axios from '@/util/axios'; // 自己写的工具函数，封装了请求数据的通用接口
-import qs from 'qs';
 import { message } from 'antd';
 import { Dispatch } from '@/store';
 
-import { Role, RoleParam, SysState, Res } from './index.type';
+import { Res } from './index.type';
 
 export default {
   state: {},

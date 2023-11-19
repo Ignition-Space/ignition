@@ -10,9 +10,6 @@ import { Dispatch } from '@/store';
 
 import {
   Menu,
-  Role,
-  MenuParam,
-  PowerParam,
   PowerTree,
   SysState,
   Res,

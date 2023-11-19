@@ -30,6 +30,8 @@ export class AuthController {
       domain: '.ig-space.com',
     });
 
+    console.log('access_token==', access_token)
+
     return access_token;
   }
 
@@ -46,7 +48,7 @@ export class AuthController {
   @ApiOperation({
     summary: '飞书 Auth2 授权登录',
     description:
-      '通过 code 获取`access_token`https://open.feishu.cn/open-apis/authen/v1/index?app_id=cli_a2ed5e7be4f9500d&redirect_uri=http%3A%2F%2F127.0.0.1%3A8080%2Fauth',
+      '通过 code 获取`access_token`https://open.feishu.cn/open-apis/authen/v1/index?app_id=07aac5b0e0a0dc5dfdcb&redirect_uri=http%3A%2F%2Fapi.ig-space.com%3A8080%2Fauth',
   })
   @Public()
   @Get('/feishu/auth2')

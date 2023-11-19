@@ -26,7 +26,6 @@ import {
 import { cloneDeep } from 'lodash';
 
 import { IconsData } from '@/util/json';
-import Icon from '@/components/Icon';
 
 const { Option } = Select;
 const { TextArea } = Input;
