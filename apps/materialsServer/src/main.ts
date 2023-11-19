@@ -1,29 +1,21 @@
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+declare const module: any;
+
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import * as cookieParser from 'cookie-parser';
-import { AllExceptionsFilter, HttpExceptionFilter } from './core';
+import { MaterialsModule } from './materials.module';
+
 import { generateDocument } from './doc';
+import { AllExceptionsFilter, HttpExceptionFilter } from '@app/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(MaterialsModule);
 
   // 异常过滤器
   app.useGlobalFilters(new AllExceptionsFilter(), new HttpExceptionFilter());
 
   // 设置全局接口前缀
   app.setGlobalPrefix('api');
-
-  // 开启跨域
-  app.enableCors({
-    credentials: true,
-    origin: ['*.ig-space.com'],
-    methods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
-    // allowedHeaders: '*',
-  });
-
-  // 格式化 cookie
-  app.use(cookieParser());
 
   // 接口版本化管理
   app.enableVersioning({
@@ -36,6 +28,14 @@ async function bootstrap() {
   // 创建文档
   generateDocument(app);
 
-  await app.listen(3000);
+  // 格式化 cookie
+  app.use(cookieParser());
+
+  // 启动所有微服务
+  await app.startAllMicroservices();
+
+  // 启动服务
+  await app.listen(5000);
 }
+
 bootstrap();

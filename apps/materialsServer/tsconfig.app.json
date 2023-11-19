@@ -16,7 +16,7 @@
       ]
     },
     "baseUrl": "./",
-    "outDir": "../../dist/apps/user-server"
+    "outDir": "../../dist/apps/materials-server"
   },
   "include": [
     "src/**/*",
