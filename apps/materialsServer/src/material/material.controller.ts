@@ -41,7 +41,10 @@ export class MaterialController {
   ) { }
 
   @Post('savePhysical')
-  async save(@Body() params: addMaterialDto, @PayloadUser() user: Payload) {
+  async save(
+    @Body() params: addMaterialDto,
+    @PayloadUser() user: IPayloadUser,
+  ) {
     const { type, groupId, ...rest } = params;
 
     return this.physicalMaterialService.save({
@@ -54,7 +57,7 @@ export class MaterialController {
   @Post('saveVirtual')
   async saveVirtual(
     @Body() params: addMaterialDto,
-    @PayloadUser() user: Payload,
+    @PayloadUser() user: IPayloadUser,
   ) {
     return this.virtualMaterialService.save({
       ...params,
@@ -65,7 +68,7 @@ export class MaterialController {
   @Post('editVirtual')
   async editVirtual(
     @Body() params: editMaterialDetailDto,
-    @PayloadUser() user: Payload,
+    @PayloadUser() user: IPayloadUser,
   ) {
     const { id, ...res } = params;
     return this.virtualMaterialService.updateOne(id, {
@@ -77,7 +80,7 @@ export class MaterialController {
   @Post('edit')
   async edit(
     @Body() params: editMaterialDetailDto,
-    @PayloadUser() user: Payload,
+    @PayloadUser() user: IPayloadUser,
   ) {
     const { id, type, groupId, ...res } = params;
     const material = await this.physicalMaterialService.findOne(params.id);
@@ -158,7 +161,10 @@ export class MaterialController {
   }
 
   @Post('publish')
-  async publish(@Body() publishDto: PublishDto, @PayloadUser() user: Payload) {
+  async publish(
+    @Body() publishDto: PublishDto,
+    @PayloadUser() user: IPayloadUser,
+  ) {
     const { id, branch, version, environment, desc } = publishDto;
     const material = await this.physicalMaterialService.findOne(id);
 

@@ -18,7 +18,7 @@ export class SystemController {
     summary: '创建新系统',
   })
   @Post('create')
-  create(@Body() dto: CreateSystemDto, @PayloadUser() user: Payload) {
+  create(@Body() dto: CreateSystemDto, @PayloadUser() user: IPayloadUser) {
     return this.systemService.create({
       ...dto,
       creatorName: user.name,
@@ -32,7 +32,7 @@ export class SystemController {
     summary: '修改系统信息',
   })
   @Post('update')
-  async update(@Body() dto: UpdateSystemDto, @PayloadUser() user: Payload) {
+  async update(@Body() dto: UpdateSystemDto, @PayloadUser() user: IPayloadUser) {
     const foundSystem = await this.systemService.findById(dto.id);
 
     if (!foundSystem) {

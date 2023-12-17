@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { isNotEmpty } from 'class-validator';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { getPaginationOptions } from '@app/common';
+import { CustomPaginationMeta, getPaginationOptions } from '@app/common';
 import { In, Repository } from 'typeorm';
 import { PrivilegeListWithPaginationDto } from './privilege.dto';
 import { Privilege } from './privilege.mysql.entity';

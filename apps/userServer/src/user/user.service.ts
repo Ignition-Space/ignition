@@ -4,7 +4,7 @@ import { User } from './user.mysql.entity';
 import { UserListWithPaginationDto } from './user.dto';
 import { isNotEmpty } from 'class-validator';
 import { GithubUserInfo } from './user.dto';
-import { BusinessException } from '@app/common';
+import { BusinessException, CustomPaginationMeta } from '@app/common';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { getPaginationOptions } from '@app/common';
 import { RolePrivilegeService } from '../role-privilege/role-privilege.service';
@@ -84,9 +84,8 @@ export class UserService {
       systemId,
     );
     const roleIds = userRoleList.map((i) => i.id);
-    const rolePrivilegeList = await this.rolePrivilegeService.listByRoleIds(
-      roleIds,
-    );
+    const rolePrivilegeList =
+      await this.rolePrivilegeService.listByRoleIds(roleIds);
     const privilegeIds = rolePrivilegeList.map((rp) => rp.privilegeId);
     const privilegeList = await this.privilegeService.findByIds([
       ...new Set(privilegeIds),
@@ -100,9 +99,8 @@ export class UserService {
       systemId,
     );
     const roleIds = userRoleList.map((i) => i.roleId);
-    const rolePrivilegeList = await this.rolePrivilegeService.listByRoleIds(
-      roleIds,
-    );
+    const rolePrivilegeList =
+      await this.rolePrivilegeService.listByRoleIds(roleIds);
     const privilegeIds = rolePrivilegeList.map((rp) => rp.privilegeId);
     const privilegeList = await this.privilegeService.findByIds([
       ...new Set(privilegeIds),
@@ -116,9 +114,8 @@ export class UserService {
 
   // 获取用户角色列表
   async getAllRolesById(userId: number) {
-    const userRoles: UserRole[] = await this.userRoleService.listByUserId(
-      userId,
-    );
+    const userRoles: UserRole[] =
+      await this.userRoleService.listByUserId(userId);
     const roleIds = userRoles.map((ur) => ur.roleId);
     return await this.roleService.findByIds(roleIds);
   }

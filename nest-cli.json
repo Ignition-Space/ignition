@@ -36,6 +36,15 @@
         "tsConfigPath": "apps/userServer/tsconfig.app.json"
       }
     },
+    "devops-server": {
+      "type": "application",
+      "root": "apps/devopsServer",
+      "entryFile": "main",
+      "sourceRoot": "apps/devopsServer/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/devopsServer/tsconfig.app.json"
+      }
+    },
     "common": {
       "type": "library",
       "root": "libs/common",

@@ -14,7 +14,7 @@ export class AuthService {
     private oAuthService: OAuthService,
   ) { }
 
-  async validateFeishuUser(code: string): Promise<Payload> {
+  async validateFeishuUser(code: string): Promise<IPayloadUser> {
     const userInfo: GithubUserInfo = await this.getOAuthTokenByApplications(
       code,
     );
@@ -30,7 +30,7 @@ export class AuthService {
     };
   }
 
-  async login(user: Payload) {
+  async login(user: IPayloadUser) {
     return {
       access_token: this.jwtService.sign(user),
     };

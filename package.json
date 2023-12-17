@@ -16,7 +16,8 @@
     "start:materials": "cross-env RUNNING_ENV=dev nest start --watch materials",
     "start-server:user": "cross-env RUNNING_ENV=dev nest start --watch user-server",
     "start-server:materials": "cross-env RUNNING_ENV=dev nest start --watch materials-server",
-    "start-client:user": "pnpm --filter user-center run dev:user"
+    "start-client:user": "pnpm --filter user-center run dev:user",
+    "start-server:devops": "cross-env RUNNING_ENV=dev nest start --watch devops-server"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^2.1.1",
@@ -42,6 +43,7 @@
     "history": "^5.3.0",
     "invariant": "^2.2.4",
     "isarray": "^2.0.5",
+    "jenkins": "^1.0.2",
     "lodash": "^4.17.21",
     "mongodb": "6.3.0",
     "mongoose": "^8.0.1",
@@ -61,6 +63,7 @@
     "rimraf": "^5.0.5",
     "rxjs": "^7.8.1",
     "scheduler": "^0.23.0",
+    "semver": "^7.5.4",
     "tiny-invariant": "^1.3.1",
     "tiny-warning": "^1.0.3",
     "typeorm": "^0.3.17",

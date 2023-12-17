@@ -1,12 +1,14 @@
 /*
  * @Author: Cookie
- * @Description: 
+ * @Description:
  */
 
 import axios, { Method } from 'axios';
 import { getConfig } from './index';
 
-const { FEISHU_CONFIG: { FEISHU_URL } } = getConfig()
+const {
+  FEISHU_CONFIG: { FEISHU_URL },
+} = getConfig();
 
 /**
  * @description: 任意请求
@@ -49,7 +51,7 @@ const methodV = async ({
 }: IMethodV): Promise<IRequest> => {
   let sendUrl = '';
   if (baseUrl) {
-    url = baseUrl + url
+    url = baseUrl + url;
   }
   if (/^(http:\/\/|https:\/\/)/.test(url)) {
     sendUrl = url;

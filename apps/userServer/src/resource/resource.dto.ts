@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { PaginationParams } from 'types/type';
 import { ResourceType } from './resource.mysql.entity';
 
 export class CreateResourceDto {

@@ -1,5 +1,3 @@
-declare const module: any;
-
 import { NestFactory } from '@nestjs/core';
 import { MaterialsModule } from './devops.module';
 
@@ -35,7 +33,7 @@ async function bootstrap() {
   await app.startAllMicroservices();
 
   // 启动服务
-  await app.listen(5000);
+  await app.listen(6000);
 }
 
 bootstrap();

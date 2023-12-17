@@ -34,7 +34,7 @@ export const getPaginationOptions = (
 };
 
 export const PayloadUser = createParamDecorator(
-  (data, ctx: ExecutionContext): Payload => {
+  (data, ctx: ExecutionContext): IPayloadUser => {
     const request = ctx.switchToHttp().getRequest();
     if (request.user) {
       return request.user;

@@ -26,7 +26,7 @@ export class GroupController {
   ) { }
 
   @Post('save/multrepo')
-  SaveMultrepo(@Body() params: addGroupDto, @PayloadUser() user: Payload) {
+  SaveMultrepo(@Body() params: addGroupDto, @PayloadUser() user: IPayloadUser) {
     return this.multrepoGroupService.save({
       ...params,
       creatorName: user.username,
@@ -35,7 +35,7 @@ export class GroupController {
   }
 
   @Post('save/code')
-  saveCode(@Body() params: addGroupDto, @PayloadUser() user: Payload) {
+  saveCode(@Body() params: addGroupDto, @PayloadUser() user: IPayloadUser) {
     return this.codeGroupService.save({
       ...params,
       creatorName: user.username,
@@ -46,7 +46,7 @@ export class GroupController {
   @Post('save/monorepo')
   async saveMonorepo(
     @Body() params: addMonorepoGroupDto,
-    @PayloadUser() user: Payload,
+    @PayloadUser() user: IPayloadUser,
   ) {
     return this.monorepoGroupService.save({
       ...params,
@@ -56,7 +56,7 @@ export class GroupController {
   }
 
   @Post('publish')
-  async publish(@Body() publishDto: PublishDto, @PayloadUser() user: Payload) {
+  async publish(@Body() publishDto: PublishDto, @PayloadUser() user: IPayloadUser) {
     const { id, branch, version, environment, desc } = publishDto;
 
     const material = await this.monorepoGroupService.findOne(id);

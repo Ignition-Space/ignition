@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { PaginationParams } from 'types/type';
 import { Action, PrivilegeStatus } from './privilege.mysql.entity';
 export class CreatePrivilegeDto {
   @ApiProperty({ example: '2', description: '系统ID' })

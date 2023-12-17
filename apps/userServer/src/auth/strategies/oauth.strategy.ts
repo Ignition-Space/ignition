@@ -9,7 +9,7 @@ export class OAuthStrategy extends PassportStrategy(Strategy, 'oauth') {
     super();
   }
 
-  async validate(req): Promise<Payload> {
+  async validate(req): Promise<IPayloadUser> {
     const q: any = req.query;
 
     const user = await this.authService.validateFeishuUser(q.code as string);

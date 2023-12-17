@@ -31,7 +31,7 @@ export class RoleController {
   @Post('create')
   async create(
     @Body() createRoleDto: CreateRoleDto,
-    @PayloadUser() user: Payload,
+    @PayloadUser() user: IPayloadUser,
   ) {
     const system = await this.systemService.findById(createRoleDto.systemId);
     return this.roleService.create({
@@ -48,7 +48,7 @@ export class RoleController {
     summary: '修改角色信息',
   })
   @Post('update')
-  async update(@Body() dto: UpdateRoleDto, @PayloadUser() user: Payload) {
+  async update(@Body() dto: UpdateRoleDto, @PayloadUser() user: IPayloadUser) {
     const foundRole = await this.roleService.findById(dto.id);
     if (!foundRole) {
       throw new BusinessException('未找到角色');

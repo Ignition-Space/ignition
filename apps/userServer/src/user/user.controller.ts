@@ -23,7 +23,7 @@ export class UserController {
     summary: '用户信息',
   })
   @Post('/profile')
-  profile(@PayloadUser() user: Payload) {
+  profile(@PayloadUser() user: IPayloadUser) {
     return this.userService.profile(user.userId);
   }
 

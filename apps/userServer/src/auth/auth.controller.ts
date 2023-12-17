@@ -19,7 +19,7 @@ export class AuthController {
   @UseGuards(OAuthGuard)
   @Get('/')
   async OAuth(
-    @PayloadUser() user: Payload,
+    @PayloadUser() user: IPayloadUser,
     @Res({ passthrough: true }) response,
   ) {
     const { access_token } = await this.authService.login(user);
@@ -30,7 +30,7 @@ export class AuthController {
       domain: '.ig-space.com',
     });
 
-    console.log('access_token==', access_token)
+    console.log('access_token==', access_token);
 
     return access_token;
   }
@@ -53,9 +53,8 @@ export class AuthController {
   @Public()
   @Get('/feishu/auth2')
   async getFeishuTokenByApplications(
-    @PayloadUser() user: Payload,
+    @PayloadUser() user: IPayloadUser,
     @Res({ passthrough: true }) response,
-    @Query() query: GetTokenByApplications,
   ) {
     const { access_token } = await this.authService.login(user);
 
@@ -71,7 +70,7 @@ export class AuthController {
     description: '解密 token 包含的信息',
   })
   @Get('/token/info')
-  async getTokenInfo(@PayloadUser() user: Payload) {
+  async getTokenInfo(@PayloadUser() user: IPayloadUser) {
     return user;
   }
 }

@@ -1,5 +1,5 @@
-import { CreateProjectDto } from '@/material/physical/physical.dto';
-import { MATERIAL_TYPE } from '@/material/physical/physical.mongo.entity';
+import { CreateProjectDto } from '@materialsServer/material/physical/physical.dto';
+import { MATERIAL_TYPE } from '@materialsServer/material/physical/physical.mongo.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
