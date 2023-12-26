@@ -64,7 +64,7 @@ const sendMergeNotice = async (params) => {
         header: {
           template: template,
           title: {
-            content: `【SHIELD】来自 (${projectName}) 的 CODE REVIEW`,
+            content: `来自 (${projectName}) 的 CODE REVIEW`,
             tag: 'plain_text',
           },
         },

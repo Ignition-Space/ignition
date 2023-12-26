@@ -1,10 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Any, In, Raw, Repository } from 'typeorm';
+import { In, Raw, Repository } from 'typeorm';
 import { Iteration, IterationStatus } from './iteration.entity';
 
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { CustomPaginationMeta, PaginationParams } from '@devopsServer/type';
-import { getPaginationOptions } from '@devopsServer/utils/helper';
+import { getPaginationOptions } from '@app/common';
 import { ListDto, SearchConditionDto } from './iteration.dto';
 import { isEmpty } from 'class-validator';
 import { getOperatorByTime } from '@devopsServer/utils/operators';

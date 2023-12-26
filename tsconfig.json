@@ -7,6 +7,9 @@
       "@app/common/*": [
         "libs/common/src/*"
       ],
+      "@ignitionServer/*": [
+        "apps/ignitionServer/src/*"
+      ],
       "@devopsServer/*": [
         "apps/devopsServer/src/*"
       ],

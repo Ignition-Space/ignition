@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { BusinessException } from '@devopsServer/common/exceptions/business.exception';
+import { BusinessException } from '@app/common';
 import { Project } from '@devopsServer/project/project.entity';
 import { ProjectService } from '@devopsServer/project/project.service';
 import {
@@ -11,8 +11,6 @@ import {
   DisableActivePlanItDto,
   UpdateStatusDto,
   ValidIterationDto,
-  ValidIterationNewVo,
-  ValidIterationNewDto,
 } from './iteration.dto';
 import {
   Iteration,
@@ -25,12 +23,10 @@ import { Branch } from '@devopsServer/branch/branch.entity';
 import { IterationService } from './iteration.service';
 
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { CustomPaginationMeta } from '@devopsServer/type';
 import { getBranchPrefix } from '@devopsServer/utils/helper';
 import { ProcessService } from '@devopsServer/iteration/process/process.service';
 import {
   Process,
-  ProcessEnvGroupNames,
   ProcessNodes,
 } from '@devopsServer/iteration/process/process.entity';
 import { BranchService } from '@devopsServer/branch/branch.service';
@@ -46,6 +42,7 @@ import { IterationHelper } from './helper';
 import { TaskService } from '../deploy/task/task.service';
 import * as semver from 'semver';
 import { PayloadUser } from '@app/common';
+import { PROCESS_NODE } from '@devopsServer/utils/constants';
 
 @ApiTags('迭代')
 @Controller('iteration')
@@ -308,34 +305,12 @@ export class IterationController {
     const iteration: Iteration =
       await this.iterationService.findIterationById(iterationId);
 
-    // const isHotfix = iteration.updateVersionType === updateVersionType.hotfix
-
-    // const processTemplate = await this.processFlowService.findByName(isHotfix ? "hotfix" : projectType);
-
-    // if (!processTemplate) {
-    //   throw new BusinessException('流程异常请联系管理员！')
-    // }
-
-    // const processNodeList = await this.processNodeService.findByIds(processTemplate.nodeIds);
-
     if (!iteration) {
       throw new BusinessException('未找到迭代');
     }
 
     if (iteration.status === IterationStatus.deprecated) {
       throw new BusinessException(`迭代已废弃`);
-    }
-
-    // 权限要求
-    if (
-      !(await this.userSerivce.hasPermission({
-        user,
-        projectId: updateStatusDto.fprojectId,
-        path: PROJECT_PERMISSION_MAP.submit,
-        envGroup: ProcessEnvGroupNames[environment],
-      }))
-    ) {
-      BusinessException.throwForbidden();
     }
 
     const project: Project = await this.projectService.findProjectById(
@@ -418,22 +393,6 @@ export class IterationController {
       currentProcessNode: environment,
       currentEnvBranch: newBranch,
     };
-
-    // 创建 提交生产 审批单
-    if (
-      updateStatusDto.environment === ProcessNodes.apply_for_production &&
-      projectType !== 'npm'
-    ) {
-      const { code, data, msg } = await this.feishuService.createApproval(
-        user.email,
-        updateStatusDto.approvalData,
-      );
-      if (code === 0) {
-        iteration.feishuApprovalInstanceCode = data.instance_code;
-      } else {
-        throw new BusinessException(msg);
-      }
-    }
 
     if (!iteration.subProcessNodes) {
       iteration.subProcessNodes = {};

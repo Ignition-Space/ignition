@@ -1,6 +1,10 @@
 import axios, { Method } from 'axios';
 
-import { FEISHU_URL } from './config';
+import { getConfig } from '@app/common';
+
+const { FEISHU_CONFIG = {} } = getConfig();
+
+const { FEISHU_URL } = FEISHU_CONFIG;
 
 interface IMethodV {
   url: string;

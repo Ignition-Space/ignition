@@ -17,8 +17,7 @@ export class ProjectConstraint implements ValidatorConstraintInterface {
   async validate(inputValue: any, { property, ...rest }: ValidationArguments) {
     switch (property) {
       case 'projectId':
-        const project: Project =
-          await this.projectService.findProjectById(inputValue);
+        const project = await this.projectService.findProjectById(inputValue);
 
         if (!project) {
           return false;

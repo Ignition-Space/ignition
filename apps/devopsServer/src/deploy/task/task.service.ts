@@ -11,7 +11,6 @@ export class TaskService {
   constructor(
     @Inject('TASK_REPOSITORY')
     private taskRepository: Repository<Task>,
-    private userService: UserService,
   ) { }
 
   publish(task: Task): Promise<Task> {
@@ -26,14 +25,6 @@ export class TaskService {
     return this.taskRepository.findOne({
       where: {
         id,
-      },
-    });
-  }
-
-  findByIronTaskId(ironTaskId: string) {
-    return this.taskRepository.findOne({
-      where: {
-        ironTaskId,
       },
     });
   }

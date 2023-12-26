@@ -73,7 +73,7 @@ export const getBranchAndDeployEnv = (
   return envList[expectedDeployEnv](iteration.version);
 };
 
-export const getDeployEnv = (expectedDeployEnv: ProcessNodes | ENV_NODES) => {
+export const getDeployEnv = (expectedDeployEnv: ProcessNodes) => {
   const envList = {
     [ProcessNodes.development]: 'dev',
     [ProcessNodes.testing]: 'test',
@@ -84,7 +84,7 @@ export const getDeployEnv = (expectedDeployEnv: ProcessNodes | ENV_NODES) => {
   return envList[expectedDeployEnv];
 };
 
-export const getEnvName = (env: ProcessNodes | ENV_NODES) => {
+export const getEnvName = (env: ProcessNodes) => {
   const envList = {
     [ProcessNodes.development]: 'dev',
     [ProcessNodes.testing]: 'test',

@@ -5,10 +5,8 @@
 
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNotEmpty } from 'class-validator';
-import { PaginationParams } from '@devopsServer/type';
 import { IterationStatus, updateVersionType } from './iteration.entity';
 import { HasIteration, IsValidVersion } from './iteration.validator';
-import { ProjectPermissionBaseDto } from '../utils/common.dto';
 import { ProcessNodes } from './process/process.entity';
 
 export class CreateIterationDto {
@@ -41,7 +39,7 @@ export class CreateIterationDto {
   fplanId?: number;
 }
 
-export class UpdateStatusDto extends ProjectPermissionBaseDto {
+export class UpdateStatusDto {
   iterationId: number;
   environment: number;
   projectType: string;
@@ -67,13 +65,6 @@ export class ListItWithPaginationDto {
 
   @ApiProperty({ example: 1 })
   fplanId?: number;
-}
-
-export class IterationModule {
-  @ApiProperty({ example: '' })
-  username: string;
-  @ApiProperty({ example: '' })
-  password: string;
 }
 
 export class DisableIterationDto {

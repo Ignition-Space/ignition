@@ -1,5 +1,3 @@
-declare const module: any;
-
 import { NestFactory } from '@nestjs/core';
 import { MaterialsModule } from './materials.module';
 

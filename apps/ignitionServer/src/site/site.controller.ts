@@ -20,7 +20,10 @@ export class SiteController {
   })
   @Post('saveAndUpdate')
   async saveAndUpdate(@Body() params: AddSiteDto) {
-    const site = await this.siteService.saveAndUpdate({ status: STATUS_TYPE.inactive, ...params });
+    const site = await this.siteService.saveAndUpdate({
+      status: STATUS_TYPE.inactive,
+      ...params,
+    });
     return site;
   }
 
@@ -29,7 +32,7 @@ export class SiteController {
   })
   @Post('getList')
   async getList() {
-    console.log(this.siteService)
+    console.log(this.siteService);
     const site = await this.siteService.findALL();
     console.log(site);
     return site;

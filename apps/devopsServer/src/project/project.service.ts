@@ -8,104 +8,43 @@ import { ProjectListWithPaginationDto } from './project.dto';
 import { isNotEmpty } from 'class-validator';
 import { In } from 'typeorm';
 import { UserStaredProject } from './user-star-project.entity';
-import { transformJobToProject, transformProjectToJob } from './helper';
+import { ProjectRelationService } from './project-relation/project-relation.service';
 
 @Injectable()
 export class ProjectService {
   constructor(
-    // @Inject('PROJECT_REPOSITORY')
-    // private readonly projectRepository: Repository<Project>,
+    @Inject('PROJECT_REPOSITORY')
+    private readonly projectRepository: Repository<Project>,
     @Inject('USER_STAR_PROJECT_REPOSITORY')
     private readonly userStarProjectRepository: Repository<UserStaredProject>,
+    private readonly projectRelationService: ProjectRelationService,
   ) { }
 
   async createOrUpdate(project: Project) {
-    const resultProject: Project = transformJobToProject(
-      await this.jenkinsProjectJobService.save(transformProjectToJob(project)),
-    );
-
-    return resultProject;
+    return this.projectRepository.save(project);
   }
 
-  async findProjectById(projectId: number, withRelation?: boolean) {
-    const app = await this.jenkinsProjectJobService.findOne({
-      where: { fid: projectId },
+  async findProjectById(projectId: number) {
+    return this.projectRepository.findOne({
+      where: {
+        id: projectId,
+      },
     });
-    if (!app) return null;
-    const project = {
-      ...transformJobToProject(app),
-      fprojectId: null,
-    };
-    return project;
   }
 
-  async findProjectByGitUrl(gitlabUrl: string) {
-    return transformJobToProject(
-      await this.jenkinsProjectJobService.findOne({
-        where: { fgitlabUrl: gitlabUrl },
-      }),
-    );
-  }
-
-  async findProjectListByGitIds(gitIds: number[]) {
-    return (
-      await this.jenkinsProjectJobService.find({
-        where: {
-          fgitlabProjectId: In(gitIds),
-          deletedAt: IsNull(),
-          appType: 'web',
-        },
-      })
-    ).map(transformJobToProject);
-  }
-
-  async findProjectListByIds(ids: number[], take: number) {
-    return (
-      await this.jenkinsProjectJobService.find({
-        where: {
-          fid: In(ids),
-        },
-        take: take || 100,
-      })
-    ).map(transformJobToProject);
-  }
-
-  async findProjectByGitProjectId(gitProjectId: number) {
-    return transformJobToProject(
-      await this.jenkinsProjectJobService.findOne({
-        where: {
-          fgitlabProjectId: gitProjectId,
-          deletedAt: IsNull(),
-          appType: 'web',
-        },
-      }),
-    );
-  }
-
-  findProjectByKeyword({ keyword, take }) {
-    const queryBuilder =
-      this.jenkinsProjectJobService.createQueryBuilder('project');
-    queryBuilder.where('project.deleted_at is null');
-    console.log('keyword: ' + keyword);
-    queryBuilder.orderBy('project.fcreate_time', 'DESC');
-    // 关键字
-    if (isNotEmpty(keyword)) {
-      queryBuilder.andWhere('project.zh_name LIKE :name', {
-        name: `%${keyword}%`,
-      });
-      queryBuilder.orWhere('project.fjob_name LIKE :name', {
-        name: `%${keyword}%`,
-      });
-    }
-    return queryBuilder.take(take).getMany();
+  async findProjectListByIds(mIds: number[]) {
+    return this.projectRepository.find({
+      where: {
+        microserviceIds: In(mIds),
+      },
+    });
   }
 
   async paginate(
     searchParams: ProjectListWithPaginationDto,
     page: PaginationParams,
   ): Promise<Pagination<Project, CustomPaginationMeta>> {
-    const queryBuilder =
-      this.jenkinsProjectJobService.createQueryBuilder('project');
+    const queryBuilder = this.projectRepository.createQueryBuilder('project');
     queryBuilder.where('project.deleted_at is null');
     queryBuilder.andWhere('project.app_type = "web"');
 
@@ -156,15 +95,45 @@ export class ProjectService {
       }
     }
 
-    const pageData = await paginate<TJenkinsProjectJob, CustomPaginationMeta>(
-      queryBuilder,
-      getPaginationOptions(page),
-    );
+    const pageData = await paginate(queryBuilder, getPaginationOptions(page));
 
     return {
-      items: pageData.items.map(transformJobToProject),
+      items: pageData.items,
       meta: pageData.meta,
     };
+  }
+
+  findProjectByKeyword({ keyword, take }) {
+    const queryBuilder = this.projectRepository.createQueryBuilder('project');
+    queryBuilder.where('project.deleted_at is null');
+    console.log('keyword: ' + keyword);
+    queryBuilder.orderBy('project.fcreate_time', 'DESC');
+    // 关键字
+    if (isNotEmpty(keyword)) {
+      queryBuilder.andWhere('project.zh_name LIKE :name', {
+        name: `%${keyword}%`,
+      });
+      queryBuilder.orWhere('project.fjob_name LIKE :name', {
+        name: `%${keyword}%`,
+      });
+    }
+    return queryBuilder.take(take).getMany();
+  }
+
+  async findProjectByGitUrl(gitProjectUrl: string) {
+    return this.projectRepository.findOne({
+      where: {
+        gitProjectUrl,
+      },
+    });
+  }
+
+  async findProjectListByGitIds(gitIds: number[]) {
+    return this.projectRepository.find({
+      where: {
+        gitProjectId: In(gitIds),
+      },
+    });
   }
 
   getStarProjectList(userId: number) {
@@ -193,14 +162,7 @@ export class ProjectService {
   }
 
   async delProject(project) {
-    const resultProject: Project = transformJobToProject(
-      await this.jenkinsProjectJobService.save({
-        ...transformProjectToJob(project),
-        deletedAt: new Date(),
-      }),
-    );
-
-    return resultProject;
+    return this.projectRepository.delete(project);
   }
 
   unStarProject(userStarProject: UserStaredProject) {

@@ -42,13 +42,11 @@ import {
   Operation,
   OperationType,
 } from '@devopsServer/system/operation/operation.entity';
-import {
-  addUserStarProjectStatusToList,
-  transformJobToProject,
-} from './helper';
+import { addUserStarProjectStatusToList } from './helper';
 import { ConfigService } from '@nestjs/config';
 import { CustomRpcExceptionFilter, PayloadUser, Public } from '@app/common';
 import { pick } from 'lodash';
+import { PROCESS_NODE } from '@devopsServer/utils/constants';
 
 type ProjectGitField = {
   gitProjectId: number;
@@ -351,7 +349,7 @@ export class ProjectController {
       keyword,
       take,
     });
-    return list.map((item) => transformJobToProject(item));
+    return list;
   }
 
   @Public()
@@ -368,7 +366,7 @@ export class ProjectController {
   @Post('list/pagination')
   async listWithPagination(
     @Body() listWithPaginationDto: ProjectListWithPaginationDto,
-    @DePayloadUser() user?: IPayloadUser,
+    @PayloadUser() user?: IPayloadUser,
   ): Promise<Pagination<Project, CustomPaginationMeta>> {
     const { page, ...searchParams } = listWithPaginationDto;
     const pageData = await this.projectService.paginate(searchParams, page);
@@ -408,10 +406,7 @@ export class ProjectController {
 
       const ids = iterations.map((it) => it.projectId);
 
-      return this.projectService.findProjectListByIds(
-        ids,
-        listByStatusDto?.take,
-      );
+      return this.projectService.findProjectListByIds(ids);
     }
 
     return [];
@@ -505,8 +500,8 @@ export class ProjectController {
 
     const projectIds = userStaredProjects.map((item) => item.projectId);
 
-    const projectList: Project[] =
-      await this.projectService.findProjectListByIds(projectIds, 100);
+    const projectList =
+      await this.projectService.findProjectListByIds(projectIds);
 
     return projectList;
   }
@@ -631,11 +626,9 @@ export class ProjectController {
       projectDetailDto.id,
     );
     if (project.microserviceIds) {
-      const microserviceList: Array<Project & { fprojectId?: string }> =
-        await this.projectService.findProjectListByIds(
-          project.microserviceIds,
-          100,
-        );
+      const microserviceList = await this.projectService.findProjectListByIds(
+        project.microserviceIds,
+      );
       return microserviceList;
     }
     return [];
@@ -648,16 +641,11 @@ export class ProjectController {
   async delMicroserviceList(
     @Body() projectDetailDto: IRegisterMicroserviceDto,
   ): Promise<any> {
-    const { MicrosIds } = projectDetailDto;
     const project = await this.projectService.findProjectById(
       projectDetailDto.id,
     );
-    const reMicrosIdList = project.microserviceIds.filter(
-      (micro) => !MicrosIds.includes(micro),
-    );
     return this.projectService.createOrUpdate({
       ...project,
-      microserviceIds: reMicrosIdList,
     });
   }
 }

@@ -24,8 +24,6 @@ export class IterationHelper {
     private readonly operationService: OperationService,
     private readonly branchService: BranchService,
     private readonly repositoryService: RepositoryService,
-    private readonly userSerivce: UserService,
-    private readonly feishuService: FeishuService,
   ) { }
 
   // 同步 git 分支

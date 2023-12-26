@@ -20,12 +20,10 @@ export class H5JenkinsParams {
   MP_APPID?: string;
   ARCHIVE_USER?: string;
   DESC?: string;
-  WEAPP3RD_ACCESS_TOKEN?: string;
   CDN?: string;
   NPM?: string;
   RESOURCE?: string;
   EXTRA?: string; // 自由扩展字段
-  SHIELD_WEB_CONFIG: string;
 }
 
 export type IJenkinsType =

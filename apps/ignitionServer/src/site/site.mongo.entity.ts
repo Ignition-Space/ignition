@@ -5,7 +5,6 @@ import {
   ObjectIdColumn,
   ObjectId,
   UpdateDateColumn,
-  BeforeInsert,
 } from 'typeorm';
 
 export enum PAGE_TYPE {

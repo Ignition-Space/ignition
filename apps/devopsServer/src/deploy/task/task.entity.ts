@@ -74,12 +74,4 @@ export class Task {
     length: 64,
   })
   version?: string | null;
-
-  @Column('varchar', {
-    name: 'domain_id',
-    nullable: true,
-    comment: '域名ID',
-    length: 36,
-  })
-  domainId?: string | null;
 }

@@ -2,7 +2,7 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
-import { AllExceptionsFilter, HttpExceptionFilter } from './core';
+import { AllExceptionsFilter, HttpExceptionFilter } from '@app/common';
 import { generateDocument } from './doc';
 
 async function bootstrap() {

@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty } from 'class-validator';
 
 import { ProcessNodes } from '@devopsServer/iteration/process/process.entity';
-import { HasProjectType } from '@devopsServer/project/project-type/project-type.validator';
 import { PublishStatus } from './task.entity';
 
 import { IJenkinsType } from '@devopsServer/common/jenkins/jenkins.dto';
@@ -51,7 +50,6 @@ export class PublishDto {
   environment: ProcessNodes; // 发布环境
 
   @ApiProperty({ example: 'web' })
-  @HasProjectType()
   projectType: IJenkinsType; // 发布类型
 
   thirdMiniIds?: number[]; // 第三方小程序 ids
@@ -64,9 +62,6 @@ export class PublishDto {
 
   @ApiProperty({ example: '描述' })
   desc?: string; // 描述
-
-  @ApiProperty({ example: 1 })
-  domainId?: string; // 域名 id
 
   @ApiProperty({ example: 1 })
   nodeId?: number; // 发布节点 id
@@ -113,19 +108,15 @@ export class PublishNewDto {
   environment: ProcessNodes; // 发布环境
 
   @ApiProperty({ example: 1 })
-  @HasProjectType()
   appId: number;
 
   @ApiProperty({ example: '0.0.01' })
-  @HasProjectType()
   deployVersion: string;
 
   @ApiProperty({ example: 1 })
-  @HasProjectType()
   taskId: string;
 
   @ApiProperty({ example: 'web' })
-  @HasProjectType()
   projectType: IJenkinsType; // 发布类型
 
   thirdMiniIds?: number[]; // 第三方小程序 ids
@@ -138,9 +129,6 @@ export class PublishNewDto {
 
   @ApiProperty({ example: '描述' })
   desc?: string; // 描述
-
-  @ApiProperty({ example: 1 })
-  domainId?: string; // 域名 id
 
   @ApiProperty({ example: 1 })
   nodeId?: number; // 发布节点 id
@@ -217,22 +205,12 @@ export enum TaskExtraFields {
   version = 'version',
   microConfig = 'microConfig',
 }
-
-export class QueryByIronTaskIdDto {
-  @ApiProperty({ example: 1 })
-  ironTaskId: string;
-  @ApiProperty({ example: [TaskExtraFields.version] })
-  fields: TaskExtraFields[];
-}
-
 export class QueryByEmailDto {
   @ApiProperty({ example: [''] })
   emails: string[];
 }
 
 export class RollbackDto {
-  @ApiProperty({ example: '0', description: '域名ID' })
-  domainId?: string;
   @ApiProperty({ example: '0.0.1', description: '回退版本' })
   @IsNotEmpty()
   rollbackVersion: string;

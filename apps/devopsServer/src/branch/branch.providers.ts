@@ -4,6 +4,6 @@ export const branchProviders = [
   {
     provide: 'BRANCH_REPOSITORY',
     useFactory: (AppDataSource) => AppDataSource.getRepository(Branch),
-    inject: ['MYSQL_DEVOPS_DATABASE_CONFIG'],
+    inject: ['MYSQL_DEVOPS_DATA_SOURCE'],
   },
 ];

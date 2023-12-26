@@ -4,7 +4,10 @@
  */
 import axios, { Method } from 'axios';
 
-import { ADMIN_PRIVATE_TOKEN, GIT_URL } from './config';
+import { getConfig } from '@app/common';
+
+const { GITLAB_CONFIG = {} } = getConfig();
+const { ADMIN_PRIVATE_TOKEN, GIT_URL } = GITLAB_CONFIG;
 
 interface IMethodV {
   url: string;

@@ -55,15 +55,8 @@ export class ThirdMiniProgramController {
   getReThirdMiniPrograms = async (commitCodeParams) => {
     const { thirdMiniProgramIds, componentAppId, projectId, environment } =
       commitCodeParams;
-    const auth = await this.redisService.get(
-      this.redisService.REDIS_CONFIG.key,
-    );
-    console.log('auth===>', auth);
-    if (!auth) {
-      throw new BusinessException('redis token 获取失败');
-    }
     const authorizerList: any = await WeChatApi.getAuthorizerList({
-      component_access_token: auth,
+      component_access_token: '1',
       component_appid: componentAppId,
       offset: 0,
       count: 500,
@@ -100,7 +93,7 @@ export class ThirdMiniProgramController {
       let { bizConfig }: any = thirdMiniProgram;
       bizConfig = JSON.parse(bizConfig);
       const token: any = await WeChatApi.getApiAuthorizerToken({
-        component_access_token: auth,
+        component_access_token: 's',
         component_appid: componentAppId,
         authorizer_appid: bizConfig.attr.wxAppid,
         authorizer_refresh_token: refresh_token,
@@ -208,17 +201,6 @@ export class ThirdMiniProgramController {
       recordList.push(record);
     }
     console.log('recordList===>', recordList);
-    request({
-      url: this.redisService.REDIS_CONFIG.javaUrl,
-      option: {
-        method: 'POST',
-        data: { pubInfo: recordList },
-        headers: {
-          version: 'springLi',
-          originType: 1,
-        },
-      },
-    });
     return reThirdMiniPrograms;
   }
 
@@ -315,18 +297,6 @@ export class ThirdMiniProgramController {
       recordList.push(record);
     }
     console.log('recordList===>', recordList);
-    const res = await request({
-      url: this.redisService.REDIS_CONFIG.javaUrl,
-      option: {
-        method: 'POST',
-        data: { pubInfo: recordList },
-        headers: {
-          version: 'springLi',
-          originType: 1,
-        },
-      },
-    });
-    console.log(res);
 
     return reThirdMiniPrograms;
   }

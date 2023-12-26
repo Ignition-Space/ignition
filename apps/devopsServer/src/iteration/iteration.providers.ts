@@ -4,6 +4,6 @@ export const iterationProviders = [
   {
     provide: 'ITERATION_REPOSITORY',
     useFactory: (AppDataSource) => AppDataSource.getRepository(Iteration),
-    inject: ['MYSQL_DEVOPS_DATABASE_CONFIG'],
+    inject: ['MYSQL_DEVOPS_DATA_SOURCE'],
   },
 ];

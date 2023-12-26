@@ -3,8 +3,12 @@
  * @Description: gitlab 用户模块 api
  */
 
-import { ADMIN_PRIVATE_TOKEN } from './config';
+import { getConfig } from '@app/common';
 import { gitPost, methodV } from './request';
+
+const { GITLAB = {} } = getConfig();
+
+const { ADMIN_PRIVATE_TOKEN } = GITLAB;
 
 type PasswordGrantType = {
   username: string;

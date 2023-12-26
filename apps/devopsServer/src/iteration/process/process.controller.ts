@@ -51,12 +51,6 @@ export class ProcessController {
       listDto.projectId,
     );
 
-      .map((lock) => lock.domainId)
-      .filter(Boolean);
-    const lockedDomainList =
-      await this.domainService.findListById(domainIdList);
-    const lockedDomainMap = keyBy(lockedDomainList, 'id');
-
     const resultList = [];
     const result: Result = {};
 
@@ -153,24 +147,6 @@ export class ProcessController {
         return {
           status: t,
           taskList: processTask[t],
-          locks: envLockList
-            .filter(
-              (lock) =>
-                lock.projectType === projectType && lock.environment === +t,
-            )
-            .map((lock) => {
-              const domain = lock.domainId
-                ? lockedDomainMap[lock.domainId]
-                : null;
-              return {
-                ...lock,
-                fplanName: lockedFplanMap[lock.fplanId]?.fname,
-                fprojectId: lockedFplanMap[lock.fplanId]?.fprojectId,
-                domainName: lock.domainId
-                  ? `${domain.name}.${domain.host}/${domain.path}`
-                  : null,
-              };
-            }),
         };
       });
       if (processList.length > 0) {

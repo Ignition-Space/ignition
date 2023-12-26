@@ -26,7 +26,6 @@ export class DeployHistoryService {
     await this.save({
       ...deployHistory,
       htmlAdr,
-      domainId: task.domainId,
       projectId: task.projectId,
       iterationId,
       taskId: task.id,

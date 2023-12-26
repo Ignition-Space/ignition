@@ -9,9 +9,7 @@ import { buildJenkins, getQueuedInfo } from './jenkins.helper';
 
 @Injectable()
 export class JenkinsService {
-  async buildH5(
-    jenkinsParams: IJenkinsParams<H5JenkinsParams>,
-  ): Promise<IJenkinsCallBack<any>> {
+  async buildH5(jenkinsParams): Promise<IJenkinsCallBack<any>> {
     const jenkinsCallback = await buildJenkins<
       H5JenkinsParams,
       IJenkinsCallBack<any>

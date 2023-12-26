@@ -8,7 +8,7 @@ export class DeployConfigService {
   constructor(
     @Inject('DEPLOY_CONFIG_REPOSITORY')
     private deployConfigRepository: MongoRepository<DeployConfig>,
-  ) {}
+  ) { }
 
   save(page) {
     return this.deployConfigRepository.save(page);

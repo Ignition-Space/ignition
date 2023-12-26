@@ -2,13 +2,12 @@ import { Inject } from '@nestjs/common';
 import { MongoRepository } from 'typeorm';
 import { Interface } from './interface.mongo.entity';
 import { ObjectId } from 'mongodb';
-import path from 'path';
 
 export class InterfaceService {
   constructor(
     @Inject('INTERFACE_REPOSITORY')
     private interfaceRepository: MongoRepository<Interface>,
-  ) {}
+  ) { }
 
   saveAndUpdate(inter) {
     const { id, ...res } = inter;

@@ -4,6 +4,6 @@ export const projectTypeProviders = [
   {
     provide: 'PROJECT_TYPE_REPOSITORY',
     useFactory: (AppDataSource) => AppDataSource.getRepository(ProjectType),
-    inject: ['MYSQL_DEVOPS_DATABASE_CONFIG'],
+    inject: ['MYSQL_DEVOPS_DATA_SOURCE'],
   },
 ];

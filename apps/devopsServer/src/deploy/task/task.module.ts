@@ -30,10 +30,6 @@ import { DeployHistoryModule } from '../history/history.module';
     forwardRef(() => ThirdMiniProgramModule),
     forwardRef(() => ProjectConfigurationModule),
     forwardRef(() => JenkinsModule),
-    forwardRef(() => RedisModule),
-    forwardRef(() => FeishuModule),
-    forwardRef(() => NacosModule),
-    forwardRef(() => DomainModule),
   ],
   exports: [TaskService],
 })

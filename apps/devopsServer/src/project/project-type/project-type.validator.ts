@@ -35,16 +35,3 @@ export class ProjectTypeConstraint implements ValidatorConstraintInterface {
     return `${property} : ${value} ，验证失败`;
   }
 }
-
-export function HasProjectType(validationOptions?: ValidationOptions) {
-  return function (object: any) {
-    registerDecorator({
-      name: 'hasProjectType',
-      target: object.constructor,
-      propertyName: 'projectType',
-      constraints: [{ message: '项目类型不存在' }],
-      options: validationOptions,
-      validator: ProjectTypeConstraint,
-    });
-  };
-}

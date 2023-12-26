@@ -2,14 +2,13 @@ import { Injectable, Inject } from '@nestjs/common';
 import { MongoRepository } from 'typeorm';
 import { Page } from './page.mongo.entity';
 import { ObjectId } from 'mongodb';
-import { STATUS_TYPE } from '../site/site.mongo.entity';
 
 @Injectable()
 export class PageService {
   constructor(
     @Inject('PAGE_REPOSITORY')
     private pageRepository: MongoRepository<Page>,
-  ) {}
+  ) { }
 
   save(page) {
     return this.pageRepository.save(page);

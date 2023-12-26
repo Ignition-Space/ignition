@@ -3,7 +3,6 @@ import { IsNotEmpty } from 'class-validator';
 import { IterationStatus } from '@devopsServer/iteration/iteration.entity';
 import { HasProject } from './project.validator';
 
-import nacosJson from './config/nacos.config.json';
 import { Project } from './project.entity';
 
 const deployJson = {
@@ -92,11 +91,6 @@ export class SetupDto extends SetupDetailDto {
   deployConfig?: string;
 
   @ApiProperty({
-    example: JSON.stringify(nacosJson),
-  })
-  nacosConfig?: string;
-
-  @ApiProperty({
     example: null,
   })
   secretToken?: string;
@@ -121,14 +115,10 @@ export class SetupDto extends SetupDetailDto {
   })
   componentAppId?: string;
 
-  @ApiProperty({
-    example: JSON.stringify(nacosJson),
-  })
+  @ApiProperty({})
   onlineMicroConfig?: string;
 
-  @ApiProperty({
-    example: JSON.stringify(nacosJson),
-  })
+  @ApiProperty({})
   offlineMicroConfig?: string;
 }
 
@@ -212,19 +202,16 @@ export class ListByStatusDto {
 
 export class StarProjectDto {
   @ApiProperty({ example: 1 })
-  @HasProject({ message: '项目不存在' })
   projectId: number;
 }
 
 export class IronAppDto {
   @ApiProperty({ example: 1 })
-  @HasProject({ message: '应用不存在' })
   jobId: number;
 }
 
 export class UnStarProjectDto {
   @ApiProperty({ example: 1 })
-  @HasProject()
   projectId: number;
 }
 
