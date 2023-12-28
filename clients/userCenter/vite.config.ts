@@ -13,14 +13,6 @@ export default defineConfig({
   base: './',
   plugins: [
     react(),
-    eslintPlugin({
-      cache: false,
-      failOnError: false,
-      include: ['src/**/*.js', 'src/**/*.tsx', 'src/**/*.ts'],
-    }),
-    createStyleImportPlugin({
-      resolves: [AntdResolve()],
-    }),
   ],
   css: {
     preprocessorOptions: {

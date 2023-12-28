@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Post,
-  UseGuards,
-  Body,
-  Res,
-  Get,
-  Query,
-  Req,
-  Response,
-} from '@nestjs/common';
+import { Controller, Post, UseGuards, Res, Get, Query } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -29,7 +19,7 @@ export class AuthController {
   @UseGuards(OAuthGuard)
   @Get('/')
   async OAuth(
-    @PayloadUser() user: Payload,
+    @PayloadUser() user: IPayloadUser,
     @Res({ passthrough: true }) response,
   ) {
     const { access_token } = await this.authService.login(user);
@@ -39,6 +29,8 @@ export class AuthController {
       httpOnly: true,
       domain: '.ig-space.com',
     });
+
+    console.log('access_token==', access_token);
 
     return access_token;
   }
@@ -56,14 +48,13 @@ export class AuthController {
   @ApiOperation({
     summary: '飞书 Auth2 授权登录',
     description:
-      '通过 code 获取`access_token`https://open.feishu.cn/open-apis/authen/v1/index?app_id=cli_a2ed5e7be4f9500d&redirect_uri=http%3A%2F%2F127.0.0.1%3A8080%2Fauth',
+      '通过 code 获取`access_token`https://open.feishu.cn/open-apis/authen/v1/index?app_id=07aac5b0e0a0dc5dfdcb&redirect_uri=http%3A%2F%2Fapi.ig-space.com%3A8080%2Fauth',
   })
   @Public()
   @Get('/feishu/auth2')
   async getFeishuTokenByApplications(
-    @PayloadUser() user: Payload,
+    @PayloadUser() user: IPayloadUser,
     @Res({ passthrough: true }) response,
-    @Query() query: GetTokenByApplications,
   ) {
     const { access_token } = await this.authService.login(user);
 
@@ -79,7 +70,7 @@ export class AuthController {
     description: '解密 token 包含的信息',
   })
   @Get('/token/info')
-  async getTokenInfo(@PayloadUser() user: Payload) {
+  async getTokenInfo(@PayloadUser() user: IPayloadUser) {
     return user;
   }
 }

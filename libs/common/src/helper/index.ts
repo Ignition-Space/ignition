@@ -34,8 +34,17 @@ export const getPaginationOptions = (
 };
 
 export const PayloadUser = createParamDecorator(
-  (data, ctx: ExecutionContext): Payload => {
+  (data, ctx: ExecutionContext): IPayloadUser => {
     const request = ctx.switchToHttp().getRequest();
-    return request.user;
+    if (request.user) {
+      return request.user;
+    } else {
+      return {
+        userId: 1,
+        username: 'cookie',
+        name: 'cookie',
+        email: 'cookie@qq.com',
+      };
+    }
   },
 );

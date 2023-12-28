@@ -1,0 +1,30 @@
+{
+  "cmd": {
+    "env": [
+      "PUBLIC_URL",
+      "STATIC_EXTRA_PATH",
+      "DEPLOY_ENV"
+    ],
+    "script": "npm run deploy"
+  },
+  "products": [
+    {
+      "type": "html",
+      "path": "./dist/main"
+    },
+    {
+      "type": "static",
+      "path": "./dist/static"
+    },
+    {
+      "type": "nacos",
+      "path": "./dist/main/index.html"
+    }
+  ],
+  "hooks": {
+    "pre": {
+      "env": [],
+      "script": "npm run build:es"
+    }
+  }
+}

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
-import { GithubUserInfo } from '../userCenter/user/user.dto';
-import { User } from '../userCenter/user/user.mysql.entity';
-import { UserService } from '../userCenter/user/user.service';
-import { OAuthService } from '../userCenter/user/oauth.service';
+import { GithubUserInfo } from '../user/user.dto';
+import { User } from '../user/user.mysql.entity';
+import { UserService } from '../user/user.service';
+import { OAuthService } from '../user/oauth.service';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +14,7 @@ export class AuthService {
     private oAuthService: OAuthService,
   ) { }
 
-  async validateFeishuUser(code: string): Promise<Payload> {
+  async validateFeishuUser(code: string): Promise<IPayloadUser> {
     const userInfo: GithubUserInfo = await this.getOAuthTokenByApplications(
       code,
     );
@@ -30,7 +30,7 @@ export class AuthService {
     };
   }
 
-  async login(user: Payload) {
+  async login(user: IPayloadUser) {
     return {
       access_token: this.jwtService.sign(user),
     };

@@ -1,15 +1,21 @@
 {
   "compilerOptions": {
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
       "@app/common": [
         "libs/common/src"
       ],
       "@app/common/*": [
         "libs/common/src/*"
-      ]
+      ],
+      "@ignitionServer/*": [
+        "apps/ignitionServer/src/*"
+      ],
+      "@devopsServer/*": [
+        "apps/devopsServer/src/*"
+      ],
+      "@materialsServer/*": [
+        "apps/materialsServer/src/*"
+      ],
     },
     "module": "commonjs",
     "declaration": true,
@@ -29,5 +35,11 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "resolveJsonModule": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "**/*spec.ts"
+  ]
 }

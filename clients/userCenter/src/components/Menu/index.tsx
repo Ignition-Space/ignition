@@ -9,7 +9,6 @@ const { Sider } = Layout;
 
 import './index.less';
 import ImgLogo from '@/assets/logo.png';
-import Icon from '@/components/Icon';
 
 import type { Menu } from '@/models/index.type';
 import type { ItemType } from 'antd/lib/menu/hooks/useItems';
@@ -70,7 +69,6 @@ export default function MenuCom(props: Props): JSX.Element {
           label:
             !item.parent && item.icon ? (
               <span>
-                <Icon type={item.icon} />
                 <span>{item.title}</span>
               </span>
             ) : (
@@ -82,7 +80,6 @@ export default function MenuCom(props: Props): JSX.Element {
         return {
           label: (
             <>
-              {!item.parent && item.icon ? <Icon type={item.icon} /> : null}
               <span>{item.title}</span>
             </>
           ),

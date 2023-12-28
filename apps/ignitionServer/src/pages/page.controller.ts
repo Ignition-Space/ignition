@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Get, Res, Query } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { BusinessException, Public } from '../core';
+import { BusinessException, Public } from '@app/common';
 import {
   addPageDto,
   findPageDto,
@@ -28,7 +28,7 @@ export class PageController {
     // private templateService: TemplateService,
     private siteService: SiteService,
     private deployConfigService: DeployConfigService,
-  ) {}
+  ) { }
 
   @ApiOperation({
     summary: '生成页面',

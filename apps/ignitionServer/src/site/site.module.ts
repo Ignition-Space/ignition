@@ -27,4 +27,4 @@ import { SiteService } from './site.service';
   ],
   exports: [InterfaceService, SiteService],
 })
-export class SiteModule {}
+export class SiteModule { }
