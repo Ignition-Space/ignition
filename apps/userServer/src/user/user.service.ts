@@ -37,6 +37,18 @@ export class UserService {
     this.userRepository.save(user);
   }
 
+  async findUserByLocal({ username, password }) {
+    const findUser: User = await this.userRepository.findOne({
+      where: [
+        {
+          username,
+          password,
+        },
+      ],
+    });
+    return findUser;
+  }
+
   async createOrUpdateByOAoth(userInfo: GithubUserInfo) {
     const findUser: User = await this.userRepository.findOne({
       where: [{ email: userInfo.email }],

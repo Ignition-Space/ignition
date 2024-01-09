@@ -1,4 +1,5 @@
 @backColor: #d1e3fa;
+
 .header {
   background-color: #fff;
   padding: 0;
@@ -6,12 +7,15 @@
   overflow: hidden;
   display: flex;
   align-items: center;
+
   .trigger {
     padding: 0 24px;
     font-size: 20px;
     cursor: pointer;
     line-height: 64px;
     transition: all 0.3s;
+    color: #fff;
+
     &.fold {
       transform: rotate(180deg);
     }
@@ -19,15 +23,19 @@
       background-color: @backColor;
     }
   }
+
   .rightBox {
     flex: auto;
     display: flex;
     justify-content: flex-end;
+    color: #fff;
+
     .userhead {
       padding: 0 20px;
       margin-right: 4px;
       cursor: pointer;
       font-size: 20px;
+      color: #fff;
       .username {
         font-size: 14px;
         margin-left: 4px;
@@ -50,6 +58,7 @@
     .icon {
       font-size: 20px;
       padding: 4px;
+      color: #fff;
     }
     &:hover {
       background-color: @backColor;

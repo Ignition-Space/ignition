@@ -149,7 +149,7 @@ export default function HeaderCom(props: Props): JSX.Element {
             placement="bottomRight"
           >
             <div className="userhead all_center">
-              <SmileOutlined color="red" />
+              <SmileOutlined />
               <span className="username">{u.name}</span>
             </div>
           </Dropdown>

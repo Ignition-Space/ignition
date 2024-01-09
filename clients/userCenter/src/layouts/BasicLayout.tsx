@@ -30,8 +30,7 @@ function BasicLayoutCom(): JSX.Element {
 
   return (
     <Layout className="page-basic" hasSider>
-      <MenuCom data={userinfo.menus} collapsed={collapsed} />
-
+      <MenuCom data={userinfo?.menus} collapsed={collapsed} />
       <Layout>
         <Header
           collapsed={collapsed}

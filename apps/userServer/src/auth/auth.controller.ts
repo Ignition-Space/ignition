@@ -2,10 +2,10 @@ import { Controller, Post, UseGuards, Res, Get, Query } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GetTokenByApplications } from './auth.dto';
 import { Public } from './constants';
 import { PayloadUser } from '@app/common';
 import { OAuthGuard } from './guards/oauth.guard';
+import { LocalGuard } from './guards/local.guard';
 
 @ApiTags('用户认证')
 @Controller('auth')
@@ -13,7 +13,28 @@ export class AuthController {
   constructor(private authService: AuthService) { }
 
   @ApiOperation({
-    summary: 'OAUTH 授权',
+    summary: '用户密码登录',
+  })
+  @Public()
+  @UseGuards(LocalGuard)
+  @Post('/login')
+  async UserLogin(
+    @PayloadUser() user: IPayloadUser,
+    @Res({ passthrough: true }) response,
+  ) {
+    const { access_token } = await this.authService.login(user);
+
+    response.cookie('jwt', access_token, {
+      path: '/',
+      httpOnly: true,
+      domain: '.ig-space.com',
+    });
+
+    return user;
+  }
+
+  @ApiOperation({
+    summary: 'Github OAUTH 授权',
   })
   @Public()
   @UseGuards(OAuthGuard)

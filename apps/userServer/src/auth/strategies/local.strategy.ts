@@ -4,15 +4,13 @@ import { AuthService } from '../auth.service';
 import { Strategy } from 'passport-custom';
 
 @Injectable()
-export class OAuthStrategy extends PassportStrategy(Strategy, 'oauth') {
+export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
   constructor(private authService: AuthService) {
     super();
   }
 
   async validate(req): Promise<IPayloadUser> {
-    const q: any = req.query;
-
-    const user = await this.authService.validateGithubUser(q.code as string);
+    const user = await this.authService.validateLocalUser({ ...req.body });
 
     if (!user) {
       throw new UnauthorizedException();

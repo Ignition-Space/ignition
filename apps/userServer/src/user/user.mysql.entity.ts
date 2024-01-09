@@ -18,6 +18,12 @@ export class User {
   @Column({ default: null })
   name: string;
 
+  @Column({ default: null, length: 255 })
+  password: string;
+
+  @Column({ default: null })
+  phone: string;
+
   @Column({ default: null })
   username: string;
 

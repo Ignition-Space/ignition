@@ -14,10 +14,28 @@ export class AuthService {
     private oAuthService: OAuthService,
   ) { }
 
-  async validateFeishuUser(code: string): Promise<IPayloadUser> {
-    const userInfo: GithubUserInfo = await this.getOAuthTokenByApplications(
-      code,
-    );
+  async validateLocalUser({ username, password }): Promise<IPayloadUser> {
+    // 同步信息
+    const user: User = await this.userService.findUserByLocal({
+      username,
+      password,
+    });
+
+    console.log('user==>', user);
+
+    if (!user) return null;
+
+    return {
+      userId: user.id,
+      username: user.username,
+      name: user.name,
+      email: user.email,
+    };
+  }
+
+  async validateGithubUser(code: string): Promise<IPayloadUser> {
+    const userInfo: GithubUserInfo =
+      await this.getOAuthTokenByApplications(code);
 
     // 同步信息
     const user: User = await this.userService.createOrUpdateByOAoth(userInfo);
