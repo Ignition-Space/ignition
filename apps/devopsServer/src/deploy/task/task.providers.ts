@@ -4,6 +4,6 @@ export const taskProviders = [
   {
     provide: 'TASK_REPOSITORY',
     useFactory: (AppDataSource) => AppDataSource.getRepository(Task),
-    inject: ['DATABASE_CONNECTION'],
+    inject: ['MYSQL_DEVOPS_DATA_SOURCE'],
   },
 ];

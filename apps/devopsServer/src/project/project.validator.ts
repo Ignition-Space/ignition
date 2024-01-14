@@ -6,7 +6,6 @@ import {
   ValidatorConstraintInterface,
   ValidatorConstraint,
 } from 'class-validator';
-import { Project } from '@devopsServer/project/project.entity';
 import { ProjectService } from '@devopsServer/project/project.service';
 
 @ValidatorConstraint({ async: true })

@@ -1,6 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { BranchModule } from '@devopsServer/branch/branch.module';
-import { DatabaseModule } from '@app/common';
 import { IterationModule } from '@devopsServer/iteration/iteration.module';
 import { ProcessModule } from '@devopsServer/iteration/process/process.module';
 import { ProjectModule } from '@devopsServer/project/project.module';
@@ -12,16 +11,14 @@ import { TaskController } from './task.controller';
 import { taskProviders } from './task.providers';
 import { TaskService } from './task.service';
 import { OperationModule } from '@devopsServer/system/operation/operation.module';
-import { DeployHistoryController } from '../history/history.controller';
-import { DeployHistoryModule } from '../history/history.module';
+import { DeployHistoryModule } from '@devopsServer/deploy/history/history.module';
 
 @Module({
-  controllers: [TaskController, DeployHistoryController],
+  controllers: [TaskController],
   providers: [TaskService, ...taskProviders],
   imports: [
-    DatabaseModule,
     OperationModule,
-    DeployHistoryModule,
+    forwardRef(() => DeployHistoryModule),
     forwardRef(() => ProjectModule),
     forwardRef(() => ProcessModule),
     forwardRef(() => IterationModule),

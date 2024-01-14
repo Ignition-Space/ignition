@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
   H5JenkinsParams,
-  IJenkinsParams,
   IJenkinsCallBack,
   IGetJenkinsInfoParams,
 } from './jenkins.dto';

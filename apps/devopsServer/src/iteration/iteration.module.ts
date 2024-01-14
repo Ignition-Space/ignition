@@ -6,17 +6,21 @@ import { DatabaseModule } from '@app/common';
 import { RepositoryModule } from '../common/repository/repository.module';
 
 import { IterationController } from './iteration.controller';
-import { iterationProviders } from './iteration.providers';
 import { IterationService } from './iteration.service';
 import { IterationConstraint } from './iteration.validator';
 import { OperationModule } from '../system/operation/operation.module';
 import { IterationHelper } from './helper';
 import { TaskModule } from '../deploy/task/task.module';
+import { Iteration } from './iteration.entity';
 
 @Module({
   controllers: [IterationController],
   providers: [
-    ...iterationProviders,
+    {
+      provide: 'ITERATION_REPOSITORY',
+      useFactory: (AppDataSource) => AppDataSource.getRepository(Iteration),
+      inject: ['MYSQL_DEVOPS_DATA_SOURCE'],
+    },
     IterationService,
     IterationConstraint,
     IterationHelper,

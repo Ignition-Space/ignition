@@ -1,4 +1,4 @@
-import { methodV } from '../../utils/request';
+import { methodV } from '@devopsServer/helper/feishu/request';
 
 export const getUserInfo = async (user_token: string) => {
   const { data } = await methodV({
@@ -39,7 +39,10 @@ export const getSingleUserInfo = async (
  * @param app_token
  * @returns
  */
-export const getUserListByDepartmentId = async (department_id: string, app_token: string) => {
+export const getUserListByDepartmentId = async (
+  department_id: string,
+  app_token: string,
+) => {
   const { data } = await methodV({
     url: `https://open.feishu.cn/open-apis/contact/v3/users`,
     // url: `/contact/v3/users/find_by_department`,
@@ -55,7 +58,6 @@ export const getUserListByDepartmentId = async (department_id: string, app_token
   });
   return data;
 };
-
 
 export const getEmployeeTypeEnums = async ({ app_token }) => {
   const { data } = await methodV({
