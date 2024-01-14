@@ -8,14 +8,21 @@ import { ProjectConfigurationModule } from '@devopsServer/project/project-config
 import { ThirdMiniProgramModule } from '@devopsServer/project/third-mini-program/third-mini-program.module';
 import { RepositoryModule } from '@devopsServer/common/repository/repository.module';
 import { TaskController } from './task.controller';
-import { taskProviders } from './task.providers';
 import { TaskService } from './task.service';
 import { OperationModule } from '@devopsServer/system/operation/operation.module';
 import { DeployHistoryModule } from '@devopsServer/deploy/history/history.module';
+import { Task } from './task.entity';
 
 @Module({
   controllers: [TaskController],
-  providers: [TaskService, ...taskProviders],
+  providers: [
+    TaskService,
+    {
+      provide: 'TASK_REPOSITORY',
+      useFactory: (AppDataSource) => AppDataSource.getRepository(Task),
+      inject: ['MYSQL_DEVOPS_DATA_SOURCE'],
+    },
+  ],
   imports: [
     OperationModule,
     forwardRef(() => DeployHistoryModule),

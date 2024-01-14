@@ -273,38 +273,9 @@ export class ProjectController {
     );
     // const project: any = await cmdbProject.getProject(projectDetailDto.id);
 
-    const reProjectConfig: ProjectConfiguration[] =
-      await this.projectConfigurationService.findByProjectId(
-        projectDetailDto.id,
-      );
-
     if (!project) {
       throw new BusinessException('未查到项目');
     }
-
-    /**
-     * @description: 兼容老项目，如果没有reProjectConfig，默认h5项目，取之前的老数据
-     */
-    const projectConfig: any = {};
-
-    project.projectTypes.forEach((type) => {
-      projectConfig[type] = {
-        projectId: project.id,
-        projectType: type,
-        deployConfig: project.deployConfig,
-      };
-      if (type === 'web') projectConfig['nacosConfig'] = project.nacosConfig;
-      reProjectConfig.forEach((reConfig) => {
-        if (
-          reConfig.authentication &&
-          typeof reConfig.authentication === 'string'
-        )
-          reConfig.authentication = JSON.parse(reConfig.authentication);
-        if (projectConfig[type]) {
-          projectConfig[reConfig.projectType] = reConfig;
-        }
-      });
-    });
 
     const third = project.projectTypes.filter((types) => {
       return types.includes('3rd');
@@ -329,12 +300,10 @@ export class ProjectController {
       return {
         ...project,
         thirdConfig,
-        projectConfig,
       };
     }
     return {
       ...project,
-      projectConfig,
     };
   }
 
