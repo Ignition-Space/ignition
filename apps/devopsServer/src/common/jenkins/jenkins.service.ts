@@ -4,7 +4,11 @@ import {
   IJenkinsCallBack,
   IGetJenkinsInfoParams,
 } from './jenkins.dto';
-import { buildJenkins, getQueuedInfo } from './jenkins.helper';
+
+import {
+  buildJenkins,
+  getQueuedInfo,
+} from '@devopsServer/helper/jenkins.helper';
 
 @Injectable()
 export class JenkinsService {

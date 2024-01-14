@@ -69,25 +69,6 @@ export class Project {
   @Column()
   creatorId: number;
 
-  // 发布配置
-  @Column({ type: 'json', default: null })
-  deployConfig?: string;
-
-  @Column({ type: 'json', default: null })
-  nacosConfig?: string;
-
-  // 小程序私钥配置
-  @Column({ type: 'text', default: null })
-  secretToken?: string;
-
-  // 小程序id配置
-  @Column({ type: 'text', default: null })
-  appId?: string;
-
-  // 飞书群配置
-  @Column({ type: 'simple-array', default: null })
-  chatIds?: string[];
-
   // 微服务关联id
   @Column({ type: 'simple-array', default: null })
   microserviceIds?: number[];

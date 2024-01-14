@@ -5,7 +5,7 @@ import {
   IJenkinsParams,
   IJenkinsCallBack,
   IGetJenkinsInfoParams,
-} from './jenkins.dto';
+} from '../common/jenkins/jenkins.dto';
 
 /**
  * @description: Jenkins连接
