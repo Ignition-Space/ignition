@@ -30,9 +30,6 @@ export class Page {
   siteId: string;
 
   @Column()
-  interfaceId: string;
-
-  @Column()
   domainId: string;
 
   @Column({ default: null })
