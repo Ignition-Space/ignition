@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "cd .. && pnpm start:ignition"
+    "dev": "cd .. && pnpm start:ignition",
+    "dev:ig": "cd .. && pnpm start:ignition"
   }
 }

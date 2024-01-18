@@ -38,6 +38,9 @@ export class Site {
   url: string;
 
   @Column({ default: null })
+  domain: string;
+
+  @Column({ default: null })
   apiType: API_TYPE;
 
   @Column({ default: null })

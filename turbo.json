@@ -6,6 +6,9 @@
     },
     "dev:user": {
       "cache": false
+    },
+    "dev:ig": {
+      "cache": false
     }
   }
 }
