@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "dev:user": "vite",
-    "build": "tsc && vite build",
+    "build:user": "vite build",
+    "deploy:user": "anywhere -p 8080 -d ../../dist-web/user -s",
     "preview": "vite preview",
     "prettier": "prettier --write \"{src,mock}/**/*.{js,css,less,ts,tsx}\""
   },

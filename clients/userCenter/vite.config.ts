@@ -1,7 +1,5 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
-import eslintPlugin from 'vite-plugin-eslint';
-import { createStyleImportPlugin, AntdResolve } from 'vite-plugin-style-import';
 import { resolve } from 'path';
 
 function pathResolve(dir) {
@@ -11,9 +9,7 @@ function pathResolve(dir) {
 // https://vitejs.dev/config/
 export default defineConfig({
   base: './',
-  plugins: [
-    react(),
-  ],
+  plugins: [react()],
   css: {
     preprocessorOptions: {
       less: {
@@ -29,6 +25,9 @@ export default defineConfig({
         replacement: `${pathResolve('src')}/`,
       },
     ],
+  },
+  build: {
+    outDir: '../../dist-web/user',
   },
   server: {
     host: '0.0.0.0',
