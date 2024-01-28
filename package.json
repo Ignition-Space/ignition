@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "dev:user": "turbo run dev:user",
-    "dev:ig": "turbo run dev:user",
+    "dev:ig": "turbo run dev:ig",
     "prebuild": "rimraf dist",
     "clean": "rimraf dist && rimraf node_modules && rimraf **/*/node_modules",
     "build": "turbo run build",

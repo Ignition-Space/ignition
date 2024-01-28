@@ -53,9 +53,9 @@ export class PageController {
       path: params.path,
     });
 
-    if (exit) {
-      throw new BusinessException('页面路径重复！');
-    }
+    // if (exit) {
+    //   throw new BusinessException('页面路径重复！');
+    // }
 
     console.log(interfaceOne);
 
@@ -85,7 +85,7 @@ export class PageController {
         });
     });
 
-    // const page = await this.pageService.save(params);
+    const page = await this.pageService.save(params);
 
     return html;
   }
@@ -149,15 +149,92 @@ export class PageController {
     });
   }
 
+  async packageHtmlByInterface(interfaceId) {
+    const interfaceOne = await this.interfaceService.findOne(interfaceId);
+
+    const { schema: schemas }: any = interfaceOne;
+
+    let contain = '';
+    const getTpl = (props: any) => {
+      return `
+        <Form.Item
+          label="${props.label}"
+          name="${props.name}"
+        >
+          <Input  placeholder="${props.placeholder}" />
+        </Form.Item>
+      `;
+    };
+    const properties = schemas.properties;
+    Object.keys(properties).forEach((key) => {
+      const property = properties[key];
+      console.log('property==', property);
+      contain =
+        contain +
+        getTpl({
+          label: property.description,
+          name: key,
+          placeholder: property.example,
+        });
+    });
+
+    const template = `
+        <!DOCTYPE html><html><head><meta charset="UTF-8"><title>Hello World</title>
+        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script crossorigin="anonymous" src="https://lib.baomitu.com/antd/4.24.2/antd.js"></script>
+        <link crossorigin="anonymous" href="https://lib.baomitu.com/antd/4.24.2/antd.css" rel="stylesheet">
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script></head><body><div id="root">
+        </div><script type="text/babel">const onFinish = (values : any) => {
+            console.log('Success:', values);
+          };
+
+          const onFinishFailed = (errorInfo : any) => {
+            console.log('Failed:', errorInfo);
+          };
+          function MyApp() {
+            var Form = antd.Form;
+            var Input = antd.Input;
+            var Checkbox = antd.Checkbox;
+            var Button = antd.Button;
+            return <Form
+                    name="basic"
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                    autoComplete="off"
+                  >
+              {{ pageInfo |safe }}
+              <Form.Item >
+                <Button type="primary" htmlType="submit">
+                          Submit
+                        </Button>
+              </Form.Item>
+            </Form>;
+          }
+
+          const container = document.getElementById('root');
+          const root = ReactDOM.createRoot(container);
+          root.render(<MyApp/>);</script></body></html>
+      `;
+
+    const html = nunjucks.renderString(template, {
+      pageInfo: contain,
+    });
+    return html;
+  }
+
   async packageHtml(params) {
     const { id } = params;
     const page = await this.pageService.findOne(id);
+
     if (!page) {
       throw new BusinessException('找不到对应的页面');
     }
+
     if (!page.templateId) {
       throw new BusinessException('该页面没有对应的模板');
     }
+
     if (!page.currentConfigId) {
       throw new BusinessException('该页面没有对应的配置');
     }
@@ -165,9 +242,11 @@ export class PageController {
     const config: any = await this.pageConfigService.findOne(
       page.currentConfigId,
     );
+
     const deployConfig: any = await this.deployConfigService.findOne(
       page.deployConfigId,
     );
+
     // const template = await this.templateService.findOne(page.templateId);
 
     // if (typeof config.config != 'string') {
@@ -252,5 +331,22 @@ export class PageController {
   ) {
     // const { html } = await this.packageHtml({ id, pushType, env: 3 });
     // res.send(html);
+  }
+
+  @ApiOperation({
+    summary: '根据接口返回预览',
+  })
+  @ApiQuery({
+    name: 'id',
+    description: '接口id',
+  })
+  @Get('previewByinterface')
+  async previewByinterface(
+    @Query('id') id,
+    @Query('pushType') pushType = 0,
+    @Res() res: Response,
+  ) {
+    const html = await this.packageHtmlByInterface({ id, pushType, env: 3 });
+    res.send(html);
   }
 }
