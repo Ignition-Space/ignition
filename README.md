@@ -32,6 +32,17 @@ MYSQL_CONFIG:
   password: "123456"
   entities: "mysql"
   synchronize: true
+MYSQL_DEVOPS_CONFIG:
+  name: "devops_test"
+  type: "mysql"
+  host: "127.0.0.1"
+  port: 3306
+  username: "root"
+  password: "123456"
+  database: "devops_test"
+  entities: "mysql"
+  logging: false
+  synchronize: true
 GITGUB_CONFIG:
   CLIENT_ID: ''
   CLIENT_SECRETS: ''

@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "cd .. && pnpm start:ig",
-    "dev:ig": "cd .. && pnpm start:ig"
+    "dev": "cd .. && pnpm dev-server:ig",
+    "dev:ig": "cd .. && pnpm dev-server:ig"
   }
 }
