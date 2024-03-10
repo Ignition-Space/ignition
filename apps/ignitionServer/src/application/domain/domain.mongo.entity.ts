@@ -5,11 +5,7 @@ import {
   UpdateDateColumn,
   ObjectIdColumn,
 } from 'typeorm';
-
-export enum ENV_TYPE {
-  test = 0,
-  prod = 1,
-}
+import { ENV_TYPE } from '../application.mongo.entity';
 
 @Entity()
 export class Domain {

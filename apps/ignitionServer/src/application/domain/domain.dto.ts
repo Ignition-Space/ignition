@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { ENV_TYPE } from './domain.mongo.entity';
+import { ENV_TYPE } from '../application.mongo.entity';
 
 export class DomainCreateDto {
   @ApiProperty({

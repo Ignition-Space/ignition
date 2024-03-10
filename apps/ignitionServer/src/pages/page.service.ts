@@ -30,9 +30,6 @@ export class PageService {
     return this.pageRepository.find({
       where: {
         ...params,
-        // status: {
-        //   $ne: STATUS_TYPE.deleted,
-        // },
       },
     });
   }

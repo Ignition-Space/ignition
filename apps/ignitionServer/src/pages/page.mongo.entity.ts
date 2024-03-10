@@ -29,6 +29,10 @@ export class Page {
   @Column()
   siteId: string;
 
+
+  @Column()
+  appId: string;
+
   @Column()
   domainId: string;
 

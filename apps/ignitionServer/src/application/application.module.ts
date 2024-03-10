@@ -6,7 +6,6 @@ import { Domain } from './domain/domain.mongo.entity';
 import { DomainService } from './domain/domain.service';
 
 @Module({
-  imports: [],
   controllers: [ApplicationController],
   providers: [
     ApplicationService,
@@ -24,6 +23,7 @@ import { DomainService } from './domain/domain.service';
       inject: ['MONGODB_DATA_SOURCE'],
     },
   ],
-  exports: [ApplicationService],
+  exports: [ApplicationService]
 })
+
 export class ApplicationModule { }
