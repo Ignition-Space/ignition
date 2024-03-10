@@ -85,4 +85,46 @@ const methodV = async ({
   }
 };
 
-export { request, methodV };
+/**
+ * @description: 带 version 的通用 api 请求
+ */
+const method = async ({
+  url,
+  method,
+  headers,
+  params = {},
+  query = {},
+}: IMethodV): Promise<IRequest> => {
+  let sendUrl = '';
+  if (/^(http:\/\/|https:\/\/)/.test(url)) {
+    sendUrl = url;
+  } else {
+    sendUrl = `${url}`;
+  }
+  try {
+    return new Promise((resolve, reject) => {
+      axios({
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          ...headers,
+        },
+        url: sendUrl,
+        method,
+        params: query,
+        data: {
+          ...params,
+        },
+      })
+        .then(({ data, status }) => {
+          resolve({ data, code: status });
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { request, methodV, method };
