@@ -1,10 +1,11 @@
 import { Controller, Post, Body, Get, Res, Query } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { BusinessException, Public } from '@app/common';
+import { BusinessException, PayloadUser, Public } from '@app/common';
 import {
   addPageDto,
   findPageDto,
   PageRestoreDto,
+  PageUpdateDto,
   searchPageDto,
   updatePageDto,
 } from './page.dto';
@@ -17,6 +18,7 @@ import { STATUS_TYPE } from '../site/site.mongo.entity';
 import { DeployConfigService } from './deploy/deployConfig.service';
 
 import * as nunjucks from 'nunjucks';
+import { ApplicationService } from '@ignitionServer/application/application.service';
 
 @ApiTags('页面配置')
 @Controller('page')
@@ -28,7 +30,67 @@ export class PageController {
     // private templateService: TemplateService,
     private siteService: SiteService,
     private deployConfigService: DeployConfigService,
+    private applicationService: ApplicationService,
   ) { }
+
+
+  @ApiOperation({
+    summary: '创建Page',
+  })
+  @Post('saveAndUpatePage')
+  async saveAndUpatePage(@Body() page: PageUpdateDto,
+    @PayloadUser() user: IPayloadUser,) {
+    const { appId, id, ...rest } = page;
+
+    const app = await this.applicationService.findOne(appId);
+
+    const { userId, username } = user;
+
+    if (!app) {
+      throw new Error('没有此应用');
+    }
+
+    if (id) {
+      const orginPage = await this.pageService.findOne(id);
+      return this.pageService.save({
+        ...orginPage,
+        ...rest,
+        updatedUser: username,
+        updatedId: userId,
+      });
+    }
+
+    return this.pageService.save({
+      ...page,
+      createdUser: username,
+      createdId: userId,
+    });
+  }
+
+
+  @ApiOperation({
+    summary: '更新Page',
+  })
+  @Post('update')
+  async updatePage(@Body() page: PageUpdateDto,
+    @PayloadUser() user: IPayloadUser,) {
+    const { id } = page;
+
+    const orginPage = await this.pageService.findOne(id);
+
+    if (!page) {
+      throw new Error('没有此页面');
+    }
+
+    const { userId, username } = user;
+
+    return this.pageService.save({
+      ...orginPage,
+      ...page,
+      updatedUser: username,
+      updatedId: userId,
+    });
+  }
 
   @ApiOperation({
     summary: '生成页面',
@@ -133,6 +195,13 @@ export class PageController {
   @Post('del')
   async del(@Body() params: findPageDto) {
     const { id } = params;
+
+    const orginPage = await this.pageService.findOne(id);
+
+    if (!orginPage) {
+      throw new Error('没有此页面');
+    }
+
     return this.pageService.updateOne(id, {
       status: STATUS_TYPE.deleted,
     });

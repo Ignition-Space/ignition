@@ -2,12 +2,15 @@ import { Injectable, Inject } from '@nestjs/common';
 import { MongoRepository } from 'typeorm';
 import { Page } from './page.mongo.entity';
 import { ObjectId } from 'mongodb';
+import { PageVersion } from './pageVersion.mongo.entity copy';
 
 @Injectable()
 export class PageService {
   constructor(
     @Inject('PAGE_REPOSITORY')
     private pageRepository: MongoRepository<Page>,
+    @Inject('PAGE_VERSION_REPOSITORY')
+    private pageVersionRepository: MongoRepository<PageVersion>,
   ) { }
 
   save(page) {
@@ -40,5 +43,22 @@ export class PageService {
       { $set: { ...page } },
       { upsert: true },
     );
+  }
+
+  async saveAndUpdatePageVersion(pageVersions) {
+    return this.pageVersionRepository.save(pageVersions);
+  }
+
+  async findPageVersionOne({ page, env }) {
+    const queryBuilder =
+      this.pageVersionRepository.createQueryBuilder('PageVersion');
+
+    queryBuilder.where(`PageVersion.page_id = "${page.id}"`);
+
+    queryBuilder.andWhere(`PageVersion.env = "${env}"`);
+
+    const pageVersion = await queryBuilder.getOne();
+
+    return pageVersion;
   }
 }

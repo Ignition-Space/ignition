@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IterationService } from './iteration.service';
-import { IterationDetailDto, IterationUpdateDto } from './iteration.dto';
+import { IterationDeployDto, IterationDetailDto, IterationUpdateDto } from './iteration.dto';
 import { compareVersions, PayloadUser } from '@app/common';
 import { ITERATION_STATUS } from './iteration.mongo.entity';
-import { DELETE_FALG } from '@ignitionServer/application/application.mongo.entity';
+import { DELETE_FALG, ENV_TYPE } from '@ignitionServer/application/application.mongo.entity';
 import { PageService } from '@ignitionServer/pages/page.service';
 import { ApplicationService } from '@ignitionServer/application/application.service';
 
@@ -110,6 +110,81 @@ export class IterationController {
     });
   }
 
+
+  @ApiOperation({
+    summary: '发布迭代',
+  })
+  @Post('deploy')
+  async deploy(@Body() iteration: IterationDeployDto,
+    @PayloadUser() user: IPayloadUser,) {
+    const { userId, username } = user;
+    const { id, env, schema } = iteration;
+    const orginIteration = await this.iterationService.findOne(id);
+
+    if (!orginIteration) {
+      throw new Error('迭代不存在');
+    }
+
+    const orginPage = await this.pageService.findOne(orginIteration.pageId);
+    const app = await this.applicationService.findOne(orginPage.appId);
+    const domain = app.domains.filter(d => d.env === env)[0];
+
+    let reIteration = orginIteration;
+
+    if (schema) {
+      reIteration = {
+        ...orginIteration,
+        schema,
+      };
+    }
+
+    // 生产前判断是否测试环境发布过
+    if (env === ENV_TYPE.prod) {
+      const testPageVersion = await this.pageService.findPageVersionOne({
+        page: orginPage,
+        env: ENV_TYPE.test,
+      });
+
+      if (!testPageVersion || testPageVersion.iterationId !== id) {
+        throw new Error('此迭代未再测试环境发布，不能直接发布生产');
+      }
+
+      reIteration = {
+        ...orginIteration,
+        status: ITERATION_STATUS.finish,
+      };
+    }
+
+    const existPageVersion = await this.pageService.findPageVersionOne({
+      page: orginPage,
+      env,
+    });
+
+    await this.iterationService.saveAndUpdate(reIteration);
+
+    if (existPageVersion) {
+      await this.pageService.saveAndUpdatePageVersion({
+        ...existPageVersion,
+        env,
+        version: orginIteration.version,
+        iterationId: iteration.id,
+      });
+    } else {
+      const reOrginPageVersions =
+        await this.pageService.saveAndUpdatePageVersion({
+          env,
+          version: orginIteration.version,
+          iterationId: orginIteration.id,
+        });
+
+      await this.pageService.save({ ...orginPage, });
+    }
+
+    return {
+      env,
+      status: reIteration.status,
+    };
+  }
 
   @ApiOperation({
     summary: '获取迭代列表',

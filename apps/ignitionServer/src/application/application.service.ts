@@ -25,12 +25,17 @@ export class ApplicationService {
     );
   }
 
-  findOne(id) {
-    return this.applicationRepository.findOne({
+  async findOne(id) {
+    const app = await this.applicationRepository.findOne({
       where: {
         _id: new ObjectId(id),
       },
     });
+
+    return {
+      ...app,
+      domains: []
+    }
   }
 
   findALL() {
