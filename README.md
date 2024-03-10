@@ -4,6 +4,19 @@
 
 ![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d720ef26d4234208966dfc3da7f47306~tplv-k3u1fbpfcp-watermark.image?)
 
+## 功能清单
+
+✅ 已完成 ⭐️ 完善中 ❌ 未开始
+
+
+✅ 用户系统【完善中】
+
+✅ 物料系统【已完成】
+
+⭐️ Deops 系统【待完善】
+
+⭐️ 搭建系统【待完善】
+
 ## 安装
 ```jsx
 $ pnpm i
