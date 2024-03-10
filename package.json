@@ -20,7 +20,6 @@
     "build:user": "turbo run build:user",
     "build-server:user": "nest build user-server",
     "start-server:user": "node ./dist/apps/userServer/src/main.js",
-    "start:materials": "cross-env RUNNING_ENV=dev nest start --watch materials",
     "deploy:user": "turbo run deploy:user",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\""
   },
