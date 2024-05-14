@@ -33,7 +33,7 @@ MYSQL_CONFIG:
   host: 'localhost'
   port: 3306
   username: 'root'
-  password: ''
+  password: 'nyh123'
   database: 'henrytest'
   entities: 'mysql' # 这里的命名一定要跟 MongoDB 里面的配置命名区分开
   synchronize: true
