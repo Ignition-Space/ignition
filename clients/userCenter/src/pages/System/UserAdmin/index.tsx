@@ -1,29 +1,43 @@
 /** User 系统管理/用户管理 **/
 
-import React, { useState, useMemo } from 'react';
-import { useSetState, useMount } from 'react-use';
-import { useSelector, useDispatch } from 'react-redux';
+import './index.less';
+
 import {
-  Form,
   Button,
-  Input,
-  Table,
-  message,
-  Popconfirm,
-  Modal,
-  Tooltip,
   Divider,
+  Form,
+  Input,
+  Modal,
+  Popconfirm,
   Select,
+  Table,
+  Tooltip,
+  message,
 } from 'antd';
 import {
-  EyeOutlined,
-  EditOutlined,
-  ToolOutlined,
   DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
   PlusCircleOutlined,
   SearchOutlined,
+  ToolOutlined,
 } from '@ant-design/icons';
+import {
+  ModalType,
+  Page,
+  Res,
+  RoleTreeInfo,
+  SearchInfo,
+  TableRecordData,
+  UserBasicInfoParam,
+  operateType,
+} from './index.type';
+import React, { useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useMount, useSetState } from 'react-use';
 
+import { Dispatch } from '@/store';
+import RoleTree from '@/components/TreeChose/RoleTree';
 import tools from '@/util/tools'; // 工具函数
 
 const { TextArea } = Input;
@@ -40,21 +54,8 @@ const formItemLayout = {
   },
 };
 
-import RoleTree from '@/components/TreeChose/RoleTree';
 
-import {
-  TableRecordData,
-  Page,
-  operateType,
-  ModalType,
-  SearchInfo,
-  RoleTreeInfo,
-  UserBasicInfoParam,
-  Res,
-} from './index.type';
-import { Dispatch } from '@/store';
 
-import './index.less';
 
 function UserAdminContainer(): JSX.Element {
   const dispatch = useDispatch<Dispatch>();
@@ -213,12 +214,12 @@ function UserAdminContainer(): JSX.Element {
         modalLoading: true,
       });
       const params: UserBasicInfoParam = {
-        username: values.formUsername,
-        password: values.formPassword,
-        phone: values.formPhone,
-        email: values.formEmail,
-        desc: values.formDesc,
-        status: values.formstatus,
+        username: values.name,
+        password: values.password,
+        phone: values.phone,
+        email: values.email,
+        desc: values.desc,
+        status: values.status,
       };
       if (modal.operateType === 'add') {
         // 新增
@@ -390,7 +391,7 @@ function UserAdminContainer(): JSX.Element {
           <li>
             <Button
               type="primary"
-              disabled
+              // disabled
               icon={<PlusCircleOutlined />}
               onClick={() => onModalShow(null, 'add')}
             >
