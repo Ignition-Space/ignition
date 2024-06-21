@@ -531,7 +531,6 @@ function UserAdminContainer(): JSX.Element {
             name="id"
           >
             <Input
-              maxLength={11}
               disabled={modal.operateType === 'see'}
             />
           </Form.Item>
