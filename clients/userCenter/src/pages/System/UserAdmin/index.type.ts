@@ -1,3 +1,11 @@
+/*
+ * @Author: ningyongheng ningyongheng@jeejio.com
+ * @Date: 2024-05-10 19:50:47
+ * @LastEditors: ningyongheng ningyongheng@jeejio.com
+ * @LastEditTime: 2024-06-20 19:17:07
+ * @FilePath: /fast-gateway-web/clients/userCenter/src/pages/System/UserAdmin/index.type.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 /** 当前页面所需所有类型声明 **/
 
 import { Role, UserBasicInfoParam } from "@/models/index.type";
@@ -8,6 +16,7 @@ export type { UserBasicInfoParam, Res } from "@/models/index.type";
 export type TableRecordData = {
   key?: number;
   id: number;
+  _id?: string;
   serial: number; // 序号
   username: string; // 用户名
   password: string; // 密码
@@ -16,6 +25,7 @@ export type TableRecordData = {
   desc: string; // 描述
   status: number; // 是否启用 1启用 -1禁用
   control?: number; // 控制，传入的ID
+  updateTime?: string; // 更新时间
   roles?: number[]; // 拥有的所有权限ID
 };
 

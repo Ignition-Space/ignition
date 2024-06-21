@@ -54,9 +54,6 @@ const formItemLayout = {
   },
 };
 
-
-
-
 function UserAdminContainer(): JSX.Element {
   const dispatch = useDispatch<Dispatch>();
 
@@ -128,10 +125,7 @@ function UserAdminContainer(): JSX.Element {
   };
 
   // 函数 - 查询当前页面所需列表数据
-  async function onGetData(page: {
-    pageNum: number;
-    pageSize: number;
-  }): Promise<void> {
+  async function onGetData(): Promise<void> {
     const params = {
       pageNum: page.pageNum,
       pageSize: page.pageSize,
@@ -140,14 +134,26 @@ function UserAdminContainer(): JSX.Element {
     };
     setLoading(true);
     try {
+      //
       const res = await dispatch.sys.getUserList(tools.clearNull(params));
       if (res && res.status === 200) {
-        setData(res.data.items);
+        // data这里需要数组格式,
+        // 返回：对象格式，需要处理一下。
+        // TODO:等待nestjs增加分页组件
         setPage({
-          pageNum: res.data.meta.currentPage,
-          pageSize: res.data.meta.totalCounts,
-          total: res.data.meta.totalCounts,
+          pageNum: 1,
+          pageSize: 10,
+          total: 100,
         });
+        const arr: TableRecordData = [];
+
+        Object.values(res.data).length &&
+          Object.values(res.data).forEach((item: any) => {
+            let { updateTime, ...others } = item;
+            arr.push({ ...others });
+          });
+
+        setData(arr);
       } else {
         message.error(res?.message ?? '数据获取失败');
       }
@@ -320,14 +326,14 @@ function UserAdminContainer(): JSX.Element {
     },
     {
       title: '用户名',
-      dataIndex: 'name',
+      dataIndex: 'username', //  属性值字段
       key: 'name',
     },
-    {
-      title: '电话',
-      dataIndex: 'mobile',
-      key: 'mobile',
-    },
+    // {
+    //   title: '电话',
+    //   dataIndex: 'phone',
+    //   key: 'mobile',
+    // },
     {
       title: '邮箱',
       dataIndex: 'email',
@@ -433,6 +439,7 @@ function UserAdminContainer(): JSX.Element {
           rowKey="id"
           columns={tableColumns}
           loading={loading}
+          // dataSource={[{ id: 1, username: '123', mobile: '123', email: '123', status: 1 }, { id: 2, username: '123', mobile: '123', email: '123', status: 1 }]}
           dataSource={data}
           pagination={{
             total: page.total,

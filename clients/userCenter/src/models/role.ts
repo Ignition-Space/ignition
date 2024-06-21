@@ -51,7 +51,9 @@ export default {
      * **/
     async getAllRolesById(params: { id: number | number[] }) {
       try {
-        const res: Res = await axios.post(`/user/getAllRolesById`, params);
+        const res = await axios.get(
+          `/user/getAllRolesById?${qs.stringify(params)}`,
+        );
         return res;
       } catch (err) {
         message.error('网络错误，请重试');
@@ -111,7 +113,9 @@ export default {
      * **/
     async getPrivilegeListById(params) {
       try {
-        const res: Res = await axios.post('/role/getPrivilegeListById', params);
+        const res: Res = await axios.post(
+          `/role/getPrivilegeListById?${qs.stringify(params)}`,
+        );
         return res;
       } catch (err) {
         message.error('网络错误，请重试');

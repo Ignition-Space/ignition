@@ -190,6 +190,7 @@ export default {
         const res: Res = await axios.get(
           `/user/list/pagination?${qs.stringify(params)}`,
         );
+        console.log(res, 'resres---res')
         // const res: Res = await axios.get(`/user/list/pagination`, {
         //   page: {
         //     pageSize: params.pageSize,

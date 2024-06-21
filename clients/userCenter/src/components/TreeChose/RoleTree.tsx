@@ -1,8 +1,17 @@
+/*
+ * @Author: ningyongheng ningyongheng@jeejio.com
+ * @Date: 2024-05-10 19:50:47
+ * @LastEditors: ningyongheng ningyongheng@jeejio.com
+ * @LastEditTime: 2024-06-20 19:22:30
+ * @FilePath: /fast-gateway-web/clients/userCenter/src/components/TreeChose/RoleTree.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+import { Modal, Tree } from 'antd';
 /* Tree选择 - 角色选择 - 多选 */
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { Tree, Modal } from 'antd';
-import { cloneDeep } from 'lodash';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+
 import { Role } from '@/models/index.type';
+import { cloneDeep } from 'lodash';
 
 interface Props {
   title: string; // 标题
@@ -63,7 +72,7 @@ export default function RoleTreeComponent(props: Props): JSX.Element {
 
     roleData.forEach((sys) => {
       sys.key = `sys_${sys.id}`;
-      sys.roles.forEach((role) => {
+      sys?.roles && sys.roles.forEach((role) => {
         role.key = `role_sys_${sys.id}_${role.id}`;
       });
     });
