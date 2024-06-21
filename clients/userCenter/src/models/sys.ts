@@ -205,6 +205,18 @@ export default {
     },
 
     /**
+     * 删除用户
+     * **/
+    async deleteUser(params: any) {
+      try {
+        const res: Res = await axios.post('/user/deleteUser', params);
+        return res;
+      } catch (err) {
+        message.error('网络错误，请重试');
+      }
+      return;
+    },
+    /**
      * 添加用户
      * **/
     async addUser(params: UserBasicInfoParam) {

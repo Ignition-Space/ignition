@@ -92,7 +92,7 @@ function UserAdminContainer(): JSX.Element {
 
   // 生命周期 - 组件挂载时触发一次
   useMount(() => {
-    onGetData(page);
+    onGetData();
     getAllRolesData();
   });
 
@@ -178,7 +178,7 @@ function UserAdminContainer(): JSX.Element {
 
   // 搜索
   const onSearch = (): void => {
-    onGetData(page);
+    onGetData();
   };
 
   /**
@@ -190,7 +190,6 @@ function UserAdminContainer(): JSX.Element {
     data: TableRecordData | null,
     type: operateType,
   ): void => {
-    debugger
     setModal({
       modalShow: true,
       nowData: data,
@@ -220,9 +219,10 @@ function UserAdminContainer(): JSX.Element {
       setModal({
         modalLoading: true,
       });
+
       const params: UserBasicInfoParam = {
-        username: values.name,
-        password: values.password,
+        username: values.username,
+        password: values.password || '123456',
         phone: values.phone,
         email: values.email,
         desc: values.desc,
@@ -234,7 +234,7 @@ function UserAdminContainer(): JSX.Element {
           const res: Res | undefined = await dispatch.sys.addUser(params);
           if (res && res.status === 200) {
             message.success('添加成功');
-            onGetData(page);
+            onGetData();
             onClose();
           } else {
             message.error(res?.message ?? '操作失败');
@@ -255,6 +255,24 @@ function UserAdminContainer(): JSX.Element {
     setModal({
       modalShow: false,
     });
+  };
+  /**
+   * 删除当前的用户
+   * @param record
+   */
+  const onDeleteUserClick = async (record: TableRecordData): Promise<void> => {
+    console.log(record);
+    try {
+      const res = await dispatch.sys.deleteUser({ userId: record.id });
+      if (res && res.status === 200) {
+        onGetData();
+        return res.data || [];
+      }
+      return [];
+    } catch {
+      //
+    }
+    return [];
   };
 
   /** 分配角色按钮点击，角色控件出现 **/
@@ -285,7 +303,7 @@ function UserAdminContainer(): JSX.Element {
     const bathRoles = Object.keys(tree).map((key) => {
       return {
         systemId: Number(key.replace('sys_', '')),
-        roleIds: tree[key].map((r) => Number(r.replace(`role_${key}_`, ''))),
+        // roleIds: tree[key].map((r) => Number(r.replace(`role_${key}_`, ''))),
       };
     });
     try {
@@ -295,7 +313,7 @@ function UserAdminContainer(): JSX.Element {
       });
       if (res && res.status === 200) {
         message.success('分配成功');
-        onGetData(page);
+        onGetData();
         onRoleClose();
       } else {
         message.error(res?.message ?? '操作失败');
@@ -315,8 +333,8 @@ function UserAdminContainer(): JSX.Element {
   };
 
   // 表格页码改变
-  const onTablePageChange = (pageNum: number, pageSize: number): void => {
-    onGetData({ pageNum, pageSize });
+  const onTablePageChange = (): void => {
+    onGetData();
   };
 
   // table字段
@@ -331,11 +349,11 @@ function UserAdminContainer(): JSX.Element {
       dataIndex: 'username', //  属性值字段
       key: 'name',
     },
-    // {
-    //   title: '电话',
-    //   dataIndex: 'phone',
-    //   key: 'mobile',
-    // },
+    {
+      title: '电话',
+      dataIndex: 'phone',
+      key: 'mobile',
+    },
     {
       title: '邮箱',
       dataIndex: 'email',
@@ -377,6 +395,17 @@ function UserAdminContainer(): JSX.Element {
           >
             <Tooltip placement="top" title="分配角色">
               <EditOutlined />
+            </Tooltip>
+          </span>,
+        );
+        controls.push(
+          <span
+            key="3"
+            className="control-btn blue"
+            onClick={() => onDeleteUserClick(record)}
+          >
+            <Tooltip placement="top" title="删除用户">
+              <DeleteOutlined />
             </Tooltip>
           </span>,
         );
