@@ -18,6 +18,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
+  MehOutlined,
   PlusCircleOutlined,
   SearchOutlined,
   ToolOutlined,
@@ -196,7 +197,7 @@ function UserAdminContainer(): JSX.Element {
       operateType: type,
     });
 
-    // 用 setTimeout 是因为首次让Modal出现时得等它挂载DOM，不然form对象还没来得及挂载到Form上
+    // TODO:用 setTimeout 是因为首次让Modal出现时得等它挂载DOM，不然form对象还没来得及挂载到Form上
     setTimeout(() => {
       if (type === 'add') {
         // 新增，需重置表单各控件的值
@@ -219,8 +220,9 @@ function UserAdminContainer(): JSX.Element {
       setModal({
         modalLoading: true,
       });
-
+      debugger;
       const params: UserBasicInfoParam = {
+        id: values.id,
         username: values.username,
         password: values.password || '123456',
         phone: values.phone,
@@ -234,6 +236,21 @@ function UserAdminContainer(): JSX.Element {
           const res: Res | undefined = await dispatch.sys.addUser(params);
           if (res && res.status === 200) {
             message.success('添加成功');
+            onGetData();
+            onClose();
+          } else {
+            message.error(res?.message ?? '操作失败');
+          }
+        } finally {
+          setModal({
+            modalLoading: false,
+          });
+        }
+      } else if (modal.operateType === 'up') {
+        try {
+          const res: Res | undefined = await dispatch.sys.updateUser(params);
+          if (res && res.status === 200) {
+            message.success('更新成功');
             onGetData();
             onClose();
           } else {
@@ -351,8 +368,9 @@ function UserAdminContainer(): JSX.Element {
     },
     {
       title: '电话',
+      // 数据库字段名称
       dataIndex: 'phone',
-      key: 'mobile',
+      key: 'phone',
     },
     {
       title: '邮箱',
@@ -394,7 +412,7 @@ function UserAdminContainer(): JSX.Element {
             onClick={() => onTreeShowClick(record)}
           >
             <Tooltip placement="top" title="分配角色">
-              <EditOutlined />
+              <MehOutlined />
             </Tooltip>
           </span>,
         );
@@ -406,6 +424,17 @@ function UserAdminContainer(): JSX.Element {
           >
             <Tooltip placement="top" title="删除用户">
               <DeleteOutlined />
+            </Tooltip>
+          </span>,
+        );
+        controls.push(
+          <span
+            key="4"
+            className="control-btn blue"
+            onClick={() => onModalShow(record, 'up')}
+          >
+            <Tooltip placement="top" title="修改用户">
+              <EditOutlined />
             </Tooltip>
           </span>,
         );
@@ -470,7 +499,6 @@ function UserAdminContainer(): JSX.Element {
           rowKey="id"
           columns={tableColumns}
           loading={loading}
-          // dataSource={[{ id: 1, username: '123', mobile: '123', email: '123', status: 1 }, { id: 2, username: '123', mobile: '123', email: '123', status: 1 }]}
           dataSource={data}
           pagination={{
             total: page.total,
@@ -498,6 +526,16 @@ function UserAdminContainer(): JSX.Element {
           }}
         >
           <Form.Item
+            hidden
+            label="当前的用户id"
+            name="id"
+          >
+            <Input
+              maxLength={11}
+              disabled={modal.operateType === 'see'}
+            />
+          </Form.Item>
+          <Form.Item
             label="用户名"
             name="username"
             {...formItemLayout}
@@ -513,7 +551,7 @@ function UserAdminContainer(): JSX.Element {
           </Form.Item>
           <Form.Item
             label="电话"
-            name="mobile"
+            name="phone"
             {...formItemLayout}
             rules={[
               () => ({

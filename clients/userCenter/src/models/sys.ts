@@ -190,7 +190,7 @@ export default {
         const res: Res = await axios.get(
           `/user/list/pagination?${qs.stringify(params)}`,
         );
-        console.log(res, 'resres---res')
+        console.log(res, 'resres---res');
         // const res: Res = await axios.get(`/user/list/pagination`, {
         //   page: {
         //     pageSize: params.pageSize,
@@ -210,6 +210,18 @@ export default {
     async deleteUser(params: any) {
       try {
         const res: Res = await axios.post('/user/deleteUser', params);
+        return res;
+      } catch (err) {
+        message.error('网络错误，请重试');
+      }
+      return;
+    },
+    /**
+     * 更新用户信息
+     * **/
+    async updateUser(params: any) {
+      try {
+        const res: Res = await axios.post('/user/updateUser', params);
         return res;
       } catch (err) {
         message.error('网络错误，请重试');
