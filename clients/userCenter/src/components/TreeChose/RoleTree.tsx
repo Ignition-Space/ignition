@@ -2,7 +2,7 @@
  * @Author: ningyongheng ningyongheng@jeejio.com
  * @Date: 2024-05-10 19:50:47
  * @LastEditors: ningyongheng ningyongheng@jeejio.com
- * @LastEditTime: 2024-06-20 19:22:30
+ * @LastEditTime: 2024-06-21 10:32:22
  * @FilePath: /fast-gateway-web/clients/userCenter/src/components/TreeChose/RoleTree.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -69,12 +69,12 @@ export default function RoleTreeComponent(props: Props): JSX.Element {
   // 处理原始数据，将原始数据处理为层级关系
   const sourceData = useMemo(() => {
     const roleData = cloneDeep(props.data);
-
+    // todo：jwt没有引入，角色权限管理问题，暂时没有，这里注释，默认都是1
     roleData.forEach((sys) => {
       sys.key = `sys_${sys.id}`;
-      sys?.roles && sys.roles.forEach((role) => {
-        role.key = `role_sys_${sys.id}_${role.id}`;
-      });
+      // sys?.roles && sys.roles.forEach((role) => {
+      //   role.key = `role_sys_${sys.id}_${role.id}`;
+      // });
     });
 
     return roleData;

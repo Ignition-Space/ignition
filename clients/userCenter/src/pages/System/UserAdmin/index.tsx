@@ -190,6 +190,7 @@ function UserAdminContainer(): JSX.Element {
     data: TableRecordData | null,
     type: operateType,
   ): void => {
+    debugger
     setModal({
       modalShow: true,
       nowData: data,
@@ -262,11 +263,12 @@ function UserAdminContainer(): JSX.Element {
       nowData: record,
     });
     const roles = await getSingleRolesData(record.id);
+    // TODO:这里默认数据给的权限都是1，不用处理了，没有专门对应admin和user
     setRole({
       roleTreeShow: true,
-      roleTreeDefault: roles.map(
-        (role) => `role_sys_${role.systemId}_${role.id}`,
-      ),
+      // roleTreeDefault: roles.map(
+      //   (role) => `role_sys_${role.systemId}_${role.id}`,
+      // ),
     });
   };
 
@@ -468,7 +470,7 @@ function UserAdminContainer(): JSX.Element {
         >
           <Form.Item
             label="用户名"
-            name="name"
+            name="username"
             {...formItemLayout}
             rules={[
               { required: true, whitespace: true, message: '必填' },
