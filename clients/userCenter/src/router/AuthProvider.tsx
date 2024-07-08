@@ -1,9 +1,9 @@
 // 路由守卫
 
-import React, { useEffect, useMemo } from 'react';
+import { Dispatch, RootState } from '@/store';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, Dispatch } from '@/store';
+import React, { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface Props {
   children: JSX.Element;

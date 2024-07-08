@@ -1,29 +1,44 @@
 /** User 系统管理/用户管理 **/
 
-import React, { useState, useMemo } from 'react';
-import { useSetState, useMount } from 'react-use';
-import { useSelector, useDispatch } from 'react-redux';
+import './index.less';
+
 import {
-  Form,
   Button,
-  Input,
-  Table,
-  message,
-  Popconfirm,
-  Modal,
-  Tooltip,
   Divider,
+  Form,
+  Input,
+  Modal,
+  Popconfirm,
   Select,
+  Table,
+  Tooltip,
+  message,
 } from 'antd';
 import {
-  EyeOutlined,
-  EditOutlined,
-  ToolOutlined,
   DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  MehOutlined,
   PlusCircleOutlined,
   SearchOutlined,
+  ToolOutlined,
 } from '@ant-design/icons';
+import {
+  ModalType,
+  Page,
+  Res,
+  RoleTreeInfo,
+  SearchInfo,
+  TableRecordData,
+  UserBasicInfoParam,
+  operateType,
+} from './index.type';
+import React, { useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useMount, useSetState } from 'react-use';
 
+import { Dispatch } from '@/store';
+import RoleTree from '@/components/TreeChose/RoleTree';
 import tools from '@/util/tools'; // 工具函数
 
 const { TextArea } = Input;
@@ -39,22 +54,6 @@ const formItemLayout = {
     sm: { span: 19 },
   },
 };
-
-import RoleTree from '@/components/TreeChose/RoleTree';
-
-import {
-  TableRecordData,
-  Page,
-  operateType,
-  ModalType,
-  SearchInfo,
-  RoleTreeInfo,
-  UserBasicInfoParam,
-  Res,
-} from './index.type';
-import { Dispatch } from '@/store';
-
-import './index.less';
 
 function UserAdminContainer(): JSX.Element {
   const dispatch = useDispatch<Dispatch>();
@@ -94,7 +93,7 @@ function UserAdminContainer(): JSX.Element {
 
   // 生命周期 - 组件挂载时触发一次
   useMount(() => {
-    onGetData(page);
+    onGetData();
     getAllRolesData();
   });
 
@@ -127,10 +126,7 @@ function UserAdminContainer(): JSX.Element {
   };
 
   // 函数 - 查询当前页面所需列表数据
-  async function onGetData(page: {
-    pageNum: number;
-    pageSize: number;
-  }): Promise<void> {
+  async function onGetData(): Promise<void> {
     const params = {
       pageNum: page.pageNum,
       pageSize: page.pageSize,
@@ -139,14 +135,26 @@ function UserAdminContainer(): JSX.Element {
     };
     setLoading(true);
     try {
+      //
       const res = await dispatch.sys.getUserList(tools.clearNull(params));
       if (res && res.status === 200) {
-        setData(res.data.items);
+        // data这里需要数组格式,
+        // 返回：对象格式，需要处理一下。
+        // TODO:等待nestjs增加分页组件
         setPage({
-          pageNum: res.data.meta.currentPage,
-          pageSize: res.data.meta.totalCounts,
-          total: res.data.meta.totalCounts,
+          pageNum: 1,
+          pageSize: 10,
+          total: 100,
         });
+        const arr: TableRecordData = [];
+
+        Object.values(res.data).length &&
+          Object.values(res.data).forEach((item: any) => {
+            let { updateTime, ...others } = item;
+            arr.push({ ...others });
+          });
+
+        setData(arr);
       } else {
         message.error(res?.message ?? '数据获取失败');
       }
@@ -171,7 +179,7 @@ function UserAdminContainer(): JSX.Element {
 
   // 搜索
   const onSearch = (): void => {
-    onGetData(page);
+    onGetData();
   };
 
   /**
@@ -189,7 +197,7 @@ function UserAdminContainer(): JSX.Element {
       operateType: type,
     });
 
-    // 用 setTimeout 是因为首次让Modal出现时得等它挂载DOM，不然form对象还没来得及挂载到Form上
+    // TODO:用 setTimeout 是因为首次让Modal出现时得等它挂载DOM，不然form对象还没来得及挂载到Form上
     setTimeout(() => {
       if (type === 'add') {
         // 新增，需重置表单各控件的值
@@ -212,13 +220,15 @@ function UserAdminContainer(): JSX.Element {
       setModal({
         modalLoading: true,
       });
+      debugger;
       const params: UserBasicInfoParam = {
-        username: values.formUsername,
-        password: values.formPassword,
-        phone: values.formPhone,
-        email: values.formEmail,
-        desc: values.formDesc,
-        status: values.formstatus,
+        id: values.id,
+        username: values.username,
+        password: values.password || '123456',
+        phone: values.phone,
+        email: values.email,
+        desc: values.desc,
+        status: values.status,
       };
       if (modal.operateType === 'add') {
         // 新增
@@ -226,7 +236,22 @@ function UserAdminContainer(): JSX.Element {
           const res: Res | undefined = await dispatch.sys.addUser(params);
           if (res && res.status === 200) {
             message.success('添加成功');
-            onGetData(page);
+            onGetData();
+            onClose();
+          } else {
+            message.error(res?.message ?? '操作失败');
+          }
+        } finally {
+          setModal({
+            modalLoading: false,
+          });
+        }
+      } else if (modal.operateType === 'up') {
+        try {
+          const res: Res | undefined = await dispatch.sys.updateUser(params);
+          if (res && res.status === 200) {
+            message.success('更新成功');
+            onGetData();
             onClose();
           } else {
             message.error(res?.message ?? '操作失败');
@@ -248,6 +273,24 @@ function UserAdminContainer(): JSX.Element {
       modalShow: false,
     });
   };
+  /**
+   * 删除当前的用户
+   * @param record
+   */
+  const onDeleteUserClick = async (record: TableRecordData): Promise<void> => {
+    console.log(record);
+    try {
+      const res = await dispatch.sys.deleteUser({ userId: record.id });
+      if (res && res.status === 200) {
+        onGetData();
+        return res.data || [];
+      }
+      return [];
+    } catch {
+      //
+    }
+    return [];
+  };
 
   /** 分配角色按钮点击，角色控件出现 **/
   const onTreeShowClick = async (record: TableRecordData): Promise<void> => {
@@ -255,11 +298,12 @@ function UserAdminContainer(): JSX.Element {
       nowData: record,
     });
     const roles = await getSingleRolesData(record.id);
+    // TODO:这里默认数据给的权限都是1，不用处理了，没有专门对应admin和user
     setRole({
       roleTreeShow: true,
-      roleTreeDefault: roles.map(
-        (role) => `role_sys_${role.systemId}_${role.id}`,
-      ),
+      // roleTreeDefault: roles.map(
+      //   (role) => `role_sys_${role.systemId}_${role.id}`,
+      // ),
     });
   };
 
@@ -276,7 +320,7 @@ function UserAdminContainer(): JSX.Element {
     const bathRoles = Object.keys(tree).map((key) => {
       return {
         systemId: Number(key.replace('sys_', '')),
-        roleIds: tree[key].map((r) => Number(r.replace(`role_${key}_`, ''))),
+        // roleIds: tree[key].map((r) => Number(r.replace(`role_${key}_`, ''))),
       };
     });
     try {
@@ -286,7 +330,7 @@ function UserAdminContainer(): JSX.Element {
       });
       if (res && res.status === 200) {
         message.success('分配成功');
-        onGetData(page);
+        onGetData();
         onRoleClose();
       } else {
         message.error(res?.message ?? '操作失败');
@@ -306,8 +350,8 @@ function UserAdminContainer(): JSX.Element {
   };
 
   // 表格页码改变
-  const onTablePageChange = (pageNum: number, pageSize: number): void => {
-    onGetData({ pageNum, pageSize });
+  const onTablePageChange = (): void => {
+    onGetData();
   };
 
   // table字段
@@ -319,13 +363,14 @@ function UserAdminContainer(): JSX.Element {
     },
     {
       title: '用户名',
-      dataIndex: 'name',
+      dataIndex: 'username', //  属性值字段
       key: 'name',
     },
     {
       title: '电话',
-      dataIndex: 'mobile',
-      key: 'mobile',
+      // 数据库字段名称
+      dataIndex: 'phone',
+      key: 'phone',
     },
     {
       title: '邮箱',
@@ -367,6 +412,28 @@ function UserAdminContainer(): JSX.Element {
             onClick={() => onTreeShowClick(record)}
           >
             <Tooltip placement="top" title="分配角色">
+              <MehOutlined />
+            </Tooltip>
+          </span>,
+        );
+        controls.push(
+          <span
+            key="3"
+            className="control-btn blue"
+            onClick={() => onDeleteUserClick(record)}
+          >
+            <Tooltip placement="top" title="删除用户">
+              <DeleteOutlined />
+            </Tooltip>
+          </span>,
+        );
+        controls.push(
+          <span
+            key="4"
+            className="control-btn blue"
+            onClick={() => onModalShow(record, 'up')}
+          >
+            <Tooltip placement="top" title="修改用户">
               <EditOutlined />
             </Tooltip>
           </span>,
@@ -390,7 +457,7 @@ function UserAdminContainer(): JSX.Element {
           <li>
             <Button
               type="primary"
-              disabled
+              // disabled
               icon={<PlusCircleOutlined />}
               onClick={() => onModalShow(null, 'add')}
             >
@@ -459,8 +526,17 @@ function UserAdminContainer(): JSX.Element {
           }}
         >
           <Form.Item
+            hidden
+            label="当前的用户id"
+            name="id"
+          >
+            <Input
+              disabled={modal.operateType === 'see'}
+            />
+          </Form.Item>
+          <Form.Item
             label="用户名"
-            name="name"
+            name="username"
             {...formItemLayout}
             rules={[
               { required: true, whitespace: true, message: '必填' },
@@ -474,7 +550,7 @@ function UserAdminContainer(): JSX.Element {
           </Form.Item>
           <Form.Item
             label="电话"
-            name="mobile"
+            name="phone"
             {...formItemLayout}
             rules={[
               () => ({

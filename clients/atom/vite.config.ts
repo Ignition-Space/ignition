@@ -23,9 +23,10 @@ export default defineConfig({
     proxy: {
       '/api': {
         // 所要代理的目标地址
-        target: 'http://localhost:3000/',
+        // target: 'http://localhost:4000/',
+        target: 'http://localhost:3031/',
         changeOrigin: true,
       },
     },
   },
-})
+});

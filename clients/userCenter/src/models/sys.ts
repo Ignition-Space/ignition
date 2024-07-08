@@ -3,19 +3,19 @@
  * 在src/store/index.js 中被挂载到store上，命名为 sys
  * **/
 
-import axios from '@/util/axios'; // 自己写的工具函数，封装了请求数据的通用接口
-import qs from 'qs';
-import { message } from 'antd';
-import { Dispatch } from '@/store';
-
 import {
   Menu,
   PowerTree,
-  SysState,
   Res,
-  UserBasicInfoParam,
+  SysState,
   SystemParam,
+  UserBasicInfoParam,
 } from './index.type';
+
+import { Dispatch } from '@/store';
+import axios from '@/util/axios'; // 自己写的工具函数，封装了请求数据的通用接口
+import { message } from 'antd';
+import qs from 'qs';
 
 const defaultState: SysState = {
   menus: [], // 所有的菜单信息（用于菜单管理，无视权限）
@@ -187,12 +187,16 @@ export default {
       status?: number;
     }) {
       try {
-        const res: Res = await axios.post(`/user/list/pagination`, {
-          page: {
-            pageSize: params.pageSize,
-            currentPage: params.pageNum,
-          },
-        });
+        const res: Res = await axios.get(
+          `/user/list/pagination?${qs.stringify(params)}`,
+        );
+        console.log(res, 'resres---res');
+        // const res: Res = await axios.get(`/user/list/pagination`, {
+        //   page: {
+        //     pageSize: params.pageSize,
+        //     currentPage: params.pageNum,
+        //   },
+        // });
         return res;
       } catch (err) {
         message.error('网络错误，请重试');
@@ -201,11 +205,35 @@ export default {
     },
 
     /**
+     * 删除用户
+     * **/
+    async deleteUser(params: any) {
+      try {
+        const res: Res = await axios.post('/user/deleteUser', params);
+        return res;
+      } catch (err) {
+        message.error('网络错误，请重试');
+      }
+      return;
+    },
+    /**
+     * 更新用户信息
+     * **/
+    async updateUser(params: any) {
+      try {
+        const res: Res = await axios.post('/user/updateUser', params);
+        return res;
+      } catch (err) {
+        message.error('网络错误，请重试');
+      }
+      return;
+    },
+    /**
      * 添加用户
      * **/
     async addUser(params: UserBasicInfoParam) {
       try {
-        const res: Res = await axios.post('/addUser', params);
+        const res: Res = await axios.post('/user/addUser', params);
         return res;
       } catch (err) {
         message.error('网络错误，请重试');

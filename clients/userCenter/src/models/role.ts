@@ -1,9 +1,9 @@
-import axios from '@/util/axios'; // 自己写的工具函数，封装了请求数据的通用接口
-import qs from 'qs';
-import { message } from 'antd';
-import { Dispatch } from '@/store';
+import { Res, Role, RoleParam, SysState } from './index.type';
 
-import { Role, RoleParam, SysState, Res } from './index.type';
+import { Dispatch } from '@/store';
+import axios from '@/util/axios'; // 自己写的工具函数，封装了请求数据的通用接口
+import { message } from 'antd';
+import qs from 'qs';
 
 export default {
   state: {},
@@ -14,10 +14,11 @@ export default {
     },
   },
   effects: (dispatch: Dispatch) => ({
+    
     /** 获取所有角色 **/
     async getAllRoles(): Promise<Res> {
       try {
-        const res: Res = await axios.post('/role/list/withSystem');
+        const res: Res = await axios.get('/role/list/withSystem');
         if (res && res.status === 200) {
           dispatch.role.reducerSetRoles(res.data);
         }
@@ -51,7 +52,9 @@ export default {
      * **/
     async getAllRolesById(params: { id: number | number[] }) {
       try {
-        const res: Res = await axios.post(`/user/getAllRolesById`, params);
+        const res = await axios.get(
+          `/user/getAllRolesById?${qs.stringify(params)}`,
+        );
         return res;
       } catch (err) {
         message.error('网络错误，请重试');
@@ -111,7 +114,9 @@ export default {
      * **/
     async getPrivilegeListById(params) {
       try {
-        const res: Res = await axios.post('/role/getPrivilegeListById', params);
+        const res: Res = await axios.post(
+          `/role/getPrivilegeListById?${qs.stringify(params)}`,
+        );
         return res;
       } catch (err) {
         message.error('网络错误，请重试');
