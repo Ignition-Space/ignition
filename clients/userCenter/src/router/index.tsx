@@ -1,24 +1,22 @@
 /** 根路由 **/
 
+import { AuthNoLogin, AuthNoPower, AuthWithLogin } from './AuthProvider';
+import { Dispatch, RootState } from '@/store';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import React, { useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { message } from 'antd';
-import loadable from '@loadable/component';
+import { useDispatch, useSelector } from 'react-redux';
 
-import tools from '@/util/tools';
-
-import { AuthNoLogin, AuthWithLogin, AuthNoPower } from './AuthProvider';
-import Loading from '../components/Loading';
 import BasicLayout from '@/layouts/BasicLayout';
+import Loading from '../components/Loading';
 import UserLayout from '@/layouts/UserLayout';
+import loadable from '@loadable/component';
+import { message } from 'antd';
+import tools from '@/util/tools';
 
 // 全局提示只显示2秒
 message.config({
   duration: 2,
 });
-
-import { RootState, Dispatch } from '@/store';
 
 const [
   NotFound,
@@ -56,10 +54,10 @@ function RouterCom(): JSX.Element {
      * sessionStorage中有user信息，但store中没有
      * 说明刷新了页面，需要重新同步user数据到store
      * **/
-    if (userTemp && !userinfo.userBasicInfo) {
+    if (userTemp && !userinfo?.userBasicInfo) {
       dispatch.app.setUserInfo(JSON.parse(tools.uncompile(userTemp)));
     }
-  }, [dispatch.app, userinfo.userBasicInfo]);
+  }, [dispatch.app, userinfo?.userBasicInfo]);
 
   return (
     <Routes>

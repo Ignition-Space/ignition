@@ -19,3 +19,19 @@ export const getConfig = (type?: string) => {
   }
   return config;
 };
+
+export const compareVersions = (version1, version2) => {
+  const v1 = version1.split('.');
+  const v2 = version2.split('.');
+
+  for (let i = 0; i < Math.max(v1.length, v2.length); i++) {
+    const num1 = parseInt(v1[i] || 0);
+    const num2 = parseInt(v2[i] || 0);
+    if (num1 < num2) {
+      return false;
+    } else if (num1 > num2) {
+      return true;
+    }
+  }
+  return false;
+};

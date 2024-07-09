@@ -1,16 +1,11 @@
 /** 登录页 **/
 
-// ==================
-// 所需的各种插件
-// ==================
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import tools from '@/util/tools';
+import axios from '@/util/axios'; // 自己写的工具函数，封装了请求数据的通用接口
 
-// ==================
-// 所需的所有组件
-// ==================
 import Vcode from 'react-vcode';
 import { Form, Input, Button, Checkbox, message } from 'antd';
 import { UserOutlined, KeyOutlined } from '@ant-design/icons';
@@ -68,12 +63,18 @@ function LoginContainer(): JSX.Element {
    * 2.通过用户信息获取其拥有的所有角色信息
    * 3.通过角色信息获取其拥有的所有权限信息
    * **/
-  const loginIn = () => { };
 
-  // 用户提交登录
   const onSubmit = async (): Promise<void> => {
     try {
-      navigate('/'); // 跳转到主页
+      const values = await form.validateFields();
+      console.log('values===>?', values);
+      const res = await axios.post('/auth/login', {
+        ...values,
+      });
+      if (res.success) {
+        navigate('/'); // 跳转到主页
+      }
+      console.log('login====>', res);
     } catch (e) {
       // 验证未通过
     }
@@ -119,7 +120,7 @@ function LoginContainer(): JSX.Element {
                 prefix={<UserOutlined style={{ fontSize: 13 }} />}
                 size="large"
                 id="username" // 为了获取焦点
-                placeholder="admin/user"
+                placeholder="username"
                 onPressEnter={onSubmit}
               />
             </Form.Item>
@@ -134,11 +135,11 @@ function LoginContainer(): JSX.Element {
                 prefix={<KeyOutlined style={{ fontSize: 13 }} />}
                 size="large"
                 type="password"
-                placeholder="123456/123456"
+                placeholder="password"
                 onPressEnter={onSubmit}
               />
             </Form.Item>
-            <Form.Item>
+            {/* <Form.Item>
               <Form.Item
                 name="vcode"
                 noStyle
@@ -181,20 +182,12 @@ function LoginContainer(): JSX.Element {
                   lines: 16,
                 }}
               />
-            </Form.Item>
-            <div style={{ lineHeight: '40px' }}>
-              <Checkbox
-                className="remember"
-                checked={rememberPassword}
-                onChange={onRemember}
-              >
-                记住密码
-              </Checkbox>
+            </Form.Item> */}
+            <div style={{ width: '100%' }}>
               <Button
                 className="submit-btn"
                 size="large"
                 type="primary"
-                disabled
                 loading={loading}
                 onClick={onSubmit}
               >
@@ -203,7 +196,7 @@ function LoginContainer(): JSX.Element {
             </div>
           </div>
         </Form>
-        <p style={{ marginTop: 20, color: '#fff' }}>三方登录：</p>
+        {/* <p style={{ marginTop: 20, color: '#fff' }}>三方登录：</p>
         <div style={{ marginTop: 20 }}>
           <img
             src={GithubLogo}
@@ -215,7 +208,7 @@ function LoginContainer(): JSX.Element {
               );
             }}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

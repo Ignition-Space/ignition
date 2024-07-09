@@ -15,7 +15,11 @@ export class DeployConfigService {
   }
 
   findOne(id) {
-    return this.deployConfigRepository.findOne(id);
+    return this.deployConfigRepository.findOne({
+      where: {
+        _id: new ObjectId(id),
+      },
+    });
   }
 
   find(params) {

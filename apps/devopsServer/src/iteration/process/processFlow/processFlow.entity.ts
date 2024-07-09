@@ -6,8 +6,8 @@ export class ProcessFlow {
   id?: number;
 
   @Column()
-  name: string
+  name: string;
 
-  @Column("simple-array")
-  nodeIds: number[]
+  @Column('simple-array')
+  nodeIds: number[];
 }

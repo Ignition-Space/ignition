@@ -7,9 +7,11 @@ import { Page } from './page.mongo.entity';
 import { DeployConfig } from './deploy/deployConfig.mongo.entity';
 import { PageConfig } from './config/pageConfig.mongo.entity';
 import { SiteModule } from '../site/site.module';
+import { ApplicationModule } from '@ignitionServer/application/application.module';
+import { PageVersion } from './pageVersion.mongo.entity copy';
 
 @Module({
-  imports: [forwardRef(() => SiteModule)],
+  imports: [forwardRef(() => SiteModule), forwardRef(() => ApplicationModule)],
   controllers: [PageController],
   providers: [
     PageService,
@@ -31,6 +33,12 @@ import { SiteModule } from '../site/site.module';
       provide: 'PAGE_CONFIG_REPOSITORY',
       useFactory: async (AppDataSource) =>
         await AppDataSource.getRepository(PageConfig),
+      inject: ['MONGODB_DATA_SOURCE'],
+    },
+    {
+      provide: 'PAGE_VERSION_REPOSITORY',
+      useFactory: async (AppDataSource) =>
+        await AppDataSource.getRepository(PageVersion),
       inject: ['MONGODB_DATA_SOURCE'],
     },
   ],

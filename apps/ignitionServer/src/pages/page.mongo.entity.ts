@@ -29,8 +29,9 @@ export class Page {
   @Column()
   siteId: string;
 
+
   @Column()
-  interfaceId: string;
+  appId: string;
 
   @Column()
   domainId: string;

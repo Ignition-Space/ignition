@@ -1,8 +1,17 @@
+/*
+ * @Author: ningyongheng ningyongheng@jeejio.com
+ * @Date: 2024-05-10 19:50:47
+ * @LastEditors: ningyongheng ningyongheng@jeejio.com
+ * @LastEditTime: 2024-06-21 10:32:22
+ * @FilePath: /fast-gateway-web/clients/userCenter/src/components/TreeChose/RoleTree.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+import { Modal, Tree } from 'antd';
 /* Tree选择 - 角色选择 - 多选 */
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { Tree, Modal } from 'antd';
-import { cloneDeep } from 'lodash';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+
 import { Role } from '@/models/index.type';
+import { cloneDeep } from 'lodash';
 
 interface Props {
   title: string; // 标题
@@ -60,12 +69,12 @@ export default function RoleTreeComponent(props: Props): JSX.Element {
   // 处理原始数据，将原始数据处理为层级关系
   const sourceData = useMemo(() => {
     const roleData = cloneDeep(props.data);
-
+    // todo：jwt没有引入，角色权限管理问题，暂时没有，这里注释，默认都是1
     roleData.forEach((sys) => {
       sys.key = `sys_${sys.id}`;
-      sys.roles.forEach((role) => {
-        role.key = `role_sys_${sys.id}_${role.id}`;
-      });
+      // sys?.roles && sys.roles.forEach((role) => {
+      //   role.key = `role_sys_${sys.id}_${role.id}`;
+      // });
     });
 
     return roleData;

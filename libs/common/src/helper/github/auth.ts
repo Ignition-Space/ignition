@@ -1,7 +1,11 @@
+import {
+  BASE_API_GITHUB_URL,
+  BASE_GITHUB_URL,
+  GITHUB_ID,
+  GITHUB_SECRET,
+} from './const';
 
-import { BASE_API_GITHUB_URL, BASE_GITHUB_URL, GITHUB_ID, GITHUB_SECRET } from './const';
-
-import { methodV } from '../../utils/request';
+import { methodV } from '@app/common/utils/request';
 
 /**
  * @description: 获取用户 token
@@ -17,7 +21,7 @@ export const getGithubToken = async ({ code }) => {
       code,
     },
   });
-  console.log('github===>', data)
+  console.log('github===>', data);
   return data;
 };
 
@@ -33,6 +37,6 @@ export const getGithubUser = async ({ token }) => {
       Authorization: `token ${token}`,
     },
   });
-  console.log(data)
+  console.log(data);
   return data;
 };

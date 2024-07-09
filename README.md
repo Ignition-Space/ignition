@@ -4,6 +4,19 @@
 
 ![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d720ef26d4234208966dfc3da7f47306~tplv-k3u1fbpfcp-watermark.image?)
 
+## 功能清单
+
+✅ 已完成 ⭐️ 完善中 ❌ 未开始
+
+
+✅ 用户系统【完善中】
+
+✅ 物料系统【已完成】
+
+⭐️ Devops 系统【待完善】
+
+⭐️ 搭建系统【待完善】
+
 ## 安装
 ```jsx
 $ pnpm i
@@ -31,6 +44,17 @@ MYSQL_CONFIG:
   username: "root"
   password: "123456"
   entities: "mysql"
+  synchronize: true
+MYSQL_DEVOPS_CONFIG:
+  name: "devops_test"
+  type: "mysql"
+  host: "127.0.0.1"
+  port: 3306
+  username: "root"
+  password: "123456"
+  database: "devops_test"
+  entities: "mysql"
+  logging: false
   synchronize: true
 GITGUB_CONFIG:
   CLIENT_ID: ''

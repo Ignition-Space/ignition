@@ -26,10 +26,6 @@ export class ProjectRelationService {
   }
 
   findRelationsByProjectTypes(projectTypes: string[]) {
-    console.log(
-      'this.projectRelationRepository===',
-      this.projectRelationRepository,
-    );
     return this.projectRelationRepository.find({
       where: {
         projectType: In(projectTypes),

@@ -1,6 +1,8 @@
 import { Alert, Button, Drawer, Form, Radio, Select, Space } from 'antd';
-import { useRef } from 'react';
-import MonacoEditor from 'react-monaco-editor';
+import { useEffect, useRef } from 'react';
+// import MonacoEditor from 'react-monaco-editor';
+import Editor from '@monaco-editor/react';
+
 
 const { Option } = Select;
 
@@ -15,8 +17,21 @@ const CodeEdit = (props: ICodeEditProps) => {
   const { open, editorValue, setEditorValue, setOpen } = props;
   const editorRef = useRef();
 
+  useEffect(() => {
+    console.log(editorValue)
+  }, [editorValue])
+
   const onClose = () => {
     setOpen(false);
+  };
+
+
+  const options: any = {
+    selectOnLineNumbers: true,
+    roundedSelection: false,
+    readOnly: false,  // //是否只读  取值 true | false
+    cursorStyle: "line",
+    automaticLayout: false, // 自动布局
   };
 
   return (
@@ -82,14 +97,20 @@ const CodeEdit = (props: ICodeEditProps) => {
           type="warning"
           style={{ marginBottom: '10px' }}
         />
-        <MonacoEditor
+        <Editor
+          height="70vh"
+          defaultLanguage="react"
+          defaultValue={editorValue}
+        />
+        {/* <MonacoEditor
           height="900"
+          width='100%'
           language="react"
-          theme="vs-dark"
           value={editorValue}
           onChange={(v) => setEditorValue(v)}
           ref={editorRef}
-        />
+          options={options}
+        /> */}
       </>
     </Drawer>
   );

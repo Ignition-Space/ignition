@@ -1,6 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { DatabaseModule } from '@app/common';
-import { processProviders } from './process.providers';
 import { ProcessService } from './process.service';
 import { ProjectModule } from '@devopsServer/project/project.module';
 import { ProcessConstraint } from './process.validator';
@@ -13,6 +12,9 @@ import { ProcessNodeService } from './processNode/processNode.service';
 
 import { ProcessFlowController } from './processFlow/processFlow.controller';
 import { ProcessFlowService } from './processFlow/processFlow.service';
+import { Process } from './process.entity';
+import { ProcessNode } from './processNode/processNode.entity';
+import { ProcessFlow } from './processFlow/processFlow.entity';
 
 @Module({
   controllers: [
@@ -21,7 +23,21 @@ import { ProcessFlowService } from './processFlow/processFlow.service';
     ProcessFlowController,
   ],
   providers: [
-    ...processProviders,
+    {
+      provide: 'PROCESS_REPOSITORY',
+      useFactory: (AppDataSource) => AppDataSource.getRepository(Process),
+      inject: ['MYSQL_DEVOPS_DATA_SOURCE'],
+    },
+    {
+      provide: 'PROCESS_NODE_REPOSITORY',
+      useFactory: (AppDataSource) => AppDataSource.getRepository(ProcessNode),
+      inject: ['MYSQL_DEVOPS_DATA_SOURCE'],
+    },
+    {
+      provide: 'PROCESS_FLOW_REPOSITORY',
+      useFactory: (AppDataSource) => AppDataSource.getRepository(ProcessFlow),
+      inject: ['MYSQL_DEVOPS_DATA_SOURCE'],
+    },
     ProcessService,
     ProcessConstraint,
     ProcessNodeService,

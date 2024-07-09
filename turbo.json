@@ -6,6 +6,15 @@
     },
     "dev:user": {
       "cache": false
+    },
+    "dev:ig": {
+      "cache": false
+    },
+    "build:user": {
+       "dependsOn": ["^build"]
+    },
+    "deploy:user": {
+       "dependsOn": ["^deploy"]
     }
   }
 }

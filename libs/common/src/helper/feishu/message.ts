@@ -1,6 +1,12 @@
-import { methodV } from '../../utils/request';
+import { methodV } from '@devopsServer/helper/feishu/request';
 
-export enum RECEIVE_TYPE { 'open_id', 'user_id', 'union_id', 'email', 'chat_id' }
+export enum RECEIVE_TYPE {
+  'open_id',
+  'user_id',
+  'union_id',
+  'email',
+  'chat_id',
+}
 
 export enum MSG_TYPE {
   text,
@@ -12,17 +18,21 @@ export enum MSG_TYPE {
   sticker,
   interactive,
   share_chat,
-  share_user
+  share_user,
 }
 
 type MESSAGES_PARAMS = {
-  receive_id: string
-  content: string
-  msg_type: MSG_TYPE
-}
+  receive_id: string;
+  content: string;
+  msg_type: MSG_TYPE;
+};
 
-export const messages = async (receive_id_type: RECEIVE_TYPE, params: MESSAGES_PARAMS, app_token: string) => {
-  console.log(receive_id_type, params, app_token)
+export const messages = async (
+  receive_id_type: RECEIVE_TYPE,
+  params: MESSAGES_PARAMS,
+  app_token: string,
+) => {
+  console.log(receive_id_type, params, app_token);
 
   const { data } = await methodV({
     url: `/im/v1/messages`,

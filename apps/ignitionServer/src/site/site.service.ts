@@ -1,13 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { MongoRepository } from 'typeorm';
-import { Site, STATUS_TYPE } from './site.mongo.entity';
+import { Site } from './site.mongo.entity';
 import { ObjectId } from 'mongodb';
 
 export class SiteService {
   constructor(
     @Inject('SITE_REPOSITORY')
     private siteRepository: MongoRepository<Site>,
-  ) {}
+  ) { }
 
   saveAndUpdate(site) {
     const { id, ...res } = site;
@@ -26,11 +26,15 @@ export class SiteService {
   }
 
   findOne(id) {
-    return this.siteRepository.findOne(id);
+    return this.siteRepository.findOne({
+      where: {
+        _id: new ObjectId(id),
+      },
+    });
   }
 
   findALL() {
-    return this.siteRepository.find()
+    return this.siteRepository.find();
     // return this.siteRepository.find({
     //   where: {
     //     status: STATUS_TYPE.inactive,

@@ -1,6 +1,6 @@
 import { request } from '@/util/request';
 
-const prefix = 'http://localhost:3000/api/';
+const prefix = '/api/';
 
 export interface ISite {
   id?: string;
@@ -66,6 +66,7 @@ export const setSite = (params: ISite) => {
 };
 
 export const getInterfaceList = (id: string) => {
+  console.log('prefix===>', prefix)
   return request({
     method: 'GET',
     prefix,

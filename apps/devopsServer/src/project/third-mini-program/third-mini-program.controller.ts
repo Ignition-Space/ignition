@@ -146,14 +146,6 @@ export class ThirdMiniProgramController {
         });
       }
     }
-    process.exec(
-      "sshpass -p 'font12345' scp -o StrictHostKeyChecking=no -r /home/app/img/. root@192.168.0.91:/home/xingyun/html/dev/preview",
-      (error) => {
-        if (error !== null) {
-          console.log('exec error: ' + error);
-        }
-      },
-    );
     return reThirdMiniPrograms;
   }
 
@@ -427,15 +419,6 @@ export class ThirdMiniProgramController {
     await WeChatApi.getQrcode(
       reThirdMiniPrograms[0].token.authorizer_access_token,
       reThirdMiniPrograms[0].id,
-    );
-
-    process.exec(
-      "sshpass -p 'font12345' scp -o StrictHostKeyChecking=no -r /home/app/img/. root@192.168.0.91:/home/xingyun/html/dev/preview",
-      (error) => {
-        if (error !== null) {
-          console.log('exec error: ' + error);
-        }
-      },
     );
 
     this.thirdMiniProgramService.createOrUpdate({

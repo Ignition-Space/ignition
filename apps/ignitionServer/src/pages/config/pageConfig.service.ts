@@ -8,14 +8,18 @@ export class PageConfigService {
   constructor(
     @Inject('PAGE_CONFIG_REPOSITORY')
     private pageConfigRepository: MongoRepository<PageConfig>,
-  ) {}
+  ) { }
 
   save(pageConfig) {
     return this.pageConfigRepository.save(pageConfig);
   }
 
   findOne(id) {
-    return this.pageConfigRepository.findOne(id);
+    return this.pageConfigRepository.findOne({
+      where: {
+        _id: new ObjectId(id),
+      },
+    });
   }
 
   findAll(params: Partial<PageConfig>) {

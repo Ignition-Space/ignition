@@ -1,7 +1,6 @@
-
 import { APP_ID, APP_SECRET } from './const';
 
-import { methodV } from '../../utils/request';
+import { methodV } from '@devopsServer/helper/feishu/request';
 
 export type GetAppTokenRes = {
   code: number;
@@ -60,7 +59,6 @@ export const getUserAccessToken = async (code) => {
   });
   return data as GetAppTokenRes;
 };
-
 
 export const getAppToken = async () => {
   const { data } = await methodV({

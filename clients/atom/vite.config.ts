@@ -17,4 +17,16 @@ export default defineConfig({
       },
     ],
   },
-})
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    proxy: {
+      '/api': {
+        // 所要代理的目标地址
+        // target: 'http://localhost:4000/',
+        target: 'http://localhost:3031/',
+        changeOrigin: true,
+      },
+    },
+  },
+});

@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "cd .. && pnpm start:materials"
+    "dev": "cd .. && pnpm dev-server:materials",
+    "dev:materials": "cd .. && pnpm dev-server:materials"
   }
 }

@@ -7,8 +7,7 @@ import {
 } from 'class-validator';
 import { Iteration } from './iteration.entity';
 import { IterationService } from './iteration.service';
-
-const semver = require('semver');
+import * as semver from 'semver';
 
 @ValidatorConstraint()
 export class IterationConstraint implements ValidatorConstraintInterface {

@@ -261,7 +261,7 @@ export class TaskController {
       await this.projectConfigurationService.findOne(project.id, projectType);
 
     if (
-      isEmpty(projectConfiguration?.deployConfig || project.deployConfig) &&
+      isEmpty(projectConfiguration?.deployConfig) &&
       projectType !== 'iOS' &&
       projectType !== 'nodejs' &&
       projectType !== 'android'
@@ -314,7 +314,7 @@ export class TaskController {
         projectConfiguration?.authentication &&
         JSON.parse(projectConfiguration.authentication),
       WEAPP_KEY: authentication.secretToken || project.secretToken,
-      MP_APPID: authentication.appId || project.appId,
+      MP_APPID: authentication.appId,
     };
   }
 
@@ -574,7 +574,7 @@ export class TaskController {
 
     // 触发 Jenkins
     let jenkinsParams = {
-      DEPLOY_CONFIG: projectConfiguration?.deployConfig || project.deployConfig, // 前端发布配置
+      DEPLOY_CONFIG: projectConfiguration?.deployConfig, // 前端发布配置
       PROJECT_GIT_PATH: `${project.gitProjectUrl.replace('http://', '')}.git`, // 项目 git 地址
       PROJECT_NAME: project.gitProjectName, // 项目 git 名称
       PROJECT_VERSION: iteration.version, // 迭代版本
@@ -711,7 +711,7 @@ export class TaskController {
       await this.projectConfigurationService.findOne(project.id, projectType);
 
     if (
-      isEmpty(projectConfiguration?.deployConfig || project.deployConfig) &&
+      isEmpty(projectConfiguration?.deployConfig) &&
       projectType !== 'iOS' &&
       projectType !== 'nodejs' &&
       projectType !== 'android'
@@ -746,7 +746,7 @@ export class TaskController {
 
     // 触发 Jenkins
     let jenkinsParams = {
-      DEPLOY_CONFIG: projectConfiguration?.deployConfig || project.deployConfig, // 前端发布配置
+      DEPLOY_CONFIG: projectConfiguration?.deployConfig, // 前端发布配置
       PROJECT_GIT_PATH: `${project.gitProjectUrl.replace('http://', '')}.git`, // 项目 git 地址
       PROJECT_NAME: project.gitProjectName, // 项目 git 名称
       PROJECT_VERSION: deployVersion, // 迭代版本

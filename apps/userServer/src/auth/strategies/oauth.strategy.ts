@@ -1,5 +1,5 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, Query, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../auth.service';
 import { Strategy } from 'passport-custom';
 
@@ -12,7 +12,7 @@ export class OAuthStrategy extends PassportStrategy(Strategy, 'oauth') {
   async validate(req): Promise<IPayloadUser> {
     const q: any = req.query;
 
-    const user = await this.authService.validateFeishuUser(q.code as string);
+    const user = await this.authService.validateGithubUser(q.code as string);
 
     if (!user) {
       throw new UnauthorizedException();

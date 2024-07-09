@@ -1,22 +1,24 @@
-import React, { useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import { Layout, Tooltip, Dropdown } from 'antd';
+import './index.less';
+
 import {
-  MenuFoldOutlined,
-  FullscreenOutlined,
-  FullscreenExitOutlined,
-  GithubOutlined,
   ChromeOutlined,
+  FullscreenExitOutlined,
+  FullscreenOutlined,
+  GithubOutlined,
   LogoutOutlined,
+  MenuFoldOutlined,
   SmileOutlined,
 } from '@ant-design/icons';
+import { Dropdown, Layout, Tooltip } from 'antd';
+import React, { useCallback, useState } from 'react';
+
+import { Link } from 'react-router-dom';
+import type { MenuProps } from 'antd';
+import { UserInfo } from '@/models/index.type';
 
 const { Header } = Layout;
 
-import './index.less';
 
-import type { MenuProps } from 'antd';
-import { UserInfo } from '@/models/index.type';
 
 interface Element {
   webkitRequestFullscreen?: () => void;
@@ -100,7 +102,7 @@ export default function HeaderCom(props: Props): JSX.Element {
             )}
           </div>
         </Tooltip>
-        {u ? (
+         { u ? (
           <Dropdown
             menu={{
               className: 'menu',
@@ -149,7 +151,8 @@ export default function HeaderCom(props: Props): JSX.Element {
             placement="bottomRight"
           >
             <div className="userhead all_center">
-              <SmileOutlined color="red" />
+              <SmileOutlined />
+              用户信息
               <span className="username">{u.name}</span>
             </div>
           </Dropdown>

@@ -1,10 +1,17 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from '@app/common';
-import { branchProviders } from './branch.providers';
 import { BranchService } from './branch.service';
+import { Branch } from './branch.entity';
 
 @Module({
-  providers: [...branchProviders, BranchService],
+  providers: [
+    {
+      provide: 'BRANCH_REPOSITORY',
+      useFactory: (AppDataSource) => AppDataSource.getRepository(Branch),
+      inject: ['MYSQL_DEVOPS_DATA_SOURCE'],
+    },
+    BranchService,
+  ],
   imports: [DatabaseModule],
   exports: [BranchService],
 })

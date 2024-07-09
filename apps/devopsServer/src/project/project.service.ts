@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Brackets, IsNull, Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { Project } from './project.entity';
 
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';

@@ -38,7 +38,11 @@ export class InterfaceService {
   }
 
   findOne(id) {
-    return this.interfaceRepository.findOne(id);
+    return this.interfaceRepository.findOne({
+      where: {
+        _id: new ObjectId(id),
+      },
+    });
   }
 
   findByUrl(siteId, url) {

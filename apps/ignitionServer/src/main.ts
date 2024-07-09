@@ -17,7 +17,7 @@ async function bootstrap() {
   // 开启跨域
   app.enableCors({
     credentials: true,
-    origin: ['*.ig-space.com'],
+    origin: ['*.ig-space.com', 'http://127.0.0.1:5173'],
     methods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
     // allowedHeaders: '*',
   });

@@ -1,13 +1,9 @@
 // 路由守卫
 
-import React, { useEffect, useMemo } from 'react';
+import { Dispatch, RootState } from '@/store';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, Dispatch } from '@/store';
-
-import type { Menu } from '@/models/index.type';
-
-import tools from '@/util/tools';
+import React, { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface Props {
   children: JSX.Element;
@@ -16,6 +12,8 @@ interface Props {
 // 未登录的用户，重定向到登录页
 export function AuthNoLogin(props: Props) {
   const userinfo = useSelector((state: RootState) => state.app.userinfo);
+
+  console.log('userinfo===>', userinfo);
 
   return props.children;
 }

@@ -1,6 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { BranchModule } from '@devopsServer/branch/branch.module';
-import { DatabaseModule } from '@app/common';
 import { IterationModule } from '@devopsServer/iteration/iteration.module';
 import { ProcessModule } from '@devopsServer/iteration/process/process.module';
 import { ProjectModule } from '@devopsServer/project/project.module';
@@ -9,19 +8,24 @@ import { ProjectConfigurationModule } from '@devopsServer/project/project-config
 import { ThirdMiniProgramModule } from '@devopsServer/project/third-mini-program/third-mini-program.module';
 import { RepositoryModule } from '@devopsServer/common/repository/repository.module';
 import { TaskController } from './task.controller';
-import { taskProviders } from './task.providers';
 import { TaskService } from './task.service';
 import { OperationModule } from '@devopsServer/system/operation/operation.module';
-import { DeployHistoryController } from '../history/history.controller';
-import { DeployHistoryModule } from '../history/history.module';
+import { DeployHistoryModule } from '@devopsServer/deploy/history/history.module';
+import { Task } from './task.entity';
 
 @Module({
-  controllers: [TaskController, DeployHistoryController],
-  providers: [TaskService, ...taskProviders],
+  controllers: [TaskController],
+  providers: [
+    TaskService,
+    {
+      provide: 'TASK_REPOSITORY',
+      useFactory: (AppDataSource) => AppDataSource.getRepository(Task),
+      inject: ['MYSQL_DEVOPS_DATA_SOURCE'],
+    },
+  ],
   imports: [
-    DatabaseModule,
     OperationModule,
-    DeployHistoryModule,
+    forwardRef(() => DeployHistoryModule),
     forwardRef(() => ProjectModule),
     forwardRef(() => ProcessModule),
     forwardRef(() => IterationModule),
