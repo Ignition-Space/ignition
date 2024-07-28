@@ -4,7 +4,7 @@ import { User } from './user.mysql.entity';
 import { UserListWithPaginationDto } from './user.dto';
 import { isNotEmpty } from 'class-validator';
 import { GithubUserInfo } from './user.dto';
-import { BusinessException, CustomPaginationMeta } from '@app/common';
+import { BusinessException, CustomPaginationMeta, encryptionPassword } from '@app/common';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { getPaginationOptions } from '@app/common';
 import { RolePrivilegeService } from '../role-privilege/role-privilege.service';
@@ -38,11 +38,12 @@ export class UserService {
   }
 
   async findUserByLocal({ username, password }) {
+    const encryption = await encryptionPassword(password);
     const findUser: User = await this.userRepository.findOne({
       where: [
         {
           username,
-          password,
+          password: encryption,
         },
       ],
     });

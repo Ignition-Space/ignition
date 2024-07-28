@@ -64,6 +64,7 @@ export class GithubUserInfo {
   accessToken?: string;
   email?: string;
   avatarUrl?: string;
+  avatar_url?: string;
   avatarThumb?: string;
   avatarBig?: string;
   avatarMiddle?: string;

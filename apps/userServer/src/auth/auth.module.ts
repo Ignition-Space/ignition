@@ -7,8 +7,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { AuthController } from './auth.controller';
 import { UserModule } from '../user/user.module';
-import { OAuthStrategy } from './strategies/oauth.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
+import { GithubStrategy } from './strategies/github.strategy';
+import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { LocalStrategy } from './strategies/local.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, OAuthStrategy, LocalStrategy],
+  providers: [AuthService, JwtStrategy, GithubStrategy, GoogleStrategy, LocalStrategy],
   exports: [AuthService],
 })
 export class AuthModule { }

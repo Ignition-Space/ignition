@@ -1,11 +1,12 @@
 import { Controller, Post, UseGuards, Res, Get, Query } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Public } from './constants';
 import { PayloadUser } from '@app/common';
-import { OAuthGuard } from './guards/oauth.guard';
 import { LocalGuard } from './guards/local.guard';
+import { GithubGuard } from './guards/github.guard';
+import { GoogleGuard } from './guards/google.guard';
 
 @ApiTags('用户认证')
 @Controller('auth')
@@ -37,9 +38,10 @@ export class AuthController {
     summary: 'Github OAUTH 授权',
   })
   @Public()
-  @UseGuards(OAuthGuard)
-  @Get('/')
-  async OAuth(
+  @UseGuards(GithubGuard)
+  @Get('/oauth/github')
+  @ApiQuery({ name: 'code', description: '授权回调 code' })
+  async OAuthGithub(
     @PayloadUser() user: IPayloadUser,
     @Res({ passthrough: true }) response,
   ) {
@@ -51,7 +53,28 @@ export class AuthController {
       domain: '.ig-space.com',
     });
 
-    console.log('access_token==', access_token);
+    return access_token;
+  }
+
+
+  @ApiOperation({
+    summary: 'Google OAUTH 授权',
+  })
+  @Public()
+  @UseGuards(GoogleGuard)
+  @Get('/oauth/google')
+  @ApiQuery({ name: 'code', description: '授权回调 code' })
+  async OAuthGoogle(
+    @PayloadUser() user: IPayloadUser,
+    @Res({ passthrough: true }) response,
+  ) {
+    const { access_token } = await this.authService.login(user);
+
+    response.cookie('jwt', access_token, {
+      path: '/',
+      httpOnly: true,
+      domain: '.ig-space.com',
+    });
 
     return access_token;
   }

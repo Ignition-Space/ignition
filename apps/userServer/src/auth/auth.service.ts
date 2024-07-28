@@ -6,6 +6,8 @@ import { User } from '../user/user.mysql.entity';
 import { UserService } from '../user/user.service';
 import { OAuthService } from '../user/oauth.service';
 
+import * as _ from 'lodash';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -38,11 +40,32 @@ export class AuthService {
       await this.getOAuthTokenByApplications(code);
 
     // 同步信息
-    const user: User = await this.userService.createOrUpdateByOAoth(userInfo);
+    const user: User = await this.userService.createOrUpdateByOAoth({
+      ..._.omit(userInfo, ['id']),
+      avatarUrl: userInfo.avatar_url,
+    });
 
     return {
       userId: user.id,
       username: user.username,
+      name: user.name,
+      email: user.email,
+    };
+  }
+
+
+  async validateGoogleUser(code: string): Promise<IPayloadUser> {
+    const userInfo = await this.getGoogleOAuthToken(code);
+
+    // 同步信息
+    const user: User = await this.userService.createOrUpdateByOAoth({
+      ...userInfo,
+      avatarUrl: userInfo.picture,
+    });
+
+    return {
+      userId: user.id,
+      username: user.name,
       name: user.name,
       email: user.email,
     };
@@ -55,7 +78,12 @@ export class AuthService {
   }
 
   async getOAuthTokenByApplications(code: string) {
-    const oauth = await this.oAuthService.getUserToken(code);
+    const oauth = await this.oAuthService.getGithubUserToken(code);
+    return oauth;
+  }
+
+  async getGoogleOAuthToken(code: string) {
+    const oauth = await this.oAuthService.getGoogleUserToken(code);
     return oauth;
   }
 }

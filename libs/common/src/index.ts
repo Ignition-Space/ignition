@@ -17,5 +17,7 @@ export * from './helper/feishu/auth';
 export * from './helper/feishu/user';
 export * from './helper/feishu/message';
 export * from './helper/github/auth';
+export * from './helper/google/auth';
+export * from './helper/auth';
 
 export * from './dto/common';
