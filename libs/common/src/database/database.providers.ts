@@ -10,7 +10,7 @@ import { NamingStrategy } from './naming.strategies';
 
 import * as path from 'path';
 
-const { MONGODB_CONFIG, MYSQL_CONFIG, MYSQL_DEVOPS_CONFIG } = getConfig();
+const { MONGODB_CONFIG, MYSQL_USER_CONFIG, MYSQL_DEVOPS_CONFIG } = getConfig();
 
 // 静态文件处理与 webpack hmr 热更新冲突
 const MONGODB_DATABASE_CONFIG = {
@@ -25,18 +25,18 @@ const MONGODB_DATABASE_CONFIG = {
 };
 
 const MYSQL_DATABASE_CONFIG = {
-  ...MYSQL_CONFIG,
+  ...MYSQL_USER_CONFIG,
   NamedNodeMap: new NamingStrategy(),
   entities: [
     path.join(
       __dirname,
-      `../../../../**/*.${MYSQL_CONFIG.entities}.entity{.ts,.js}`,
+      `../../../../**/*.${MYSQL_USER_CONFIG.entities}.entity{.ts,.js}`,
     ),
   ],
 };
 
 const MYSQL_DEVOPS_DATABASE_CONFIG = {
-  ...MYSQL_CONFIG,
+  ...MYSQL_DEVOPS_CONFIG,
   NamedNodeMap: new NamingStrategy(),
   entities: [
     path.join(
@@ -47,7 +47,7 @@ const MYSQL_DEVOPS_DATABASE_CONFIG = {
 };
 
 const MONGODB_DATA_SOURCE = new DataSource(MONGODB_DATABASE_CONFIG);
-const MYSQL_DATA_SOURCE = new DataSource(MYSQL_DATABASE_CONFIG);
+const MYSQL_USER_DATA_SOURCE = new DataSource(MYSQL_DATABASE_CONFIG);
 const MYSQL_DEVOPS_DATA_SOURCE = new DataSource(MYSQL_DEVOPS_DATABASE_CONFIG);
 
 // 数据库注入
@@ -61,11 +61,11 @@ export const DatabaseProviders = [
     },
   },
   {
-    provide: 'MYSQL_DATA_SOURCE',
+    provide: 'MYSQL_USER_DATA_SOURCE',
     useFactory: async () => {
-      if (!MYSQL_DATA_SOURCE.isInitialized)
-        await MYSQL_DATA_SOURCE.initialize();
-      return MYSQL_DATA_SOURCE;
+      if (!MYSQL_USER_DATA_SOURCE.isInitialized)
+        await MYSQL_USER_DATA_SOURCE.initialize();
+      return MYSQL_USER_DATA_SOURCE;
     },
   },
   {

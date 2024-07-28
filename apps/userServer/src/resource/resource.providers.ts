@@ -4,6 +4,6 @@ export const ResourceProviders = [
   {
     provide: 'RESOURCE_REPOSITORY',
     useFactory: (AppDataSource) => AppDataSource.getRepository(Resource),
-    inject: ['MYSQL_DATA_SOURCE'],
+    inject: ['MYSQL_USER_DATA_SOURCE'],
   },
 ];
