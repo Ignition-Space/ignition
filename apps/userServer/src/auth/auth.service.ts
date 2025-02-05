@@ -17,7 +17,6 @@ export class AuthService {
   ) { }
 
   async validateLocalUser({ username, password }): Promise<IPayloadUser> {
-    // 同步信息
     const user: User = await this.userService.findUserByLocal({
       username,
       password,
@@ -52,7 +51,6 @@ export class AuthService {
       email: user.email,
     };
   }
-
 
   async validateGoogleUser(code: string): Promise<IPayloadUser> {
     const userInfo = await this.getGoogleOAuthToken(code);

@@ -4,7 +4,11 @@ import { User } from './user.mysql.entity';
 import { UserListWithPaginationDto } from './user.dto';
 import { isNotEmpty } from 'class-validator';
 import { GithubUserInfo } from './user.dto';
-import { BusinessException, CustomPaginationMeta, encryptionPassword } from '@app/common';
+import {
+  BusinessException,
+  CustomPaginationMeta,
+  encryptionPassword,
+} from '@app/common';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { getPaginationOptions } from '@app/common';
 import { RolePrivilegeService } from '../role-privilege/role-privilege.service';
@@ -37,15 +41,22 @@ export class UserService {
     this.userRepository.save(user);
   }
 
+  findByUsername(name: string) {
+    return this.userRepository.findOne({
+      where: {
+        username: name,
+      },
+    });
+  }
+
   async findUserByLocal({ username, password }) {
     const encryption = await encryptionPassword(password);
+    console.log(encryption);
     const findUser: User = await this.userRepository.findOne({
-      where: [
-        {
-          username,
-          password: encryption,
-        },
-      ],
+      where: {
+        username,
+        password: encryption,
+      },
     });
     return findUser;
   }

@@ -2,7 +2,7 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { BUSINESS_ERROR_CODE, BusinessException } from '@app/common';
-import { IS_PUBLIC_KEY } from '../constants';
+import { IS_PUBLIC_KEY } from '@app/common';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {

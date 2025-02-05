@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "cd .. && pnpm start-server:user",
-    "dev:user": "cd .. && pnpm start-server:user",
+    "dev:user": "cd .. && pnpm dev-server:user",
     "build:user": "cd .. && pnpm build-server:user",
     "deploy:user": "cd .. && pnpm start-server:user"
   }

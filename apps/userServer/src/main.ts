@@ -11,6 +11,18 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(UserCenterModule);
 
+  // 开启跨域
+  app.enableCors({
+    credentials: true,
+    origin: [
+      '*.ig-space.com',
+      'http://127.0.0.1:10010',
+      'http://localhost:10010',
+    ],
+    methods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+    allowedHeaders: '*',
+  });
+
   // 异常过滤器
   app.useGlobalFilters(new AllExceptionsFilter(), new HttpExceptionFilter());
 

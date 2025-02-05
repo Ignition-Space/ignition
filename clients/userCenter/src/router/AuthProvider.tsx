@@ -1,65 +1,81 @@
 // 路由守卫
 
-import { Dispatch, RootState } from '@/store';
 import { Navigate, useLocation } from 'react-router-dom';
-import React, { useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useAtomValue } from 'jotai';
+import { currentUserAtom } from '@/atoms/userAtom';
+import { useNavigate, Outlet } from 'react-router-dom';
+import { useUser } from '@/hooks/useUser';
+import { Spin } from 'antd';
+import { getStorageItem, removeStorageItem } from '@/util/storage';
 
 interface Props {
   children: JSX.Element;
 }
 
+const publicPaths = ['/login'];
+export const AuthProvider = () => {
+  const { user, loading, fetchUserInfo } = useUser();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const token = getStorageItem('token');
+
+    // 第一次进入页面时检查token和用户状态
+    if (token) {
+      fetchUserInfo()
+        .then(() => {
+          console.log('fetchUserInfo success');
+        })
+        .catch(() => {
+          removeStorageItem('token');
+          navigate('/login', { replace: true });
+        });
+    } else if (!publicPaths.includes(location.pathname)) {
+      // 无token且不在公开路径时跳转登录页
+      navigate('/login', { replace: true });
+    }
+  }, []); // 仅在组件挂载时执行一次
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  return <Outlet />;
+};
+
 // 未登录的用户，重定向到登录页
-export function AuthNoLogin(props: Props) {
-  const userinfo = useSelector((state: RootState) => state.app.userinfo);
+export function AuthNoLogin({ children }: Props) {
+  const currentUser = useAtomValue(currentUserAtom);
 
-  console.log('userinfo===>', userinfo);
+  if (!currentUser) {
+    console.warn('User not logged in, redirecting to login page.');
+    // Add redirection logic here
+  }
 
-  return props.children;
+  return children;
 }
 
 // 已登录的用户，不应该进入login页，直接重定向到主页
-export const AuthWithLogin = (props: Props) => {
-  const dispatch = useDispatch();
+export const AuthWithLogin = ({ children }: Props) => {
+  const currentUser = useAtomValue(currentUserAtom);
 
-  // dispatch.app.getUserinfo();
-  const userinfo = useSelector((state: RootState) => state.app.userinfo);
+  if (currentUser) {
+    console.warn('User already logged in, redirecting to home page.');
+    // Add redirection logic here
+  }
 
-  return props.children;
+  return children;
 };
-
-// 已登录，但没有权限访问当前页面，跳401
-export function AuthNoPower(props: Props) {
-  const location = useLocation();
-  const dispatch = useDispatch<Dispatch>();
-
-  const userinfo = useSelector((state: RootState) => state.app.userinfo);
-
-  useEffect(() => {
-    if (!userinfo.id) {
-      dispatch.app.getUserInfo();
-    }
-  }, []);
-
-  //  判断当前用户是否有该路由权限，如果没有就跳转至401页
-  // const isHavePower = useMemo(() => {
-  //   let menus: Menu[] = [];
-  //   if (userinfo.menus && userinfo.menus.length) {
-  //     menus = userinfo.menus;
-  //   } else if (sessionStorage.getItem('userinfo')) {
-  //     menus = JSON.parse(
-  //       tools.uncompile(sessionStorage.getItem('userinfo') || '[]'),
-  //     ).menus;
-  //   }
-  //   const m: string[] = menus.map((item) => item.url); // 当前用户拥有的所有菜单
-
-  //   if (m.includes(location.pathname)) {
-  //     return true;
-  //   }
-  //   return false;
-  // }, [userinfo, location.pathname]);
-
-  console.log('auth:', userinfo, location.pathname);
-
-  return props.children;
-}

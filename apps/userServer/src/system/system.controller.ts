@@ -32,7 +32,10 @@ export class SystemController {
     summary: '修改系统信息',
   })
   @Post('update')
-  async update(@Body() dto: UpdateSystemDto, @PayloadUser() user: IPayloadUser) {
+  async update(
+    @Body() dto: UpdateSystemDto,
+    @PayloadUser() user: IPayloadUser,
+  ) {
     const foundSystem = await this.systemService.findById(dto.id);
 
     if (!foundSystem) {

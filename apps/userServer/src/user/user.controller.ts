@@ -5,9 +5,10 @@ import {
   GetRolesByIdDto,
   SetRolesDto,
   DisableUserDto,
+  CreateUserDto,
 } from './user.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { PayloadUser } from '@app/common';
+import { encryptionPassword, PayloadUser } from '@app/common';
 import { UserRoleService } from '../user-role/user-role.service';
 import { BusinessException } from '@app/common';
 
@@ -18,6 +19,25 @@ export class UserController {
     private readonly userService: UserService,
     private readonly userRoleService: UserRoleService,
   ) { }
+
+  @ApiOperation({
+    summary: '创建用户',
+  })
+  @Post('/create')
+  async create(@Body() user: CreateUserDto) {
+    const found = await this.userService.findByUsername(user.username);
+    if (found) {
+      throw new BusinessException('用户名已存在');
+    }
+    return this.userService.createOrSave({
+      ...user,
+      name: user.username,
+      status: 1,
+      phone: user.mobile,
+      avatarUrl: '',
+      password: await encryptionPassword('123456'),
+    });
+  }
 
   @ApiOperation({
     summary: '用户信息',
@@ -42,7 +62,7 @@ export class UserController {
   @ApiOperation({
     summary: '用户列表（分页）',
   })
-  @Post('/list/pagination')
+  @Post('/list')
   async listWithPagination(@Body() dto: UserListWithPaginationDto) {
     const { page, ...searchParams } = dto;
     return this.userService.paginate(searchParams, page);

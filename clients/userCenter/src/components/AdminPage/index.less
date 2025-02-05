@@ -1,0 +1,63 @@
+@import '../../styles/theme.less';
+
+.admin-page {
+  .admin-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: @shadow-1;
+    border: @cyber-border;
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+
+      h2 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 500;
+        color: @text-primary;
+      }
+    }
+
+    .ant-table-wrapper {
+      .ant-table {
+        .ant-table-thead > tr > th {
+          background: fade(@primary-color, 5%);
+          color: @text-primary;
+          font-weight: 500;
+        }
+
+        .ant-table-tbody > tr > td {
+          padding: 16px 8px;
+        }
+      }
+
+      .ant-table-pagination {
+        margin: 16px 0;
+      }
+    }
+  }
+}
+
+// 响应式布局
+@media (max-width: 768px) {
+  .admin-page {
+    .admin-card {
+      .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .ant-table-wrapper {
+        .ant-table {
+          .ant-table-tbody > tr > td {
+            padding: 12px 8px;
+          }
+        }
+      }
+    }
+  }
+} 

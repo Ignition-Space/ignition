@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Res, Get, Query } from '@nestjs/common';
+import { Controller, Post, UseGuards, Res, Get, Body } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -7,6 +7,7 @@ import { PayloadUser } from '@app/common';
 import { LocalGuard } from './guards/local.guard';
 import { GithubGuard } from './guards/github.guard';
 import { GoogleGuard } from './guards/google.guard';
+import { UserLoginDto } from './auth.dto';
 
 @ApiTags('用户认证')
 @Controller('auth')
@@ -21,17 +22,26 @@ export class AuthController {
   @Post('/login')
   async UserLogin(
     @PayloadUser() user: IPayloadUser,
-    @Res({ passthrough: true }) response,
+    @Body() userLogin: UserLoginDto,
   ) {
+    console.log(userLogin);
     const { access_token } = await this.authService.login(user);
+    return access_token;
+  }
 
-    response.cookie('jwt', access_token, {
-      path: '/',
-      httpOnly: true,
-      domain: '.ig-space.com',
-    });
-
-    return user;
+  @ApiOperation({
+    summary: '用户密码登录',
+  })
+  @Public()
+  @UseGuards(LocalGuard)
+  @Post('/login2')
+  async UserLogin2(
+    @PayloadUser() user: IPayloadUser,
+    @Body() userLogin: UserLoginDto,
+  ) {
+    console.log(userLogin);
+    const { access_token } = await this.authService.login(user);
+    return access_token;
   }
 
   @ApiOperation({
@@ -55,7 +65,6 @@ export class AuthController {
 
     return access_token;
   }
-
 
   @ApiOperation({
     summary: 'Google OAUTH 授权',

@@ -69,7 +69,7 @@ export class ResourceController {
     summary: '资源列表',
     description: '根据角色名称查询',
   })
-  @Post('/list/paginate')
+  @Post('/list')
   async list(@Body() dto: ListWithPaginationDto) {
     const { page, ...searchParams } = dto;
     const rourceData = await this.resourceService.paginate(searchParams, page);

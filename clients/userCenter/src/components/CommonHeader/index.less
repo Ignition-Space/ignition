@@ -1,0 +1,55 @@
+@import '../../styles/theme.less';
+
+.common-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  height: 64px;
+  background: @dark-bg;
+  box-shadow: @shadow-1;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    
+    img {
+      height: 32px;
+      margin-right: 8px;
+    }
+
+    span {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+      letter-spacing: 1px;
+    }
+  }
+
+  .user-info {
+    .username {
+      margin-right: 8px;
+      color: #fff;
+      font-weight: 500;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    .ant-avatar {
+      cursor: pointer;
+      transition: all 0.3s;
+      border: @cyber-border;
+      box-shadow: @cyber-glow;
+
+      &:hover {
+        opacity: 0.8;
+        transform: scale(1.05);
+      }
+    }
+  }
+} 

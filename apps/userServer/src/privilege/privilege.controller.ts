@@ -99,7 +99,7 @@ export class PrivilegeController {
     summary: '权限列表（分页）',
     description: '根据权限名称查询',
   })
-  @Post('/list/pagination')
+  @Post('/list')
   async listWithPagination(@Body() dto: PrivilegeListWithPaginationDto) {
     const { page, ...searchParams } = dto;
 

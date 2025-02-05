@@ -60,6 +60,13 @@ export class UserListWithPaginationDto {
   page?: PaginationParams;
 }
 
+export class CreateUserDto {
+  username: string;
+  password: string;
+  email: string;
+  mobile: string;
+}
+
 export class GithubUserInfo {
   accessToken?: string;
   email?: string;

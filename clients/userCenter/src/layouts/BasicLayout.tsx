@@ -1,51 +1,79 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate, Outlet } from 'react-router-dom';
-import { Layout, message } from 'antd';
-
+import React from 'react';
+import { Layout, Menu } from 'antd';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import {
+  DashboardOutlined,
+  UserOutlined,
+  SettingOutlined,
+} from '@ant-design/icons';
+import CommonHeader from '@/components/CommonHeader';
 import './BasicLayout.less';
 
-import Header from '@/components/Header';
-import MenuCom from '@/components/Menu';
-import Footer from '@/components/Footer';
-// import Bread from '@/components/Bread';
+const { Sider, Content } = Layout;
 
-const { Content } = Layout;
+const menuItems = [
+  {
+    key: '/dashboard',
+    icon: <DashboardOutlined />,
+    label: '仪表盘',
+  },
+  {
+    key: 'system',
+    icon: <SettingOutlined />,
+    label: '系统管理',
+    children: [
+      {
+        key: '/user',
+        icon: <UserOutlined />,
+        label: '用户管理',
+      },
+      {
+        key: '/role',
+        icon: <UserOutlined />,
+        label: '角色管理',
+      },
+      {
+        key: '/privilege',
+        icon: <UserOutlined />,
+        label: '权限管理',
+      },
+      {
+        key: '/resource',
+        icon: <UserOutlined />,
+        label: '资源管理',
+      },
+      {
+        key: '/system',
+        icon: <SettingOutlined />,
+        label: '系统管理',
+      },
+    ],
+  },
+];
 
-import type { RootState, Dispatch } from '@/store';
-
-function BasicLayoutCom(): JSX.Element {
-  const dispatch = useDispatch<Dispatch>();
+const BasicLayout: React.FC = () => {
   const navigate = useNavigate();
-  const userinfo = useSelector((state: RootState) => state.app.userinfo);
-  const [collapsed, setCollapsed] = useState(false); // 菜单栏是否收起
-
-  // 退出登录
-  const onLogout = () => {
-    dispatch.app.onLogout().then(() => {
-      message.success('退出成功');
-      navigate('/user/login');
-    });
-  };
+  const location = useLocation();
 
   return (
-    <Layout className="page-basic" hasSider>
-      <MenuCom data={userinfo?.menus} collapsed={collapsed} />
+    <Layout className="basic-layout">
+      <CommonHeader />
       <Layout>
-        <Header
-          collapsed={collapsed}
-          userinfo={userinfo}
-          onToggle={() => setCollapsed(!collapsed)}
-          onLogout={onLogout}
-        />
-        {/* <Bread menus={userinfo.menus} /> */}
-        <Content className="content">
+        <Sider width={200} className="site-layout-sider">
+          <Menu
+            mode="inline"
+            selectedKeys={[location.pathname]}
+            defaultOpenKeys={['system']}
+            items={menuItems}
+            onClick={({ key }) => navigate(key)}
+          />
+        </Sider>
+        <Content className="site-layout-content">
           <Outlet />
         </Content>
-        <Footer />
       </Layout>
     </Layout>
   );
-}
+};
 
-export default BasicLayoutCom;
+export default BasicLayout;

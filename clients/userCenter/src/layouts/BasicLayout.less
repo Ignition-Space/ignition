@@ -1,3 +1,5 @@
+@import '../styles/theme.less';
+
 .page-basic {
   width: 100%;
   min-height: 100vh;
@@ -7,5 +9,133 @@
     background: #fff;
     height: 100%;
     min-height: 280px;
+  }
+}
+
+.basic-layout {
+  min-height: 100vh;
+
+  .site-layout-sider {
+    background: @menu-bg;
+    box-shadow: @shadow-1;
+    margin-top: 64px;
+    height: calc(100vh - 64px);
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+
+    .ant-menu {
+      height: 100%;
+      border-right: none;
+      overflow-x: hidden;
+      overflow-y: auto;
+      
+      // 隐藏滚动条但保持可滚动
+      &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: transparent;
+        border-radius: 3px;
+      }
+      
+      &:hover::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.12);
+      }
+      
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .ant-menu-item {
+        color: @menu-item-color;
+        margin: 4px;
+        padding: 0 16px;
+        border-radius: 6px;
+        
+        &:hover {
+          background: @menu-item-hover-bg;
+          color: @menu-item-active-color;
+        }
+        
+        &.ant-menu-item-selected {
+          background: @menu-item-active-bg;
+          color: @menu-item-active-color;
+          font-weight: 500;
+          
+          &::after {
+            display: none;
+          }
+          
+          .anticon {
+            color: @primary-color;
+          }
+        }
+        
+        .anticon {
+          color: @text-light;
+        }
+      }
+
+      .ant-menu-submenu {
+        .ant-menu-submenu-title {
+          color: @menu-item-color;
+          margin: 4px;
+          padding: 0 16px;
+          border-radius: 6px;
+          
+          &:hover {
+            background: @menu-item-hover-bg;
+            color: @menu-item-active-color;
+          }
+          
+          .anticon {
+            color: @text-light;
+          }
+        }
+        
+        &.ant-menu-submenu-open,
+        &.ant-menu-submenu-selected {
+          > .ant-menu-submenu-title {
+            color: @menu-item-active-color;
+            
+            .anticon {
+              color: @primary-color;
+            }
+          }
+        }
+        
+        .ant-menu-sub {
+          background: transparent;
+        }
+      }
+    }
+  }
+
+  .site-layout-content {
+    margin-left: 200px;
+    margin-top: 64px;
+    padding: 24px;
+    min-height: calc(100vh - 64px);
+    background: #f8fafc;
+    overflow-y: auto;
+  }
+}
+
+// 响应式布局
+@media (max-width: 768px) {
+  .basic-layout {
+    .site-layout-sider {
+      display: none;
+    }
+
+    .site-layout-content {
+      margin-left: 0;
+      padding: 12px;
+    }
   }
 }

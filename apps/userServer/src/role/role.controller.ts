@@ -8,7 +8,6 @@ import {
   CreateRoleDto,
   DeleteRoleDto,
   GetPrivilegeListByIdDto,
-  RoleListDto,
   RoleListWithPaginationDto,
   RolePrivilegeSetDto,
   UpdateRoleDto,
@@ -34,6 +33,11 @@ export class RoleController {
     @PayloadUser() user: IPayloadUser,
   ) {
     const system = await this.systemService.findById(createRoleDto.systemId);
+
+    if (!system) {
+      throw new BusinessException('未找到系统');
+    }
+
     return this.roleService.create({
       ...createRoleDto,
       systemName: system.name,
@@ -90,7 +94,7 @@ export class RoleController {
     summary: '角色列表（分页）',
     description: '根据角色名称查询',
   })
-  @Post('/list/pagination')
+  @Post('/list')
   async listWithPagination(@Body() dto: RoleListWithPaginationDto) {
     const { page, ...searchParams } = dto;
     const pageData = await this.roleService.paginate(searchParams, page);
