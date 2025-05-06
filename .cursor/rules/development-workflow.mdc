@@ -1,0 +1,70 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# 开发工作流
+
+## 项目启动
+项目使用pnpm+Turbo进行包管理和任务调度。
+
+启动命令：
+```bash
+# 安装依赖
+pnpm install
+
+# 启动所有服务
+pnpm dev
+
+# 只启动用户服务
+pnpm dev:user
+
+# 只启动ignition服务
+pnpm dev:ig
+```
+
+## 前端开发（Next.js）
+前端项目使用Next.js框架开发，采用App Router架构。
+
+开发命令：
+```bash
+# 进入用户中心项目
+cd clients/userCenter
+
+# 开发模式启动
+pnpm dev
+
+# 构建
+pnpm build
+
+# 生产模式启动
+pnpm start
+```
+
+## 项目构建
+```bash
+# 构建所有项目
+pnpm build
+
+# 构建用户服务
+pnpm build:user
+```
+
+## 项目结构
+项目使用Monorepo架构，使用pnpm workspaces管理多个包。
+
+配置文件：
+- [pnpm-workspace.yaml](mdc:pnpm-workspace.yaml) - 工作区配置
+- [turbo.json](mdc:turbo.json) - Turbo管道配置
+
+## 代码规范
+项目使用ESLint和Prettier进行代码格式化和规范检查。
+
+配置文件：
+- [.eslintrc.js](mdc:.eslintrc.js) - ESLint配置
+- [.prettierrc](mdc:.prettierrc) - Prettier配置
+
+## 项目部署
+项目提供Docker部署方式，详见：
+- [Dockerfile](mdc:Dockerfile) - 主Dockerfile
+- [docker](mdc:docker) - Docker相关配置目录

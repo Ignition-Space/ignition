@@ -1,0 +1,39 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 火石系统项目结构概述
+
+## 项目概述
+火石是一个一站式工程化解决方案，包含以下主要功能：
+- 用户系统
+- 物料系统
+- DevOps系统
+- 搭建系统
+
+## 项目结构
+
+### 主要目录
+- `apps/` - 存放后端服务应用
+  - `userServer/` - 用户服务系统
+  - `materialsServer/` - 物料服务系统
+  - `devopsServer/` - DevOps服务系统
+  - `ignitionServer/` - 主应用服务
+
+- `clients/` - 存放前端应用
+  - `userCenter/` - 用户中心前端
+  - `atom/` - 其他前端组件库
+
+- `libs/` - 存放共享库
+  - `common/` - 通用功能共享库
+
+- `docs/` - 项目文档
+
+- `tools/` - 工具脚本
+
+## 技术栈
+- 后端：NestJS
+- 前端：ReactJS + AntD
+- 数据库：MongoDB, MySQL
+- 构建工具：Turbo, pnpm

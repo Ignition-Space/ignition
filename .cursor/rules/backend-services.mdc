@@ -1,0 +1,42 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# 后端服务说明
+
+项目采用NestJS框架构建，采用微服务架构，分为多个不同功能模块的服务。
+
+## 用户服务 (userServer)
+用户服务负责用户管理、认证、授权等功能。
+
+主要文件：
+- [apps/userServer/src/main.ts](mdc:apps/userServer/src/main.ts) - 用户服务入口文件
+- [apps/userServer/src/app.module.ts](mdc:apps/userServer/src/app.module.ts) - 用户服务模块配置
+
+## 物料服务 (materialsServer)
+物料服务负责管理系统中的物料资源。
+
+主要文件：
+- [apps/materialsServer/src/main.ts](mdc:apps/materialsServer/src/main.ts) - 物料服务入口文件
+- [apps/materialsServer/src/app.module.ts](mdc:apps/materialsServer/src/app.module.ts) - 物料服务模块配置
+
+## DevOps服务 (devopsServer)
+DevOps服务负责CI/CD流程、代码仓库集成等功能。
+
+主要文件：
+- [apps/devopsServer/src/main.ts](mdc:apps/devopsServer/src/main.ts) - DevOps服务入口文件
+- [apps/devopsServer/src/app.module.ts](mdc:apps/devopsServer/src/app.module.ts) - DevOps服务模块配置
+
+## 主应用服务 (ignitionServer)
+主应用服务作为系统的主入口点。
+
+主要文件：
+- [apps/ignitionServer/src/main.ts](mdc:apps/ignitionServer/src/main.ts) - 主应用服务入口文件
+- [apps/ignitionServer/src/app.module.ts](mdc:apps/ignitionServer/src/app.module.ts) - 主应用服务模块配置
+
+## 通用库 (common)
+通用库包含被各服务共享的功能模块。
+
+主要目录：
+- [libs/common/src](mdc:libs/common/src) - 通用功能库源码
