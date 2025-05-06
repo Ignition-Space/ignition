@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import BasicLayout from '../../src/layouts/BasicLayout';
+import BasicLayout from '../../components/layout/BasicLayout';
 
 export default function UserLayout({
   children,
@@ -9,4 +9,4 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   return <BasicLayout>{children}</BasicLayout>;
-} 
+}

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import '../src/styles/tailwind.css';
-import { AntdRegistry } from '@/lib/AntdRegistry';
+import './globals.css';
+import { AntdRegistry } from '../lib/AntdRegistry';
 import { Providers } from './providers';
 
 const inter = Inter({ subsets: ['latin'] });

@@ -12,7 +12,9 @@ const nextConfig = {
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@': path.resolve(__dirname, './src'),
+      '@lib': path.resolve(__dirname, './lib'),
+      '@app': path.resolve(__dirname, './app'),
+      '@components': path.resolve(__dirname, './components'),
     };
     return config;
   },
@@ -32,7 +34,7 @@ const nextConfig = {
   typescript: {
     // 临时禁用TypeScript检查，方便开发
     ignoreBuildErrors: true,
-  }
+  },
 };
 
 module.exports = nextConfig;

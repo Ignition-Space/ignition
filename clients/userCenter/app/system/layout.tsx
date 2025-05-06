@@ -3,7 +3,7 @@
 import React from 'react';
 import BasicLayout from '../../components/layout/BasicLayout';
 
-export default function RoleLayout({
+export default function SystemLayout({
   children,
 }: {
   children: React.ReactNode;

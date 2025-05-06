@@ -24,21 +24,14 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
+      "@components/*": [
+        "./components/*"
       ],
-      "@/components/*": [
-        "./components/*",
-        "./src/components/*"
-      ],
-      "@/lib/*": [
+      "@lib/*": [
         "./lib/*"
       ],
-      "@/app/*": [
+      "@app/*": [
         "./app/*"
-      ],
-      "@/src/*": [
-        "./src/*"
       ]
     },
     "baseUrl": "."
