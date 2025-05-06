@@ -110,7 +110,7 @@
     "turbo": "^2.2.3",
     "typescript": "^5.3.3"
   },
-  "packageManager": "pnpm@10.8.2",
+  "packageManager": "pnpm@10.5.2",
   "resolutions": {
     "esbuild": "^0.18.20"
   },

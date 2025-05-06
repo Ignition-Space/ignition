@@ -9,11 +9,11 @@ function updateRootDependencies() {
   console.log('正在更新根项目依赖...');
   try {
     // 获取最新的依赖版本信息
-    execSync('npm outdated --json > outdated.json', { stdio: 'inherit' });
+    execSync('pnpm outdated --json > outdated.json', { stdio: 'inherit' });
 
     // 更新依赖
-    execSync('npm update --save', { stdio: 'inherit' });
-    execSync('npm update --save-dev', { stdio: 'inherit' });
+    execSync('pnpm update --save', { stdio: 'inherit' });
+    execSync('pnpm update --save-dev', { stdio: 'inherit' });
 
     console.log('根项目依赖更新完成！');
   } catch (error) {
@@ -33,11 +33,11 @@ function updateSubprojectDependencies(projectPath) {
     process.chdir(projectPath);
 
     // 获取最新的依赖版本信息
-    execSync('npm outdated --json > outdated.json', { stdio: 'inherit' });
+    execSync('pnpm outdated --json > outdated.json', { stdio: 'inherit' });
 
     // 更新依赖
-    execSync('npm update --save', { stdio: 'inherit' });
-    execSync('npm update --save-dev', { stdio: 'inherit' });
+    execSync('pnpm update --save', { stdio: 'inherit' });
+    execSync('pnpm update --save-dev', { stdio: 'inherit' });
 
     console.log(`${projectPath} 依赖更新完成！`);
 
