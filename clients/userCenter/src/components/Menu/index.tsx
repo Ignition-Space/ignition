@@ -2,17 +2,16 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Layout, Menu as MenuAntd, MenuProps } from 'antd';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { cloneDeep } from 'lodash';
 
 const { Sider } = Layout;
 
-import './index.less';
-import ImgLogo from '@/assets/logo.png';
+import ImgLogo from '../../assets/logo.png';
 
-import type { Menu } from '@/models/index.type';
+import type { Menu } from '../../models/index.type';
 import type { ItemType } from 'antd/lib/menu/hooks/useItems';
-import MenuItem from 'antd/lib/menu/MenuItem';
 import {
   DeploymentUnitOutlined,
   MailOutlined,
@@ -25,22 +24,22 @@ interface Props {
 }
 
 export default function MenuCom(props: Props): JSX.Element {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const pathname = usePathname() || '';
   const [chosedKey, setChosedKey] = useState<string[]>([]); // 当前选中
   const [openKeys, setOpenKeys] = useState<string[]>([]); // 当前需要被展开的项
 
-  // 当页面路由跳转时，即location发生改变，则更新选中项
+  // 当页面路由跳转时，即pathname发生改变，则更新选中项
   useEffect(() => {
-    const paths = location.pathname.split('/').filter((item) => !!item);
-    setChosedKey([location.pathname]);
+    const paths = pathname.split('/').filter((item) => !!item);
+    setChosedKey([pathname]);
     setOpenKeys(paths.map((item) => `/${item}`));
-  }, [location]);
+  }, [pathname]);
 
   // 菜单被选择
   const onSelect = (e: any) => {
     if (e?.key) {
-      navigate(e.key);
+      router.push(e.key);
     }
   };
 
@@ -93,7 +92,7 @@ export default function MenuCom(props: Props): JSX.Element {
     label: React.ReactNode,
     key: React.Key,
     icon?: React.ReactNode,
-    children?: MenuItem[],
+    children?: any[],
     type?: 'group',
   ) => {
     return {
@@ -122,8 +121,8 @@ export default function MenuCom(props: Props): JSX.Element {
       collapsed={props.collapsed}
     >
       <div className={props.collapsed ? 'menuLogo hide' : 'menuLogo'}>
-        <Link to="/">
-          <img src={ImgLogo} />
+        <Link href="/">
+          <img src={ImgLogo.src} alt="Logo" />
           <div>IG-User-Center</div>
         </Link>
       </div>

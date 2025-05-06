@@ -1,21 +1,20 @@
 /** 通用动态面包屑 **/
 import React, { useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 import { Breadcrumb } from 'antd';
 import { EnvironmentOutlined } from '@ant-design/icons';
-import './index.less';
-import { Menu } from '@/models/index.type';
+import { Menu } from '../../models/index.type';
 
 interface Props {
   menus: Menu[];
 }
 
 export default function BreadCom(props: Props): JSX.Element {
-  const location = useLocation();
+  const pathname = usePathname();
 
   /** 根据当前location动态生成对应的面包屑 **/
   const breads = useMemo(() => {
-    const paths: string = location.pathname;
+    const paths: string = pathname || '';
     const breads: JSX.Element[] = [];
 
     let parentId: number | null = null;
@@ -36,7 +35,7 @@ export default function BreadCom(props: Props): JSX.Element {
 
     breads.reverse();
     return breads;
-  }, [location.pathname, props.menus]);
+  }, [pathname, props.menus]);
 
   return (
     <div className="bread">

@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 全局样式 */
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded;
+  }
+  
+  .card {
+    @apply bg-white p-4 rounded-lg shadow;
+  }
+  
+  .form-input {
+    @apply w-full p-2 border border-gray-300 rounded;
+  }
+}
+
+/* 与Ant Design兼容的一些样式重置 */
+.ant-layout {
+  background: transparent;
+}
+
+.ant-menu {
+  background: transparent;
+}
+
+/* 编辑器相关样式 */
+.monaco-editor-container {
+  @apply h-full w-full rounded overflow-hidden border border-gray-200;
+} 

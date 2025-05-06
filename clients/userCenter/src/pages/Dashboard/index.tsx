@@ -9,7 +9,6 @@ import {
 import { Line, Pie } from '@ant-design/charts';
 import { useAtomValue } from 'jotai';
 import { userAtom } from '@/atoms/userAtom';
-import './index.less';
 
 const Dashboard: React.FC = () => {
   const { user } = useAtomValue(userAtom);
@@ -39,14 +38,54 @@ const Dashboard: React.FC = () => {
     point: {
       size: 5,
       shape: 'diamond',
+      fill: '#1890ff',
+    },
+    line: {
+      style: {
+        stroke: '#1890ff',
+        lineWidth: 3,
+      },
+    },
+    area: {
+      style: {
+        fill: 'l(270) 0:#1890ff00 1:#1890ff80',
+      }
     },
     label: {
       style: {
-        fill: '#aaa',
+        fill: '#f0f0f0',
+      },
+    },
+    xAxis: {
+      label: {
+        style: {
+          fill: '#f0f0f0',
+        },
+      },
+      line: {
+        style: {
+          stroke: '#15395b',
+        },
+      },
+    },
+    yAxis: {
+      label: {
+        style: {
+          fill: '#f0f0f0',
+        },
+      },
+      grid: {
+        line: {
+          style: {
+            stroke: '#15395b',
+            lineWidth: 1,
+            lineDash: [4, 4],
+          },
+        },
       },
     },
     smooth: true,
-    padding: [20, 20, 50, 50],
+    padding: [30, 30, 50, 50],
   };
 
   const pieConfig = {
@@ -54,14 +93,28 @@ const Dashboard: React.FC = () => {
     angleField: 'value',
     colorField: 'type',
     autoFit: true,
-    radius: 0.8,
+    radius: 0.7,
+    theme: {
+      colors10: ['#1890ff', '#36cbcb', '#4ecb73'],
+    },
     label: {
       type: 'spider',
       labelHeight: 28,
       content: '{name}\n{percentage}',
+      style: {
+        fill: '#f0f0f0',
+      },
     },
     interactions: [{ type: 'element-active' }],
     padding: [20, 20, 20, 20],
+    legend: {
+      position: 'bottom',
+      itemName: {
+        style: {
+          fill: '#f0f0f0',
+        },
+      },
+    },
   };
 
   return (
@@ -69,45 +122,45 @@ const Dashboard: React.FC = () => {
       <div className="dashboard-content">
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} lg={6}>
-            <Card bordered={false} className="stat-card">
+            <Card bordered={false} className="stat-card" bodyStyle={{ padding: '24px' }}>
               <Statistic
                 title="总用户数"
                 value={user?.totalUsers || 0}
-                prefix={<UserOutlined />}
-                className="cyber-stat"
+                prefix={<UserOutlined className="text-blue-400" />}
+                valueStyle={{ color: '#f0f0f0', fontSize: '24px' }}
               />
             </Card>
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <Card bordered={false} className="stat-card">
+            <Card bordered={false} className="stat-card" bodyStyle={{ padding: '24px' }}>
               <Statistic
                 title="系统负载"
                 value={42.3}
-                prefix={<RocketOutlined />}
+                prefix={<RocketOutlined className="text-green-400" />}
                 suffix="%"
-                className="cyber-stat"
+                valueStyle={{ color: '#f0f0f0', fontSize: '24px' }}
               />
             </Card>
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <Card bordered={false} className="stat-card">
+            <Card bordered={false} className="stat-card" bodyStyle={{ padding: '24px' }}>
               <Statistic
                 title="响应时间"
                 value={0.28}
-                prefix={<ThunderboltOutlined />}
+                prefix={<ThunderboltOutlined className="text-yellow-400" />}
                 suffix="ms"
-                className="cyber-stat"
+                valueStyle={{ color: '#f0f0f0', fontSize: '24px' }}
               />
             </Card>
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <Card bordered={false} className="stat-card">
+            <Card bordered={false} className="stat-card" bodyStyle={{ padding: '24px' }}>
               <Statistic
                 title="服务器状态"
                 value={99.9}
-                prefix={<CloudServerOutlined />}
+                prefix={<CloudServerOutlined className="text-purple-400" />}
                 suffix="%"
-                className="cyber-stat"
+                valueStyle={{ color: '#f0f0f0', fontSize: '24px' }}
               />
             </Card>
           </Col>
@@ -115,19 +168,15 @@ const Dashboard: React.FC = () => {
 
         <Row gutter={[16, 16]} className="chart-row">
           <Col xs={24} lg={16}>
-            <Card title="系统访问趋势" bordered={false} className="chart-card">
-              <div
-                style={{ width: '100%', height: '100%', minHeight: '300px' }}
-              >
+            <Card title="系统访问趋势" bordered={false} className="chart-card" bodyStyle={{ padding: '12px' }}>
+              <div style={{ width: '100%', height: '320px' }}>
                 <Line {...lineConfig} />
               </div>
             </Card>
           </Col>
           <Col xs={24} lg={8}>
-            <Card title="用户分布" bordered={false} className="chart-card">
-              <div
-                style={{ width: '100%', height: '100%', minHeight: '300px' }}
-              >
+            <Card title="用户分布" bordered={false} className="chart-card" bodyStyle={{ padding: '12px' }}>
+              <div style={{ width: '100%', height: '320px' }}>
                 <Pie {...pieConfig} />
               </div>
             </Card>
@@ -136,20 +185,38 @@ const Dashboard: React.FC = () => {
 
         <Row gutter={[16, 16]} className="info-row">
           <Col xs={24} lg={12}>
-            <Card title="系统公告" bordered={false} className="info-card">
-              <div className="announcement">
-                <p>• 系统将于本周六凌晨2点进行例行维护</p>
-                <p>• 新版本功能预告：智能数据分析即将上线</p>
-                <p>• 安全更新：已修复已知的安全漏洞</p>
+            <Card title="系统公告" bordered={false} className="info-card" bodyStyle={{ padding: '20px' }}>
+              <div className="announcement text-gray-300">
+                <p className="flex items-center mb-3">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-400 mr-2"></span>
+                  系统将于本周六凌晨2点进行例行维护
+                </p>
+                <p className="flex items-center mb-3">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-400 mr-2"></span>
+                  新版本功能预告：智能数据分析即将上线
+                </p>
+                <p className="flex items-center">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-yellow-400 mr-2"></span>
+                  安全更新：已修复已知的安全漏洞
+                </p>
               </div>
             </Card>
           </Col>
           <Col xs={24} lg={12}>
-            <Card title="活跃用户" bordered={false} className="info-card">
-              <div className="active-users">
-                <p>• 张三 - 最后登录时间：2分钟前</p>
-                <p>• 李四 - 最后登录时间：5分钟前</p>
-                <p>• 王五 - 最后登录时间：12分钟前</p>
+            <Card title="活跃用户" bordered={false} className="info-card" bodyStyle={{ padding: '20px' }}>
+              <div className="active-users text-gray-300">
+                <p className="flex items-center mb-3">
+                  <span className="inline-block w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                  张三 <span className="text-gray-400 ml-2 text-xs">最后登录时间：2分钟前</span>
+                </p>
+                <p className="flex items-center mb-3">
+                  <span className="inline-block w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                  李四 <span className="text-gray-400 ml-2 text-xs">最后登录时间：5分钟前</span>
+                </p>
+                <p className="flex items-center">
+                  <span className="inline-block w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>
+                  王五 <span className="text-gray-400 ml-2 text-xs">最后登录时间：12分钟前</span>
+                </p>
               </div>
             </Card>
           </Col>

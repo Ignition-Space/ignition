@@ -1,10 +1,20 @@
 /** @type {import('next').NextConfig} */
+const path = require('path');
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   transpilePackages: ['@ant-design/icons', '@ant-design/charts', 'lodash'],
   images: {
     domains: ['localhost'],
+  },
+  // 配置路径别名
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname, './src'),
+    };
+    return config;
   },
   // 兼容旧版API路径
   async rewrites() {
@@ -22,7 +32,7 @@ const nextConfig = {
   typescript: {
     // 临时禁用TypeScript检查，方便开发
     ignoreBuildErrors: true,
-  },
+  }
 };
 
 module.exports = nextConfig;

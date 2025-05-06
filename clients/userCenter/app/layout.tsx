@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
+import '../src/styles/tailwind.css';
 import { AntdRegistry } from '@/lib/AntdRegistry';
 import { Providers } from './providers';
 
@@ -17,8 +17,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
-      <body className={inter.className}>
+    <html lang="zh-CN" className="overflow-hidden">
+      <body className={`${inter.className} m-0 p-0 overflow-hidden`}>
         <AntdRegistry>
           <Providers>{children}</Providers>
         </AntdRegistry>

@@ -1,7 +1,8 @@
 'use client';
 
-import UserPage from '@/src/pages/User';
+import React from 'react';
+import UserContainer from '../../src/pages/User';
 
-export default function User() {
-  return <UserPage />;
+export default function UserPage() {
+  return <UserContainer />;
 }

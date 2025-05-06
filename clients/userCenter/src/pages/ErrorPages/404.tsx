@@ -1,16 +1,14 @@
 /* 404 NotFound */
 
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { Button } from "antd";
 import Img from "@/assets/error.gif";
 
-import "./index.less";
-
 export default function NotFoundContainer(): JSX.Element {
-  const navigate = useNavigate();
+  const router = useRouter();
   const gotoHome = (): void => {
-    navigate("/", { replace: true });
+    router.push("/");
   };
   return (
     <div className="page-error">
@@ -22,7 +20,7 @@ export default function NotFoundContainer(): JSX.Element {
           返回首页
         </Button>
       </div>
-      <img src={Img + `?${Date.now()}`} />
+      <img src={Img.src} alt="404 error" />
     </div>
   );
 }

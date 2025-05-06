@@ -2,15 +2,14 @@
 
 import React from "react";
 import { Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
-import "./index.less";
 import Img from "@/assets/error.gif";
 
 export default function NoPowerContainer(): JSX.Element {
-  const navigate = useNavigate();
+  const router = useRouter();
   const gotoHome = (): void => {
-    navigate("/", { replace: true });
+    router.push("/");
   };
 
   return (
@@ -23,7 +22,7 @@ export default function NoPowerContainer(): JSX.Element {
           返回首页
         </Button>
       </div>
-      <img src={Img + `?${Date.now()}`} />
+      <img src={Img.src} alt="401 error" />
     </div>
   );
 }

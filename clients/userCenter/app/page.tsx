@@ -1,23 +1,21 @@
-import Link from 'next/link';
-import { Button } from 'antd';
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // 立即跳转到dashboard页面
+    router.push('/dashboard');
+  }, [router]);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6 md:p-24">
-      <div className="max-w-4xl w-full space-y-6 text-center">
-        <h1 className="text-4xl font-bold">火石工程化平台 - 用户中心</h1>
-        <p className="text-xl">一站式用户管理与权限控制系统</p>
-        <div className="flex flex-col md:flex-row justify-center gap-4 pt-4">
-          <Link href="/login">
-            <Button type="primary" size="large">
-              立即登录
-            </Button>
-          </Link>
-          <Link href="/dashboard">
-            <Button size="large">进入仪表盘</Button>
-          </Link>
-        </div>
+    <div className="flex justify-center items-center h-screen">
+      <div className="text-center">
+        <div className="animate-pulse text-lg text-gray-500">正在加载...</div>
       </div>
-    </main>
+    </div>
   );
 }

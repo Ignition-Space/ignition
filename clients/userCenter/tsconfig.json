@@ -25,21 +25,23 @@
     ],
     "paths": {
       "@/*": [
-        "./*"
-      ],
-      "@/src/*": [
         "./src/*"
       ],
       "@/components/*": [
-        "./components/*"
+        "./components/*",
+        "./src/components/*"
       ],
       "@/lib/*": [
         "./lib/*"
       ],
       "@/app/*": [
         "./app/*"
+      ],
+      "@/src/*": [
+        "./src/*"
       ]
-    }
+    },
+    "baseUrl": "."
   },
   "include": [
     "next-env.d.ts",

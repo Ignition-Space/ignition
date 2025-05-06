@@ -5,7 +5,6 @@
  */
 import React from "react";
 import { WarningOutlined } from "@ant-design/icons";
-import "./index.less";
 
 interface Props {
   location: Location;

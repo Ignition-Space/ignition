@@ -1,7 +1,5 @@
 /** User 系统管理/用户管理 **/
 
-import './index.less';
-
 import React from 'react';
 import { Button, Form, Input, Select } from 'antd';
 import { MehOutlined } from '@ant-design/icons';

@@ -1,18 +1,19 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
 import { Layout } from 'antd';
-
-import './UserLayout.less';
 
 import Footer from '../components/Footer';
 
 const { Content } = Layout;
 
-export default function AppContainer(): JSX.Element {
+interface UserLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function UserLayout({ children }: UserLayoutProps): JSX.Element {
   return (
     <Layout className="page-user">
       <Content className="content">
-        <Outlet />
+        {children}
       </Content>
       <Footer className="user-layout" />
     </Layout>

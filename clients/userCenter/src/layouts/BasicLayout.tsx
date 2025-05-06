@@ -1,13 +1,12 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { useRouter, usePathname } from 'next/navigation';
 import {
   DashboardOutlined,
   UserOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
-import CommonHeader from '@/components/CommonHeader';
-import './BasicLayout.less';
+import CommonHeader from '../components/CommonHeader';
 
 const { Sider, Content } = Layout;
 
@@ -51,9 +50,13 @@ const menuItems = [
   },
 ];
 
-const BasicLayout: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+interface BasicLayoutProps {
+  children: React.ReactNode;
+}
+
+const BasicLayout: React.FC<BasicLayoutProps> = ({ children }) => {
+  const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <Layout className="basic-layout">
@@ -62,14 +65,14 @@ const BasicLayout: React.FC = () => {
         <Sider width={200} className="site-layout-sider">
           <Menu
             mode="inline"
-            selectedKeys={[location.pathname]}
+            selectedKeys={pathname ? [pathname] : []}
             defaultOpenKeys={['system']}
             items={menuItems}
-            onClick={({ key }) => navigate(key)}
+            onClick={({ key }) => router.push(key)}
           />
         </Sider>
         <Content className="site-layout-content">
-          <Outlet />
+          {children}
         </Content>
       </Layout>
     </Layout>

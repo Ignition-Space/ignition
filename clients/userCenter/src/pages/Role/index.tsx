@@ -8,7 +8,6 @@ const { Option } = Select;
 
 import { Role } from './index.type';
 
-import './index.less';
 import dayjs from 'dayjs';
 import { AdminPage } from '@/components/AdminPage';
 import { useRole } from '@/hooks/useAdmin';

@@ -1,7 +1,6 @@
 /** Canvas背景效果，变化的线条 **/
 import React, { useRef, useCallback } from "react";
 import { useMount } from "react-use";
-import "./index.less";
 
 interface Props {
   col: number; // 纵向密度

@@ -3,8 +3,6 @@
 import React from 'react';
 import ImgLogo from '@/assets/ig-logo.jpg';
 
-import './index.less';
-
 export default function HomePageContainer(): JSX.Element {
   return (
     <div className="page-home all_nowarp">

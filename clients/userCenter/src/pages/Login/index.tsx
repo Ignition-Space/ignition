@@ -1,16 +1,15 @@
 /** 登录页 **/
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, KeyOutlined } from '@ant-design/icons';
 import { useUser } from '@/hooks/useUser';
 import CanvasBack from '@/components/CanvasBack';
 import LogoImg from '@/assets/logo.png';
-import './index.less';
 
 function LoginContainer(): JSX.Element {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [form] = Form.useForm();
   const [show, setShow] = useState(false);
   const { loginUser, loading } = useUser();
@@ -32,7 +31,7 @@ function LoginContainer(): JSX.Element {
     try {
       await loginUser(values.username, values.password);
       message.success('登录成功');
-      navigate('/dashboard');
+      router.push('/dashboard');
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '登录失败';
       message.error(errorMessage);
@@ -40,15 +39,15 @@ function LoginContainer(): JSX.Element {
   };
 
   return (
-    <div className="page-login">
-      <div className="canvasBox">
-        <CanvasBack row={12} col={8} />
+    <div className="absolute inset-0 flex justify-center items-center bg-[#001528]">
+      <div className="absolute inset-0 w-full h-full">
+        <CanvasBack row={20} col={15} />
       </div>
-      <div className={show ? 'loginBox show' : 'loginBox'}>
-        <Form form={form} onFinish={onFinish}>
-          <div className="title">
-            <img src={LogoImg} alt="logo" />
-            <span>IG-User-Center</span>
+      <div className={`relative z-10 w-[420px] p-8 rounded-xl backdrop-blur-sm bg-black/10 shadow-xl transition-all duration-500 ${show ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+        <Form form={form} onFinish={onFinish} className="w-full">
+          <div className="flex justify-center items-center mb-10">
+            <img src={LogoImg.src} alt="logo" className="h-16 mr-3" />
+            <span className="text-3xl font-bold text-white tracking-wider">用户中心</span>
           </div>
           <Form.Item
             name="username"
@@ -58,10 +57,11 @@ function LoginContainer(): JSX.Element {
             ]}
           >
             <Input
-              prefix={<UserOutlined style={{ fontSize: 13 }} />}
+              prefix={<UserOutlined className="text-gray-400" />}
               size="large"
               id="username"
-              placeholder="username"
+              placeholder="用户名"
+              className="h-12 rounded-lg"
             />
           </Form.Item>
           <Form.Item
@@ -72,21 +72,24 @@ function LoginContainer(): JSX.Element {
             ]}
           >
             <Input
-              prefix={<KeyOutlined style={{ fontSize: 13 }} />}
+              prefix={<KeyOutlined className="text-gray-400" />}
               size="large"
               type="password"
-              placeholder="password"
+              placeholder="密码"
+              className="h-12 rounded-lg"
             />
           </Form.Item>
-          <Button
-            className="submit-btn"
-            size="large"
-            type="primary"
-            loading={loading}
-            htmlType="submit"
-          >
-            {loading ? '请稍后' : '登录'}
-          </Button>
+          <Form.Item className="mb-2">
+            <Button
+              className="w-full h-12 text-lg font-medium rounded-lg"
+              size="large"
+              type="primary"
+              loading={loading}
+              htmlType="submit"
+            >
+              {loading ? '登录中...' : '登录'}
+            </Button>
+          </Form.Item>
         </Form>
       </div>
     </div>

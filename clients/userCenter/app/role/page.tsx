@@ -1,7 +1,8 @@
 'use client';
 
-import RolePage from '@/src/pages/Role';
+import React from 'react';
+import RoleContainer from '../../src/pages/Role';
 
-export default function Role() {
-  return <RolePage />;
+export default function RolePage() {
+  return <RoleContainer />;
 }

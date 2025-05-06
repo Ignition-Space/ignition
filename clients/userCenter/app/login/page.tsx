@@ -1,7 +1,8 @@
 'use client';
 
-import LoginPage from '@/src/pages/Login';
+import React from 'react';
+import LoginContainer from '../../src/pages/Login';
 
-export default function Login() {
-  return <LoginPage />;
+export default function LoginPage() {
+  return <LoginContainer />;
 }

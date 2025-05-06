@@ -1,7 +1,6 @@
 /* Footer 页面底部 */
 import React from "react";
 import { Layout } from "antd";
-import "./index.less";
 
 const { Footer } = Layout;
 

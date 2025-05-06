@@ -1,5 +1,3 @@
-import './index.less';
-
 import {
   ChromeOutlined,
   FullscreenExitOutlined,
@@ -12,9 +10,9 @@ import {
 import { Dropdown, Layout, Tooltip } from 'antd';
 import React, { useCallback, useState } from 'react';
 
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import type { MenuProps } from 'antd';
-import { UserInfo } from '@/models/index.type';
+import { UserInfo } from '../../models/index.type';
 
 const { Header } = Layout;
 
@@ -102,7 +100,7 @@ export default function HeaderCom(props: Props): JSX.Element {
             )}
           </div>
         </Tooltip>
-         { u ? (
+        {u ? (
           <Dropdown
             menu={{
               className: 'menu',
@@ -159,7 +157,7 @@ export default function HeaderCom(props: Props): JSX.Element {
         ) : (
           <Tooltip placement="bottom" title="点击登录">
             <div className="full all_center">
-              <Link to="/user/login">未登录</Link>
+              <Link href="/user/login">未登录</Link>
             </div>
           </Tooltip>
         )}
