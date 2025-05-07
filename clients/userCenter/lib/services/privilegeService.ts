@@ -1,17 +1,22 @@
 'use client';
 
 import api from './api';
-import { PaginationParams } from './userService';
 
 // 权限相关数据类型
 export interface PrivilegeData {
   id: number;
   name: string;
-  resourceKey: string;
   description: string;
-  action: 'manage' | 'create' | 'read' | 'update' | 'delete';
   systemId: number;
+  resourceKey: string;
+  action: 'manage' | 'create' | 'read' | 'update' | 'delete';
   status: number;
+  createdAt: string;
+}
+
+export interface PaginationParams {
+  pageSize: number;
+  currentPage: number;
 }
 
 export interface PrivilegeListParams {
@@ -21,29 +26,37 @@ export interface PrivilegeListParams {
 
 export interface CreatePrivilegeParams {
   name: string;
-  resourceKey: string;
   description: string;
-  action: 'manage' | 'create' | 'read' | 'update' | 'delete';
   systemId: number;
+  resourceKey: string;
+  action: 'manage' | 'create' | 'read' | 'update' | 'delete';
 }
 
-export interface UpdatePrivilegeParams extends CreatePrivilegeParams {
+export interface UpdatePrivilegeParams {
   id: number;
+  name: string;
+  description: string;
+  systemId: number;
+  resourceKey: string;
+  action: 'manage' | 'create' | 'read' | 'update' | 'delete';
 }
 
-export interface ChangeStatusParams {
+export interface DeletePrivilegeParams {
   privilegeId: number;
-  status: number; // 0禁用 1启用 2删除
+}
+
+export interface ChangePrivilegeStatusParams {
+  privilegeId: number;
+  status: 0 | 1 | 2; // 0-禁用 1-启用 2-其他状态
+}
+
+export interface ListAllPrivilegeParams {
+  systemId: number;
 }
 
 // 获取权限列表（分页）
 export async function getPrivilegeList(params: PrivilegeListParams) {
   return api.post('/privilege/list', params);
-}
-
-// 根据系统ID获取所有权限
-export async function getPrivilegesBySystemId(systemId: number) {
-  return api.post('/privilege/listBySys', { systemId });
 }
 
 // 创建权限
@@ -56,12 +69,19 @@ export async function updatePrivilege(privilege: UpdatePrivilegeParams) {
   return api.post('/privilege/update', privilege);
 }
 
+// 删除权限
+export async function deletePrivilege(params: DeletePrivilegeParams) {
+  return api.post('/privilege/delete', params);
+}
+
 // 更改权限状态
-export async function changePrivilegeStatus(params: ChangeStatusParams) {
+export async function changePrivilegeStatus(
+  params: ChangePrivilegeStatusParams,
+) {
   return api.post('/privilege/changeStatus', params);
 }
 
-// 删除权限
-export async function deletePrivilege(privilegeId: number) {
-  return api.post('/privilege/delete', { privilegeId });
+// 获取系统所有权限
+export async function getAllPrivilegesBySystem(params: ListAllPrivilegeParams) {
+  return api.post('/privilege/listBySys', params);
 }

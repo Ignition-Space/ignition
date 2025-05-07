@@ -5,11 +5,15 @@ import { useCallback } from 'react';
 import { systemAtom } from '../atoms/systemAtom';
 import {
   getSystemList,
-  addSystem,
+  createSystem,
   updateSystem,
   deleteSystem,
+  type SystemData,
+  type CreateSystemParams,
+  type UpdateSystemParams,
+  type DeleteSystemParams,
 } from '../../lib/services/systemService';
-import type { SystemItem, SystemState } from '../../lib/types/system';
+import { message } from 'antd';
 
 export const useSystem = () => {
   const [state, setState] = useAtom(systemAtom);
@@ -17,10 +21,10 @@ export const useSystem = () => {
   const fetchSystemList = useCallback(async () => {
     try {
       setState((prev) => ({ ...prev, loading: true }));
-      const response = await getSystemList(state.searchInfo);
+      const response = await getSystemList();
       setState((prev) => ({
         ...prev,
-        list: response,
+        list: response || [],
         loading: false,
         error: null,
       }));
@@ -30,22 +34,27 @@ export const useSystem = () => {
         loading: false,
         error: err instanceof Error ? err.message : '未知错误',
       }));
+      message.error('获取系统列表失败');
     }
-  }, [setState, state.searchInfo]);
+  }, [setState]);
 
-  const createSystem = useCallback(
-    async (values: Omit<SystemItem, 'id'>) => {
+  const addNewSystem = useCallback(
+    async (values: CreateSystemParams) => {
       try {
         setState((prev) => ({
           ...prev,
           modal: { ...prev.modal, loading: true },
         }));
-        await addSystem(values);
+
+        await createSystem(values);
         await fetchSystemList();
+
         setState((prev) => ({
           ...prev,
           modal: { ...prev.modal, visible: false, loading: false },
         }));
+
+        message.success('创建系统成功');
         return true;
       } catch (err) {
         setState((prev) => ({
@@ -53,6 +62,8 @@ export const useSystem = () => {
           modal: { ...prev.modal, loading: false },
           error: err instanceof Error ? err.message : '未知错误',
         }));
+
+        message.error('创建系统失败');
         return false;
       }
     },
@@ -60,18 +71,22 @@ export const useSystem = () => {
   );
 
   const updateSystemItem = useCallback(
-    async (values: SystemItem) => {
+    async (values: UpdateSystemParams) => {
       try {
         setState((prev) => ({
           ...prev,
           modal: { ...prev.modal, loading: true },
         }));
+
         await updateSystem(values);
         await fetchSystemList();
+
         setState((prev) => ({
           ...prev,
           modal: { ...prev.modal, visible: false, loading: false },
         }));
+
+        message.success('更新系统成功');
         return true;
       } catch (err) {
         setState((prev) => ({
@@ -79,18 +94,28 @@ export const useSystem = () => {
           modal: { ...prev.modal, loading: false },
           error: err instanceof Error ? err.message : '未知错误',
         }));
+
+        message.error('更新系统失败');
         return false;
       }
     },
     [setState, fetchSystemList],
   );
 
-  const deleteSystemItem = useCallback(
+  const removeSystem = useCallback(
     async (id: number) => {
       try {
         setState((prev) => ({ ...prev, loading: true }));
-        await deleteSystem(id);
+
+        await deleteSystem({ id });
         await fetchSystemList();
+
+        setState((prev) => ({
+          ...prev,
+          loading: false,
+        }));
+
+        message.success('删除系统成功');
         return true;
       } catch (err) {
         setState((prev) => ({
@@ -98,24 +123,26 @@ export const useSystem = () => {
           loading: false,
           error: err instanceof Error ? err.message : '未知错误',
         }));
+
+        message.error('删除系统失败');
         return false;
       }
     },
     [setState, fetchSystemList],
   );
 
-  const setSearchInfo = useCallback(
-    (searchInfo: Partial<SystemState['searchInfo']>) => {
+  const setSearchKeyword = useCallback(
+    (searchKeyword: string) => {
       setState((prev) => ({
         ...prev,
-        searchInfo: { ...prev.searchInfo, ...searchInfo },
+        searchKeyword,
       }));
     },
     [setState],
   );
 
   const setModalInfo = useCallback(
-    (modal: Partial<SystemState['modal']>) => {
+    (modal: Partial<typeof state.modal>) => {
       setState((prev) => ({
         ...prev,
         modal: { ...prev.modal, ...modal },
@@ -127,10 +154,10 @@ export const useSystem = () => {
   return {
     ...state,
     fetchSystemList,
-    createSystem,
-    updateSystemItem,
-    deleteSystemItem,
-    setSearchInfo,
+    createSystem: addNewSystem,
+    updateSystem: updateSystemItem,
+    deleteSystem: removeSystem,
+    setSearchKeyword,
     setModalInfo,
   };
 };

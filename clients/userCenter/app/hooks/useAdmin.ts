@@ -9,29 +9,36 @@ import {
   adminUserAtom,
 } from '../atoms/adminAtoms';
 import {
+  // 导入类型
+  type PrivilegeData,
+  type ResourceData,
+  type RoleData,
+  type UserData,
+
+  // 导入权限服务
   getPrivilegeList,
-  addPrivilege,
+  createPrivilege,
   updatePrivilege,
   deletePrivilege,
+
+  // 导入资源服务
   getResourceList,
-  addResource,
+  createResource,
   updateResource,
   deleteResource,
+
+  // 导入角色服务
   getRoleList,
-  addRole,
+  createRole,
   updateRole,
   deleteRole,
-  getAdminUserList,
-  addAdminUser,
-  updateAdminUser,
-  deleteAdminUser,
+
+  // 导入用户服务
+  getUserList,
+  createUser,
+  updateUser,
+  changeUserStatus,
 } from '../../lib/services/admin';
-import type {
-  Privilege,
-  Resource,
-  Role,
-  AdminUser,
-} from '../../lib/types/admin';
 
 // 创建通用的 CRUD hooks
 const createAdminHook = <T extends { id: number }>(
@@ -49,10 +56,17 @@ const createAdminHook = <T extends { id: number }>(
     const fetchList = useCallback(async () => {
       try {
         setState((prev) => ({ ...prev, loading: true }));
-        const response = await services.getList(state.searchInfo);
+        const params = {
+          keyword: state.searchKeyword || '',
+          page: {
+            currentPage: 1,
+            pageSize: 10,
+          },
+        };
+        const response = await services.getList(params);
         setState((prev) => ({
           ...prev,
-          list: response.items || response,
+          list: response.items || response.list || response || [],
           loading: false,
           error: null,
         }));
@@ -63,7 +77,7 @@ const createAdminHook = <T extends { id: number }>(
           error: err instanceof Error ? err.message : '未知错误',
         }));
       }
-    }, [setState, state.searchInfo]);
+    }, [setState, state.searchKeyword]);
 
     const create = useCallback(
       async (values: Omit<T, 'id'>) => {
@@ -121,7 +135,11 @@ const createAdminHook = <T extends { id: number }>(
       async (id: number) => {
         try {
           setState((prev) => ({ ...prev, loading: true }));
-          await services.delete(id);
+          await services.delete(
+            services.delete.name.includes('deletePrivilege')
+              ? { privilegeId: id }
+              : { id },
+          );
           await fetchList();
           return true;
         } catch (err) {
@@ -136,11 +154,11 @@ const createAdminHook = <T extends { id: number }>(
       [setState, fetchList],
     );
 
-    const setSearchInfo = useCallback(
-      (searchInfo: any) => {
+    const setSearchKeyword = useCallback(
+      (searchKeyword: string) => {
         setState((prev) => ({
           ...prev,
-          searchInfo: { ...prev.searchInfo, ...searchInfo },
+          searchKeyword,
         }));
       },
       [setState],
@@ -162,37 +180,37 @@ const createAdminHook = <T extends { id: number }>(
       create,
       update,
       remove,
-      setSearchInfo,
+      setSearchKeyword,
       setModalInfo,
     };
   };
 };
 
 // 创建具体的管理 hooks
-export const usePrivilege = createAdminHook<Privilege>(privilegeAtom, {
+export const usePrivilege = createAdminHook<PrivilegeData>(privilegeAtom, {
   getList: getPrivilegeList,
-  add: addPrivilege,
+  add: createPrivilege,
   update: updatePrivilege,
   delete: deletePrivilege,
 });
 
-export const useResource = createAdminHook<Resource>(resourceAtom, {
+export const useResource = createAdminHook<ResourceData>(resourceAtom, {
   getList: getResourceList,
-  add: addResource,
+  add: createResource,
   update: updateResource,
   delete: deleteResource,
 });
 
-export const useRole = createAdminHook<Role>(roleAtom, {
+export const useRole = createAdminHook<RoleData>(roleAtom, {
   getList: getRoleList,
-  add: addRole,
+  add: createRole,
   update: updateRole,
   delete: deleteRole,
 });
 
-export const useAdminUser = createAdminHook<AdminUser>(adminUserAtom, {
-  getList: getAdminUserList,
-  add: addAdminUser,
-  update: updateAdminUser,
-  delete: deleteAdminUser,
+export const useAdminUser = createAdminHook<UserData>(adminUserAtom, {
+  getList: getUserList,
+  add: createUser,
+  update: updateUser,
+  delete: (id: number) => changeUserStatus({ userId: id, status: 0 }),
 });

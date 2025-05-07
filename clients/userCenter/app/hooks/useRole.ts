@@ -5,27 +5,19 @@ import { useCallback } from 'react';
 import { atom } from 'jotai';
 import {
   getRoleList,
-  getRoleListWithSystem,
+  getRoleSystemTree,
   createRole,
   updateRole,
   deleteRole,
-  getPrivilegesByRoleId,
+  getRolePrivileges,
   setRolePrivileges,
 } from '../../lib/services/roleService';
 import { message } from 'antd';
-
-// 扩展角色接口以包含systemId
-interface RoleWithSystem {
-  id: number;
-  systemId: number;
-  name: string;
-  code: string;
-  description?: string;
-}
+import type { RoleData } from '../../lib/services/roleService';
 
 // 定义角色状态
 interface RoleStateType {
-  roleData: RoleWithSystem[];
+  roleData: RoleData[];
   roleTreeShow: boolean;
   roleTreeLoading: boolean;
   roleTreeDefault: string[];
@@ -42,47 +34,84 @@ export const useRole = () => {
   const [state, setState] = useAtom(roleState);
 
   const fetchAllRoles = useCallback(async () => {
-    const res = await getRoleList();
-    setState((prev) => ({
-      ...prev,
-      roleData: res as unknown as RoleWithSystem[],
-    }));
+    try {
+      const params = {
+        keyword: '',
+        page: {
+          currentPage: 1,
+          pageSize: 100,
+        },
+      };
+      const res = await getRoleList(params);
+      setState((prev) => ({
+        ...prev,
+        roleData: res.list || [],
+      }));
+    } catch (error) {
+      console.error('获取角色列表失败:', error);
+      message.error('获取角色列表失败');
+    }
   }, [setState]);
 
   const fetchUserRoles = useCallback(async (userId: number) => {
-    const res = await getRoleListWithSystem();
-    return (res as unknown as RoleWithSystem[]) || [];
+    try {
+      const res = await getRoleSystemTree();
+      return res || [];
+    } catch (error) {
+      console.error('获取用户角色列表失败:', error);
+      message.error('获取用户角色列表失败');
+      return [];
+    }
   }, []);
 
   const assignRoles = useCallback(
-    async (userId: number, bathRoles: { systemId: number }[]) => {
-      setState((prev) => ({
-        ...prev,
-        roleTreeLoading: true,
-      }));
+    async (userId: number, roleIds: string[]) => {
+      try {
+        setState((prev) => ({
+          ...prev,
+          roleTreeLoading: true,
+        }));
 
-      await setRolePrivileges({ userId, bathRoles });
-      message.success('分配成功');
-      setState((prev) => ({
-        ...prev,
-        roleTreeShow: false,
-        roleTreeLoading: false,
-      }));
-      return true;
+        await setRolePrivileges({
+          roleId: Number(userId),
+          systemId: 1, // 需要根据实际情况修改
+          privileges: roleIds.map((id) => Number(id)),
+        });
+
+        message.success('分配成功');
+        setState((prev) => ({
+          ...prev,
+          roleTreeShow: false,
+          roleTreeLoading: false,
+        }));
+        return true;
+      } catch (error) {
+        console.error('分配角色失败:', error);
+        message.error('分配角色失败');
+        setState((prev) => ({
+          ...prev,
+          roleTreeLoading: false,
+        }));
+        return false;
+      }
     },
     [setState],
   );
 
   const showRoleTree = useCallback(
     async (userId: number) => {
-      const roles = await fetchUserRoles(userId);
-      setState((prev) => ({
-        ...prev,
-        roleTreeShow: true,
-        roleTreeDefault: roles.map(
-          (role) => `role_sys_${role.systemId}_${role.id}`,
-        ),
-      }));
+      try {
+        const roles = await fetchUserRoles(userId);
+        setState((prev) => ({
+          ...prev,
+          roleTreeShow: true,
+          roleTreeDefault: roles.map(
+            (role) => `role_sys_${role.systemId}_${role.id}`,
+          ),
+        }));
+      } catch (error) {
+        console.error('获取角色树失败:', error);
+      }
     },
     [fetchUserRoles, setState],
   );

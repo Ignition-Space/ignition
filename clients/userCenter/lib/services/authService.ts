@@ -2,90 +2,60 @@
 
 import api from './api';
 
+// 认证相关数据类型
 export interface LoginParams {
   username: string;
   password: string;
 }
-export interface LoginResponse {
-  data: string;
+
+export interface OAuthGithubParams {
+  code: string;
 }
 
-/**
- * 用户登录
- * @param params 登录参数
- * @returns 登录响应
- */
-export async function login(params: LoginParams): Promise<LoginResponse> {
-  try {
-    // 我们的api返回的直接是响应体的data部分
-    const data = await api.post('/auth/login', params);
-
-    // data应该符合LoginResponse接口
-    const response = data as unknown as LoginResponse;
-
-    // 保存token到localStorage
-    if (response && response.data) {
-      localStorage.setItem('token', response.data);
-    }
-
-    return response;
-  } catch (error) {
-    throw error;
-  }
+export interface OAuthGoogleParams {
+  code: string;
 }
 
-/**
- * 退出登录
- */
-export async function logout(): Promise<void> {
-  try {
-    await api.post('/auth/logout');
-  } catch (error) {
-    // 即使API请求失败，也清除本地token
-    console.error('登出API请求失败', error);
-  } finally {
-    localStorage.removeItem('token');
-    // 如果在浏览器环境，跳转到登录页
-    if (typeof window !== 'undefined') {
-      window.location.href = '/login';
-    }
-  }
+export interface UserInfo {
+  id: number;
+  username: string;
+  email?: string;
+  status: number;
+  roles?: string[];
+  permissions?: string[];
 }
 
-/**
- * 检查是否已登录
- * @returns 是否已登录
- */
-export function isAuthenticated(): boolean {
-  if (typeof window === 'undefined') {
-    return false;
-  }
-
-  const token = localStorage.getItem('token');
-  return !!token;
+// 登录认证
+export async function login(params: LoginParams) {
+  return api.post('/auth/login', params);
 }
 
-/**
- * 获取当前用户信息
- * @returns 用户信息
- */
-export async function getCurrentUser() {
-  try {
-    const response = await api.get('/auth/token/info');
-    return response;
-  } catch (error) {
-    throw error;
-  }
+// 备用登录接口 - login2
+export async function login2(params: LoginParams) {
+  return api.post('/auth/login2', params);
 }
 
-/**
- * 获取token
- * @returns token字符串或null
- */
-export function getToken(): string | null {
-  if (typeof window === 'undefined') {
-    return null;
-  }
+// Github OAuth登录
+export async function loginWithGithub(code: string) {
+  return api.get(`/auth/oauth/github?code=${code}`);
+}
 
-  return localStorage.getItem('token');
+// Google OAuth登录
+export async function loginWithGoogle(code: string) {
+  return api.get(`/auth/oauth/google?code=${code}`);
+}
+
+// 飞书OAuth登录
+export async function loginWithFeishu() {
+  return api.get('/auth/feishu/auth2');
+}
+
+// 登出
+export async function logout() {
+  return api.post('/auth/logout');
+}
+
+// 获取Token信息
+export async function getTokenInfo() {
+  return api.get('/auth/token/info');
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import api from './api';
-import { PaginationParams } from './userService';
 
 // 角色相关数据类型
 export interface RoleData {
@@ -9,6 +8,12 @@ export interface RoleData {
   name: string;
   description: string;
   systemId: number;
+  createdAt: string;
+}
+
+export interface PaginationParams {
+  pageSize: number;
+  currentPage: number;
 }
 
 export interface RoleListParams {
@@ -22,8 +27,25 @@ export interface CreateRoleParams {
   systemId: number;
 }
 
-export interface UpdateRoleParams extends CreateRoleParams {
+export interface UpdateRoleParams {
   id: number;
+  name: string;
+  description: string;
+  systemId: number;
+}
+
+export interface DeleteRoleParams {
+  id: number;
+}
+
+export interface GetPrivilegesByRoleParams {
+  roleId: number;
+}
+
+export interface SetRolePrivilegesParams {
+  roleId: number;
+  systemId: number;
+  privileges?: number[]; // 根据API可能需要调整
 }
 
 // 获取角色列表（分页）
@@ -31,10 +53,13 @@ export async function getRoleList(params: RoleListParams) {
   return api.post('/role/list', params);
 }
 
-// 获取树形角色列表（系统级别）
-export async function getRoleListWithSystem() {
+// 获取角色系统树
+export async function getRoleSystemTree() {
   return api.post('/role/list/withSystem');
 }
+
+// 兼容旧代码
+export const getRoleListWithSystem = getRoleSystemTree;
 
 // 创建角色
 export async function createRole(role: CreateRoleParams) {
@@ -47,20 +72,20 @@ export async function updateRole(role: UpdateRoleParams) {
 }
 
 // 删除角色
-export async function deleteRole(id: number) {
-  return api.post('/role/delete', { id });
+export async function deleteRole(params: DeleteRoleParams) {
+  return api.post('/role/delete', params);
 }
 
-// 根据角色ID获取权限列表
-export async function getPrivilegesByRoleId(roleId: number) {
-  return api.post('/role/getPrivilegeListById', { roleId });
+// 获取角色权限
+export async function getRolePrivileges(params: GetPrivilegesByRoleParams) {
+  return api.post('/role/getPrivilegeListById', params);
 }
+
+// 兼容旧代码
+export const getPrivilegesByRoleId = (roleId: number) =>
+  getRolePrivileges({ roleId });
 
 // 设置角色权限
-export async function setRolePrivileges(
-  roleId: number,
-  systemId: number,
-  privilegeIds: number[],
-) {
-  return api.post('/role/set', { roleId, systemId, privilegeIds });
+export async function setRolePrivileges(params: SetRolePrivilegesParams) {
+  return api.post('/role/set', params);
 }

@@ -126,7 +126,7 @@ const RoleContainer = () => {
       cancelText: '取消',
       onOk: async () => {
         try {
-          await deleteRole(id);
+          await deleteRole({ id });
           message.success('删除成功');
           fetchAllRoles();
         } catch (error) {
@@ -139,8 +139,8 @@ const RoleContainer = () => {
   // 查看角色权限
   const showPermissions = async (roleId: number) => {
     try {
-      const permissions = await getPrivilegesByRoleId(roleId);
-      setCurrentPermissions(permissions || []);
+      const response = await getPrivilegesByRoleId(roleId);
+      setCurrentPermissions(response?.data || []);
       setIsPermModalVisible(true);
     } catch (error) {
       message.error('获取权限信息失败');

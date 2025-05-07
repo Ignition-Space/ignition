@@ -1,81 +1,110 @@
-import request from '../utils/request';
-import type { Privilege, Resource, Role, AdminUser } from '../types/admin';
+'use client';
 
-const prefix = 'user';
+import {
+  type UserData,
+  getUserList,
+  getUserProfile,
+  createUser,
+  updateUser,
+  changeUserStatus,
+  getUserRoles,
+  getAllUserRoles,
+  setUserRoles,
+} from './userService';
 
-// 权限管理接口
-export const getPrivilegeList = (params?: {
-  name?: string;
-  status?: number;
-}) => {
-  return request.post<Privilege[]>(`${prefix}/privilege/list`, { params });
-};
+import {
+  type SystemData,
+  getSystemList,
+  createSystem,
+  updateSystem,
+  deleteSystem,
+} from './systemService';
 
-export const addPrivilege = (params: Omit<Privilege, 'id'>) => {
-  return request.post<Privilege>(`${prefix}/privilege/add`, params);
-};
+import {
+  type RoleData,
+  getRoleList,
+  getRoleSystemTree,
+  createRole,
+  updateRole,
+  deleteRole,
+  getRolePrivileges,
+  setRolePrivileges,
+} from './roleService';
 
-export const updatePrivilege = (params: Privilege) => {
-  return request.put<Privilege>(`${prefix}/privilege/update`, params);
-};
+import {
+  type PrivilegeData,
+  getPrivilegeList,
+  getAllPrivilegesBySystem,
+  createPrivilege,
+  updatePrivilege,
+  deletePrivilege,
+  changePrivilegeStatus,
+} from './privilegeService';
 
-export const deletePrivilege = (id: number) => {
-  return request.delete(`${prefix}/privilege/delete/${id}`);
-};
+import {
+  type ResourceData,
+  getResourceList,
+  getResourcesBySystemId,
+  createResource,
+  updateResource,
+  deleteResource,
+} from './resourceService';
 
-// 资源管理接口
-export const getResourceList = (params?: {
-  name?: string;
-  status?: number;
-}) => {
-  return request.post<Resource[]>(`${prefix}/resource/list`, { params });
-};
+// 别名导出，兼容旧代码
+export const addPrivilege = createPrivilege;
+export const addResource = createResource;
+export const addRole = createRole;
+export const addAdminUser = createUser;
+export const getAdminUserList = getUserList;
+export const updateAdminUser = updateUser;
+export const deleteAdminUser = changeUserStatus;
 
-export const addResource = (params: Omit<Resource, 'id'>) => {
-  return request.post<Resource>(`${prefix}/resource/add`, params);
-};
+// 重新导出类型
+export type { UserData };
+export type { SystemData };
+export type { RoleData };
+export type { PrivilegeData };
+export type { ResourceData };
 
-export const updateResource = (params: Resource) => {
-  return request.put<Resource>(`${prefix}/resource/update`, params);
-};
+// 重新导出函数
+export {
+  // 用户管理
+  getUserList,
+  getUserProfile,
+  createUser,
+  updateUser,
+  changeUserStatus,
+  getUserRoles,
+  getAllUserRoles,
+  setUserRoles,
 
-export const deleteResource = (id: number) => {
-  return request.delete(`${prefix}/resource/delete/${id}`);
-};
+  // 系统管理
+  getSystemList,
+  createSystem,
+  updateSystem,
+  deleteSystem,
 
-// 角色管理接口
-export const getRoleList = (params?: { name?: string; status?: number }) => {
-  return request.post<Role[]>(`${prefix}/role/list`, { params });
-};
+  // 角色管理
+  getRoleList,
+  getRoleSystemTree,
+  createRole,
+  updateRole,
+  deleteRole,
+  getRolePrivileges,
+  setRolePrivileges,
 
-export const addRole = (params: Omit<Role, 'id'>) => {
-  return request.post<Role>(`${prefix}/role/create`, params);
-};
+  // 权限管理
+  getPrivilegeList,
+  getAllPrivilegesBySystem,
+  createPrivilege,
+  updatePrivilege,
+  deletePrivilege,
+  changePrivilegeStatus,
 
-export const updateRole = (params: Role) => {
-  return request.put<Role>(`${prefix}/role/update`, params);
-};
-
-export const deleteRole = (id: number) => {
-  return request.delete(`${prefix}/role/delete/${id}`);
-};
-
-// 用户管理接口
-export const getAdminUserList = (params?: {
-  username?: string;
-  status?: number;
-}) => {
-  return request.post<AdminUser[]>(`${prefix}/user/list`, { params });
-};
-
-export const addAdminUser = (params: Omit<AdminUser, 'id'>) => {
-  return request.post<AdminUser>(`${prefix}/user/create`, params);
-};
-
-export const updateAdminUser = (params: AdminUser) => {
-  return request.put<AdminUser>(`${prefix}/user/update`, params);
-};
-
-export const deleteAdminUser = (id: number) => {
-  return request.delete(`${prefix}/user/delete/${id}`);
+  // 资源管理
+  getResourceList,
+  getResourcesBySystemId,
+  createResource,
+  updateResource,
+  deleteResource,
 };

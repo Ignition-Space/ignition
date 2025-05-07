@@ -7,6 +7,7 @@ export interface SystemData {
   id: number;
   name: string;
   description: string;
+  createdAt: string;
 }
 
 export interface CreateSystemParams {
@@ -14,11 +15,17 @@ export interface CreateSystemParams {
   description: string;
 }
 
-export interface UpdateSystemParams extends CreateSystemParams {
+export interface UpdateSystemParams {
+  id: number;
+  name: string;
+  description: string;
+}
+
+export interface DeleteSystemParams {
   id: number;
 }
 
-// 获取所有系统列表
+// 获取系统列表
 export async function getSystemList() {
   return api.post('/system/list');
 }
@@ -28,12 +35,12 @@ export async function createSystem(system: CreateSystemParams) {
   return api.post('/system/create', system);
 }
 
-// 更新系统
+// 更新系统信息
 export async function updateSystem(system: UpdateSystemParams) {
   return api.post('/system/update', system);
 }
 
 // 删除系统
-export async function deleteSystem(id: number) {
-  return api.post('/system/delete', { id });
+export async function deleteSystem(params: DeleteSystemParams) {
+  return api.post('/system/delete', params);
 }

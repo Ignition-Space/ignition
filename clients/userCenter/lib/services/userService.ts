@@ -39,6 +39,16 @@ export interface ChangeStatusParams {
   status: number;
 }
 
+export interface UserRoleParams {
+  userId: number;
+  systemId: number;
+}
+
+export interface SetUserRolesParams {
+  userId: number;
+  bathRoles: string[];
+}
+
 // 获取用户列表（分页）
 export async function getUserList(params: UserListParams) {
   return api.post('/user/list', params);
@@ -49,7 +59,7 @@ export async function createUser(user: CreateUserParams) {
   return api.post('/user/create', user);
 }
 
-// 更新用户信息
+// 更新用户信息 - 现在API中没有这个接口，先保留
 export async function updateUser(user: UpdateUserParams) {
   return api.post('/user/update', user);
 }
@@ -64,12 +74,17 @@ export async function getUserProfile() {
   return api.post('/user/profile');
 }
 
+// 获取用户特定系统角色
+export async function getUserRoles(params: UserRoleParams) {
+  return api.post('/user/getRolesById', params);
+}
+
 // 获取用户所有角色
-export async function getUserRoles(userId: number, systemId: number) {
-  return api.post('/user/getRolesById', { userId, systemId });
+export async function getAllUserRoles(userId: number) {
+  return api.post('/user/getAllRolesById', { userId });
 }
 
 // 设置用户角色
-export async function setUserRoles(userId: number, bathRoles: string[]) {
-  return api.post('/user/setRoles', { userId, bathRoles });
+export async function setUserRoles(params: SetUserRolesParams) {
+  return api.post('/user/setRoles', params);
 }
