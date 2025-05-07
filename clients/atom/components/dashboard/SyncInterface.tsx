@@ -1,10 +1,12 @@
-import { analysisInterface, ISite } from '@/services';
+'use client';
+
+import { analysisInterface, ISite } from '@/lib/services';
 import { message, Popconfirm, Spin } from 'antd';
 import { TooltipPlacement } from 'antd/es/tooltip';
-import { ReactNode, useState } from 'react';
+import { ReactElement, useState } from 'react';
 
 interface ISyncInterface extends ISite {
-  children?: ReactNode;
+  children?: ReactElement;
   placement?: TooltipPlacement;
 }
 
@@ -35,4 +37,4 @@ const SyncInterface = (props: ISyncInterface) => {
   );
 };
 
-export default SyncInterface;
+export default SyncInterface; 

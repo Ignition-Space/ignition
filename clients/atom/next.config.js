@@ -3,22 +3,30 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   transpilePackages: [
-    '@ant-design/icons',
     '@ant-design/pro-components',
+    '@ant-design/icons',
     'antd',
-    'monaco-editor',
-    '@monaco-editor/react'
+    'lodash',
+    'dayjs',
   ],
   images: {
     domains: ['localhost'],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:4000/api/:path*',
+      },
+    ];
+  },
   webpack: (config) => {
-    // 支持Monaco Editor
+    // 支持monaco-editor
     config.resolve.alias = {
       ...config.resolve.alias,
-      'monaco-editor': 'monaco-editor/esm/vs/editor/editor.api',
+      'next/router': require.resolve('next/router'),
+      'next/navigation': require.resolve('next/navigation'),
     };
-
     return config;
   },
   eslint: {

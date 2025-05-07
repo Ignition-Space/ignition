@@ -1,4 +1,6 @@
-import { IInterface, IProperty } from '@/services';
+'use client';
+
+import { IInterface, IProperty } from '@/lib/services';
 import { Card, Space, Table } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { useEffect, useState } from 'react';
@@ -94,4 +96,4 @@ const Parameter = (props: IParameterProps) => {
   );
 };
 
-export default Parameter;
+export default Parameter; 

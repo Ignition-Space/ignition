@@ -1,13 +1,10 @@
+import './globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import '../src/styles/tailwind.css';
-import { AntdRegistry } from '@/lib/AntdRegistry';
-
-const inter = Inter({ subsets: ['latin'] });
+import { AntdRegistry } from './providers';
 
 export const metadata: Metadata = {
-  title: '火石组件库',
-  description: '火石工程化平台 - 原子组件库',
+  title: 'Atom - 低代码生成工具',
+  description: '基于接口管理的低代码生成器',
 };
 
 export default function RootLayout({
@@ -17,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
-      <body className={inter.className}>
+      <body>
         <AntdRegistry>{children}</AntdRegistry>
       </body>
     </html>

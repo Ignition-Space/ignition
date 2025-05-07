@@ -1,10 +1,12 @@
-import { ISite, setSite } from '@/services';
+'use client';
+
+import { ISite, setSite } from '@/lib/services';
 import { ModalForm, ProFormInstance, ProFormText } from '@ant-design/pro-components';
 import { message } from 'antd';
-import { ReactNode, useRef } from 'react';
+import { ReactElement, ReactNode, useRef } from 'react';
 
 interface IEddSiteProps extends ISite {
-  children?: ReactNode;
+  children?: ReactElement;
 }
 
 const EddSite = (props: IEddSiteProps) => {
@@ -57,4 +59,4 @@ const EddSite = (props: IEddSiteProps) => {
   );
 };
 
-export default EddSite;
+export default EddSite; 

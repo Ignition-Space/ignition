@@ -1,3 +1,5 @@
+'use client';
+
 import {
   GithubFilled,
   InfoCircleFilled,
@@ -6,20 +8,19 @@ import {
   SearchOutlined,
 } from '@ant-design/icons';
 import type { ProSettings } from '@ant-design/pro-components';
-
 import { ProLayout, SettingDrawer } from '@ant-design/pro-components';
-
 import { Divider, Input } from 'antd';
 import React, { useState } from 'react';
-import { useLocation } from 'react-router';
-import { Outlet, useNavigate } from 'react-router-dom';
-import defaultProps from './_defaultProps';
-import profileImg from '@/assets/profile.jpeg';
+import defaultProps from '@/components/dashboard/_defaultProps';
+import { usePathname, useRouter } from 'next/navigation';
 
-const Dashbord = () => {
-
-  const navigate = useNavigate();
-  const location = useLocation();
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
     fixSiderbar: true,
@@ -27,7 +28,7 @@ const Dashbord = () => {
     splitMenus: true,
   });
 
-  const [pathname, setPathname] = useState('siteList');
+  const [menuPath, setMenuPath] = useState('siteList');
 
   return (
     <div
@@ -39,14 +40,14 @@ const Dashbord = () => {
       <ProLayout
         {...defaultProps}
         location={{
-          pathname,
+          pathname: menuPath,
         }}
         siderMenuType="group"
         menu={{
           collapsedShowGroupTitle: true,
         }}
         avatarProps={{
-          src: profileImg,
+          src: '/profile.jpeg',
           size: 'small',
           title: '言萧凡',
         }}
@@ -148,8 +149,8 @@ const Dashbord = () => {
         menuItemRender={(item, dom) => (
           <div
             onClick={() => {
-              setPathname(item.key || '/welcome');
-              item.path && navigate(item.path || '/welcome');
+              setMenuPath(item.key || '/');
+              item.path && router.push(item.path);
             }}
           >
             {dom}
@@ -157,7 +158,7 @@ const Dashbord = () => {
         )}
         {...settings}
       >
-        <Outlet />
+        {children}
         <SettingDrawer
           pathname={pathname}
           enableDarkTheme
@@ -171,6 +172,4 @@ const Dashbord = () => {
       </ProLayout>
     </div>
   );
-};
-
-export default Dashbord
+} 

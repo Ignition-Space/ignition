@@ -1,3 +1,5 @@
+'use client';
+
 import {
   EditOutlined,
   EllipsisOutlined,
@@ -8,12 +10,11 @@ import type { ProFormInstance } from '@ant-design/pro-components';
 import { Avatar, Card, Button, Col, Row, message, } from 'antd';
 import { PageContainer } from '@ant-design/pro-components';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
-import { getSiteList, setSite, ISite, } from '@/services';
-import SyncInterface from './SyncInterface';
+import { getSiteList, setSite, ISite, } from '@/lib/services';
+import SyncInterface from '@/components/dashboard/SyncInterface';
 import { ProCard } from '@ant-design/pro-components';
-import profileImg from '@/assets/profile.jpeg';
-import { useNavigate } from 'react-router';
-import EddSite from './EddSite';
+import EddSite from '@/components/dashboard/EddSite';
+import { useRouter } from 'next/navigation';
 
 const { Meta } = Card;
 
@@ -80,8 +81,8 @@ const AddSite = () => {
   );
 };
 
-const SiteList = () => {
-  const navigate = useNavigate();
+export default function SiteList() {
+  const router = useRouter();
   const [siteList, setSiteList] = useState([]);
 
   useEffect(() => {
@@ -101,21 +102,21 @@ const SiteList = () => {
                   <img
                     alt="example"
                     src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                    onClick={() => navigate(`/interface/${site.id}`)}
+                    onClick={() => router.push(`/dashboard/interface/${site.id}`)}
                   />
                 }
                 actions={[
-                  <EddSite {...site}>
+                  <EddSite {...site} key="setting">
                     <SettingOutlined key="setting" />
                   </EddSite>,
-                  <SyncInterface {...site}>
+                  <SyncInterface {...site} key="edit">
                     <EditOutlined key="edit" />
                   </SyncInterface>,
                   <EllipsisOutlined key="ellipsis" />,
                 ]}
               >
                 <Meta
-                  avatar={<Avatar src={profileImg} />}
+                  avatar={<Avatar src="/profile.jpeg" />}
                   title={site.name}
                   description={site.description}
                 />
@@ -126,6 +127,4 @@ const SiteList = () => {
       </ProCard>
     </PageContainer>
   );
-};
-
-export default SiteList;
+} 
