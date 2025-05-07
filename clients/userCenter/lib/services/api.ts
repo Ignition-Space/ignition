@@ -32,18 +32,49 @@ api.interceptors.request.use(
 // 响应拦截器
 api.interceptors.response.use(
   (response) => {
-    return response.data;
+    const responseData = response.data;
+
+    // 处理10002状态码（token失效）
+    if (responseData.status === 10002 || responseData.code === 10002) {
+      localStorage.removeItem('token');
+      // 如果在浏览器环境，跳转到登录页
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login';
+      }
+      return Promise.reject(new Error('登录已过期，请重新登录'));
+    }
+
+    return responseData;
   },
   (error) => {
     if (error.response) {
+      // 获取响应数据
+      const responseData = error.response.data;
+
+      // 处理10002状态码（token失效）
+      if (
+        responseData?.status === 10002 ||
+        responseData?.code === 10002 ||
+        error.response.status === 10002
+      ) {
+        localStorage.removeItem('token');
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
+        return Promise.reject(new Error('登录已过期，请重新登录'));
+      }
+
       // 处理401未授权（Token过期或无效）
       if (error.response.status === 401) {
         localStorage.removeItem('token');
-        window.location.href = '/login';
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
       }
 
       // 提取错误信息
-      const errorMessage = error.response.data?.message || '请求失败';
+      const errorMessage =
+        responseData?.message || responseData?.msg || '请求失败';
       return Promise.reject(new Error(errorMessage));
     }
     return Promise.reject(error);

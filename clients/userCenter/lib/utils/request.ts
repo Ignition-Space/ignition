@@ -38,7 +38,28 @@ const getHeaders = () => {
 /* 响应拦截器 */
 service.interceptors.response.use(
   (response: AxiosResponse) => {
-    const { success, msg, data } = response.data;
+    const {
+      success,
+      msg,
+      data,
+      status,
+      message: responseMessage,
+    } = response.data;
+
+    // 处理特定错误码
+    if (status === 10002 || response.data.code === 10002) {
+      message.error('登录已过期，请重新登录');
+      // 清除token
+      removeStorageItem('token');
+      // 跳转到登录页
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login';
+      }
+      return Promise.reject({
+        success: false,
+        msg: '登录已过期，请重新登录',
+      });
+    }
 
     if (success) {
       return data;
@@ -46,10 +67,10 @@ service.interceptors.response.use(
 
     // 处理业务错误
     if (!success) {
-      message.error(msg);
+      message.error(msg || responseMessage || '请求失败');
       return Promise.reject({
         success,
-        msg,
+        msg: msg || responseMessage,
         data,
       });
     }
@@ -59,11 +80,32 @@ service.interceptors.response.use(
     let msg = '';
     // HTTP 状态码
     const status = error.response?.status;
+    const errorData = error.response?.data as any;
+
+    // 处理10002错误码（token失效）
+    if (
+      status === 10002 ||
+      errorData?.code === 10002 ||
+      errorData?.status === 10002
+    ) {
+      message.error('登录已过期，请重新登录');
+      // 清除token
+      removeStorageItem('token');
+      // 跳转到登录页
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login';
+      }
+      return Promise.reject(error);
+    }
 
     switch (status) {
-      case 10002:
-        msg = 'token 失效，请重新登录';
-        // 这里可以触发退出的 action
+      case 401:
+        msg = '未授权，请重新登录';
+        // 清除token并跳转到登录页
+        removeStorageItem('token');
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
         break;
       case 403:
         msg = '拒绝访问';
@@ -75,7 +117,7 @@ service.interceptors.response.use(
         msg = '服务器故障';
         break;
       default:
-        msg = '网络连接故障';
+        msg = errorData?.message || errorData?.msg || '网络连接故障';
     }
 
     message.error(msg);
@@ -126,6 +168,7 @@ const getUrl = (url: string) => {
   return rssAdminBaseURL[getEnv() as 'dev' | 'test' | 'prod'] + url;
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
   get<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return service.get(getUrl(url), config);
