@@ -4,10 +4,14 @@ import { useAtom } from 'jotai';
 import { useCallback } from 'react';
 import { atom } from 'jotai';
 import {
-  getAllRoles,
-  getAllRolesById,
-  setUserRoles,
-} from '../../lib/services/role';
+  getRoleList,
+  getRoleListWithSystem,
+  createRole,
+  updateRole,
+  deleteRole,
+  getPrivilegesByRoleId,
+  setRolePrivileges,
+} from '../../lib/services/roleService';
 import { message } from 'antd';
 
 // 扩展角色接口以包含systemId
@@ -38,7 +42,7 @@ export const useRole = () => {
   const [state, setState] = useAtom(roleState);
 
   const fetchAllRoles = useCallback(async () => {
-    const res = await getAllRoles();
+    const res = await getRoleList();
     setState((prev) => ({
       ...prev,
       roleData: res as unknown as RoleWithSystem[],
@@ -46,7 +50,7 @@ export const useRole = () => {
   }, [setState]);
 
   const fetchUserRoles = useCallback(async (userId: number) => {
-    const res = await getAllRolesById(userId);
+    const res = await getRoleListWithSystem();
     return (res as unknown as RoleWithSystem[]) || [];
   }, []);
 
@@ -57,7 +61,7 @@ export const useRole = () => {
         roleTreeLoading: true,
       }));
 
-      await setUserRoles({ userId, bathRoles });
+      await setRolePrivileges({ userId, bathRoles });
       message.success('分配成功');
       setState((prev) => ({
         ...prev,

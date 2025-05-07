@@ -28,7 +28,6 @@ import {
   deletePrivilege,
   changePrivilegeStatus,
   PrivilegeData,
-  CreatePrivilegeParams,
   UpdatePrivilegeParams,
 } from '../../lib/services/privilegeService';
 import { getSystemList, SystemData } from '../../lib/services/systemService';

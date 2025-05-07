@@ -8,7 +8,7 @@ import {
   addSystem,
   updateSystem,
   deleteSystem,
-} from '../../lib/services/system';
+} from '../../lib/services/systemService';
 import type { SystemItem, SystemState } from '../../lib/types/system';
 
 export const useSystem = () => {

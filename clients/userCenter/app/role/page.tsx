@@ -43,13 +43,6 @@ interface ISystem {
   description: string;
 }
 
-// 响应数据接口
-interface ApiResponse<T> {
-  data: T;
-  message?: string;
-  code?: number;
-}
-
 const RoleContainer = () => {
   const { roleData, fetchAllRoles } = useRole();
   const [isModalVisible, setIsModalVisible] = useState(false);

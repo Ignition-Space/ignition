@@ -53,13 +53,15 @@ service.interceptors.response.use(
       removeStorageItem('token');
       // 跳转到登录页
       if (typeof window !== 'undefined') {
-        window.location.href = '/login';
+        // window.location.href = '/login';
       }
       return Promise.reject({
         success: false,
         msg: '登录已过期，请重新登录',
       });
     }
+
+    console.log('success==>', success);
 
     if (success) {
       return data;

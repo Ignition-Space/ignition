@@ -7,7 +7,6 @@ import { UserService } from '../user/user.service';
 import { OAuthService } from '../user/oauth.service';
 
 import * as _ from 'lodash';
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -17,6 +16,9 @@ export class AuthService {
   ) { }
 
   async validateLocalUser({ username, password }): Promise<IPayloadUser> {
+    console.log('username==>', username);
+    console.log('password==>', password);
+
     const user: User = await this.userService.findUserByLocal({
       username,
       password,

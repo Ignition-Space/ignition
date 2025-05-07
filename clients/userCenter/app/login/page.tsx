@@ -103,7 +103,7 @@ const LoginContainer = () => {
       });
 
       // 成功登录
-      if (response && response.token) {
+      if (response) {
         message.success('登录成功');
 
         // 跳转到来源页或默认页

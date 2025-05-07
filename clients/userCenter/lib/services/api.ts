@@ -1,5 +1,6 @@
 'use client';
 
+import { message } from 'antd';
 import axios from 'axios';
 
 const baseURL =
@@ -32,10 +33,18 @@ api.interceptors.request.use(
 // 响应拦截器
 api.interceptors.response.use(
   (response) => {
-    const responseData = response.data;
+    const {
+      success,
+      msg,
+      data,
+      status,
+      code,
+      message: responseMessage,
+    } = response.data;
 
     // 处理10002状态码（token失效）
-    if (responseData.status === 10002 || responseData.code === 10002) {
+    if (status === 10002 || code === 10002) {
+      message.error('登录已过期，请重新登录');
       localStorage.removeItem('token');
       // 如果在浏览器环境，跳转到登录页
       if (typeof window !== 'undefined') {
@@ -44,7 +53,19 @@ api.interceptors.response.use(
       return Promise.reject(new Error('登录已过期，请重新登录'));
     }
 
-    return responseData;
+    if (success) {
+      return data;
+    }
+
+    // 处理业务错误
+    if (!success) {
+      message.error(msg || responseMessage || '请求失败');
+      return Promise.reject({
+        success,
+        msg: msg || responseMessage,
+        data,
+      });
+    }
   },
   (error) => {
     if (error.response) {

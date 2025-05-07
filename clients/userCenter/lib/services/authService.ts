@@ -6,15 +6,8 @@ export interface LoginParams {
   username: string;
   password: string;
 }
-
 export interface LoginResponse {
-  token: string;
-  user: {
-    id: number;
-    username: string;
-    email: string;
-    status: number;
-  };
+  data: string;
 }
 
 /**
@@ -31,8 +24,8 @@ export async function login(params: LoginParams): Promise<LoginResponse> {
     const response = data as unknown as LoginResponse;
 
     // 保存token到localStorage
-    if (response && response.token) {
-      localStorage.setItem('token', response.token);
+    if (response && response.data) {
+      localStorage.setItem('token', response.data);
     }
 
     return response;
