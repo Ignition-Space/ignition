@@ -18,6 +18,7 @@ async function bootstrap() {
       '*.ig-space.com',
       'http://127.0.0.1:10010',
       'http://localhost:10010',
+      'http://localhost:5000',
     ],
     methods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
     allowedHeaders: '*',

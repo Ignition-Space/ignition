@@ -1,0 +1,60 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# 数据库配置说明
+
+项目使用多个数据库存储不同类型的数据：
+
+## MongoDB
+MongoDB主要用于存储非结构化或半结构化数据。
+
+配置路径：
+- [.config/.dev.yaml](mdc:.config/.dev.yaml) - 开发环境配置
+- [libs/common/src/config](mdc:libs/common/src/config) - 配置相关代码
+
+MongoDB配置示例：
+```yaml
+MONGODB_CONFIG:
+  name: "ignition_test"
+  type: "mongodb"
+  url: "mongodb://127.0.0.1:27017"
+  database: "ignition_test"
+  entities: "mongo"
+  logging: false
+  synchronize: true
+```
+
+## MySQL
+MySQL主要用于存储结构化数据，包括物料系统和DevOps系统的数据。
+
+配置路径：
+- [.config/.dev.yaml](mdc:.config/.dev.yaml) - 开发环境配置
+- [libs/common/src/config](mdc:libs/common/src/config) - 配置相关代码
+
+MySQL配置示例：
+```yaml
+MYSQL_CONFIG:
+  name: "material_test"
+  type: "mysql"
+  host: "127.0.0.1"
+  port: 3306
+  database: "material_test"
+  username: "root"
+  password: "123456"
+  entities: "mysql"
+  synchronize: true
+```
+
+## 开发环境设置
+开发环境需要配置`.config/.dev.yaml`文件，参考README.md中的示例进行配置。
+
+### Docker开发环境
+可以使用Docker快速搭建开发环境：
+```bash
+cd docker
+docker-compose up -d mysql mongodb
+```
+
+详细说明见：[developer-guide.md](mdc:developer-guide.md)

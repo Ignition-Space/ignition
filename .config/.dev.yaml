@@ -2,57 +2,56 @@ TEST_VALUE:
   name: express-cookie
 
 NODE_ENV:
-  name: 'development'
+  name: "development"
 MONGODB_CONFIG:
-  name: 'ignition_test' # 自定义次数据库链接名称
+  name: "ignition_test" # 自定义次数据库链接名称
   type: mongodb # 数据库链接类型
-  url: 'mongodb://localhost:27017' # 数据库链接地址
-  username: 'root' # 数据库链接用户名
-  password: 'root123' # 数据库链接密码
-  database: 'ignition_test' # 数据库名
-  entities: 'mongo' # 自定义加载类型
+  url: "mongodb://localhost:27017" # 数据库链接地址
+  username: "root" # 数据库链接用户名
+  password: "root123" # 数据库链接密码
+  database: "ignition_test" # 数据库名
+  entities: "mongo" # 自定义加载类型
   logging: false # 数据库打印日志
   synchronize: true # 是否开启同步数据表功能
 
 MYSQL_DEVOPS_CONFIG:
-  name: 'devops_test'
-  type: 'mysql'
-  host: 'localhost'
+  name: "devops_test"
+  type: "mysql"
+  host: "127.0.0.1"
   port: 3306
-  username: 'root'
-  password: 'root'
-  database: 'devops_test'
-  entities: '' # 这里的命名一定要跟 MongoDB 里面的配置命名区分开
+  username: "root"
+  password: "123456"
+  database: "devops_test"
+  entities: "" # 这里的命名一定要跟 MongoDB 里面的配置命名区分开
   synchronize: true
 
 # MongoDB 是无模式的，所以即使在配置参数开启了 synchronize，启动项目的时候也不会去数据库创建对应的表，所以不用奇怪，并没有出错，
 # 但 Mysql 在每次应用程序启动时自动同步表结构，容易造成数据丢失，生产环境记得关闭，以免造成无可预计的损失。
 MYSQL_USER_CONFIG:
-  name: 'user_test'
-  type: 'mysql'
-  host: 'localhost'
+  name: "user_test"
+  type: "mysql"
+  host: "127.0.0.1"
   port: 3306
-  username: 'root'
-  password: 'root'
-  database: 'user_test'
-  entities: 'mysql' # 这里的命名一定要跟 MongoDB 里面的配置命名区分开
+  username: "root"
+  password: "123456"
+  database: "user_test"
+  entities: "mysql" # 这里的命名一定要跟 MongoDB 里面的配置命名区分开
   synchronize: true
 
 REDIS_CONFIG:
-  host: 'localhost' # redis 链接
+  host: "localhost" # redis 链接
   port: 6379 # redis 端口
-  auth: '' # redis 连接密码，没有显式设置都是空
+  auth: "" # redis 连接密码，没有显式设置都是空
   db: 1 # redis 数据库，0开始
 
 # 飞书 配置
 FEISHU_CONFIG:
   FEISHU_URL: https://open.feishu.cn/open-apis
   FEISHU_API_HOST: https://open.feishu.cn
-  FEISHU_APP_ID: 
-  FEISHU_APP_SECRET: 
+  FEISHU_APP_ID:
+  FEISHU_APP_SECRET:
   APP_TOKEN_CACHE_KEY:
 
-  
 # 本地 配置
 LOCAL_USER_CONFIG:
   SECRET: ignition-test
@@ -62,8 +61,7 @@ GITGUB_CONFIG:
   CLIENT_ID:
   CLIENT_SECRET:
 
-  
 # Google 配置
 GOOGLE_CONFIG:
-  CLIENT_ID: 
-  CLIENT_SECRETS: 
+  CLIENT_ID:
+  CLIENT_SECRETS:

@@ -1,0 +1,38 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 前端应用说明
+
+项目的前端部分使用Next.js、ReactJS和AntD构建，采用App Router架构，分为多个不同功能的客户端应用。
+
+## 用户中心 (userCenter)
+用户中心是用户管理和身份验证的前端界面，使用Next.js构建。
+
+主要目录：
+- [clients/userCenter/app](mdc:clients/userCenter/app) - Next.js应用路由
+- [clients/userCenter/components](mdc:clients/userCenter/components) - 用户中心组件
+- [clients/userCenter/lib](mdc:clients/userCenter/lib) - 工具库和辅助函数
+- [clients/userCenter/public](mdc:clients/userCenter/public) - 静态资源文件
+
+## 组件库 (atom)
+通用组件库，包含可在多个前端应用间共享的组件，使用Next.js构建。
+
+主要目录：
+- [clients/atom/app](mdc:clients/atom/app) - Next.js应用路由
+- [clients/atom/components](mdc:clients/atom/components) - 共享组件
+- [clients/atom/lib](mdc:clients/atom/lib) - 工具库和辅助函数
+- [clients/atom/hooks](mdc:clients/atom/hooks) - 共享Hooks
+
+## 开发指南
+前端开发遵循以下约定：
+- 使用Next.js框架和App Router架构
+- 采用TypeScript进行类型检查
+- 服务器组件(Server Components)和客户端组件(Client Components)分离
+- 使用Next.js内置的数据获取方法
+- 路由采用App Router文件系统路由
+- 组件采用函数组件与React Hooks
+- 全局状态管理优先使用React Context或Server Components
+- 样式使用CSS Modules或TailwindCSS
+- 代码格式化遵循项目中的ESLint和Prettier配置

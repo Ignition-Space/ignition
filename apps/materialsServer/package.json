@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "cd .. && pnpm dev-server:materials",
+    "dev:atom": "cd .. && pnpm dev-server:materials",
     "dev:materials": "cd .. && pnpm dev-server:materials"
   }
 }
