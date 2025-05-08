@@ -33,7 +33,7 @@ async function bootstrap() {
   await app.startAllMicroservices();
 
   // 启动服务
-  await app.listen(6000);
+  await app.listen(4003);
 }
 
 bootstrap();

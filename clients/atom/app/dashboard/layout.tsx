@@ -96,7 +96,7 @@ export default function DashboardLayout({
             <QuestionCircleFilled key="QuestionCircleFilled" />,
             <GithubFilled
               key="GithubFilled"
-              onClick={() => window.open('https://github.com/boty-design')}
+              onClick={() => window.open('https://github.com/Ignition-Space')}
             />,
           ];
         }}

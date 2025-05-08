@@ -47,7 +47,7 @@ export default {
       icon: '/images/design-logo.png',
       title: '火石设计 HuoS',
       desc: '基于接口管理的低代码生成器',
-      url: 'https://github.com/boty-design',
+      url: 'https://github.com/Ignition-Space',
     },
     {
       icon: '/images/cli-logo.png',
@@ -60,7 +60,7 @@ export default {
       icon: '/images/component-logo.png',
       title: 'BOTY DESIGN',
       desc: '基于 ANT DESIGN 的业务组件库',
-      url: 'https://github.com/boty-design',
+      url: 'https://github.com/Ignition-Space',
     },
     {
       icon: '/images/devops-logo.png',
