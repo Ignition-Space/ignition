@@ -2,10 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* 主要颜色 */
+  --primary-color: #2563eb;
+  --primary-color-hover: #3b82f6;
+  --primary-color-active: #1d4ed8;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  
+  /* 文本颜色 */
+  --heading-color: #111827;
+  --text-color: #374151;
+  --text-color-secondary: #6b7280;
+  --disabled-color: #9ca3af;
+  
+  /* 边框和背景色 */
+  --border-color-base: #e5e7eb;
+  --border-color-split: #f3f4f6;
+  --layout-body-background: #f1f5f9;
+  --layout-header-background: #ffffff;
+  --layout-sider-background: #1e293b;
+
+  /* 组件背景色 */
+  --component-background: #ffffff;
+  --card-background: #ffffff;
+}
+
+/* 深色模式主题 */
+.dark {
+  /* 主要颜色保持不变 */
+  --primary-color: #2563eb;
+  --primary-color-hover: #3b82f6;
+  --primary-color-active: #1d4ed8;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  
+  /* 文本颜色 */
+  --heading-color: #f1f5f9;
+  --text-color: #e2e8f0;
+  --text-color-secondary: #94a3b8;
+  --disabled-color: #64748b;
+  
+  /* 边框和背景色 */
+  --border-color-base: #334155;
+  --border-color-split: #1e293b;
+  --layout-body-background: #0f172a;
+  --layout-header-background: #1e293b;
+  --layout-sider-background: #0f172a;
+
+  /* 组件背景色 */
+  --component-background: #1e293b;
+  --card-background: #1e293b;
+}
+
 /* 全局样式 */
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-gray-50 text-gray-900 transition-colors duration-200;
+    background-color: var(--layout-body-background);
+    color: var(--text-color);
+  }
+
+  .dark body {
+    @apply bg-gray-900 text-gray-100;
   }
 }
 
@@ -16,14 +77,18 @@
   
   .btn-secondary {
     @apply bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded;
+    @apply dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200;
   }
   
   .card {
-    @apply bg-white p-4 rounded-lg shadow;
+    @apply bg-white p-4 rounded-lg shadow transition-colors duration-200;
+    @apply dark:bg-gray-800;
+    background-color: var(--card-background);
   }
   
   .form-input {
     @apply w-full p-2 border border-gray-300 rounded;
+    @apply dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200;
   }
 }
 
@@ -36,7 +101,79 @@
   background: transparent;
 }
 
+.dark .ant-menu {
+  background: var(--layout-sider-background);
+  color: var(--text-color);
+}
+
+/* 顶部导航菜单样式 */
+.ant-menu-horizontal {
+  border-bottom: none;
+  line-height: 64px;
+}
+
+.dark .ant-menu-horizontal {
+  background: var(--layout-header-background);
+  color: var(--text-color);
+}
+
+.ant-menu-horizontal > .ant-menu-item::after,
+.ant-menu-horizontal > .ant-menu-submenu::after {
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.ant-menu-horizontal > .ant-menu-item-selected,
+.ant-menu-horizontal > .ant-menu-item-active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+.dark .ant-menu-horizontal > .ant-menu-item-selected,
+.dark .ant-menu-horizontal > .ant-menu-item-active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+.dark .ant-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .ant-btn {
+  background-color: var(--component-background);
+  border-color: var(--border-color-base);
+  color: var(--text-color);
+}
+
+.dark .ant-input {
+  background-color: var(--component-background);
+  border-color: var(--border-color-base);
+  color: var(--text-color);
+}
+
+.dark .ant-dropdown-menu {
+  background-color: var(--component-background);
+  border-color: var(--border-color-base);
+}
+
+.dark .ant-dropdown-menu-item {
+  color: var(--text-color);
+}
+
+.dark .ant-dropdown-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 /* 编辑器相关样式 */
 .monaco-editor-container {
   @apply h-full w-full rounded overflow-hidden border border-gray-200;
+  @apply dark:border-gray-700;
+}
+
+/* 主题切换相关样式 */
+.theme-toggle {
+  @apply transition-colors duration-200;
+}
+
+.dark .theme-toggle {
+  color: var(--text-color);
 } 
