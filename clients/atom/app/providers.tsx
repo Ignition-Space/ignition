@@ -37,15 +37,29 @@ const theme = {
     },
     Menu: {
       itemHeight: 48,
-      itemHoverBg: 'rgba(37, 99, 235, 0.08)',
-      itemSelectedBg: 'rgba(37, 99, 235, 0.12)',
+      itemHoverBg: 'transparent',
+      itemSelectedBg: 'transparent',
       horizontalItemSelectedColor: '#2563eb',
       horizontalItemHoverColor: '#3b82f6',
+      activeBarBorderWidth: 2,
+      activeBarHeight: 2,
+      horizontalItemBorderRadius: 0,
+      horizontalItemHoverBg: 'transparent',
+      darkItemColor: '#ffffff', // 更改为纯白色，确保足够的对比度
+      darkItemHoverColor: '#2563eb', // 暗色模式下的菜单悬停文本颜色
+      darkItemSelectedColor: '#2563eb', // 暗色模式下的菜单选中文本颜色
+      darkItemBg: 'transparent', // 暗色模式下的菜单背景色
+      darkItemHoverBg: 'transparent', // 确保暗色模式下hover不改变背景色
+      darkItemSelectedBg: 'transparent', // 确保暗色模式下选中不改变背景色
+      darkSubMenuItemBg: '#0f172a', // 暗色模式下的子菜单背景色
     },
     Layout: {
       bodyBg: '#f1f5f9',
       headerBg: '#ffffff',
       siderBg: '#1e293b',
+      darkBodyBg: '#0f172a', // 暗色模式下的主体背景色
+      darkHeaderBg: '#1e293b', // 暗色模式下的头部背景色
+      darkSiderBg: '#0f172a', // 暗色模式下的侧边栏背景色
     },
   },
 };

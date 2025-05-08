@@ -49,7 +49,7 @@ const Header: React.FC = () => {
   // 获取当前选中的菜单项
   const getSelectedKeys = () => {
     return menuItems
-      .filter((item) => pathname.startsWith(item.key))
+      .filter((item) => pathname === item.key || pathname.startsWith(item.key) && item.key !== '/')
       .map((item) => item.key);
   };
 
@@ -63,6 +63,11 @@ const Header: React.FC = () => {
       </div>
     ),
   }));
+
+  // 处理导航点击
+  const handleNavClick = ({ key }: { key: string }) => {
+    router.push(key);
+  };
 
   return (
     <AntHeader className="bg-white dark:bg-gray-800 px-4 sm:px-6 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 transition-colors duration-200 sticky top-0 z-10">
@@ -86,8 +91,10 @@ const Header: React.FC = () => {
           mode="horizontal"
           selectedKeys={getSelectedKeys()}
           items={menuItems}
-          onClick={({ key }) => router.push(key)}
-          className="border-none dark:bg-gray-800 dark:text-gray-100"
+          onClick={handleNavClick}
+          className="border-none nav-menu"
+          style={{ background: 'transparent' }}
+          theme={typeof window !== 'undefined' && document.documentElement.classList.contains('dark') ? 'dark' : 'light'}
         />
       </div>
 

@@ -101,41 +101,54 @@
   background: transparent;
 }
 
-.dark .ant-menu {
-  background: var(--layout-sider-background);
-  color: var(--text-color);
-}
-
 /* 顶部导航菜单样式 */
 .ant-menu-horizontal {
   border-bottom: none;
   line-height: 64px;
 }
 
-.dark .ant-menu-horizontal {
-  background: var(--layout-header-background);
-  color: var(--text-color);
+/* 确保菜单项样式 */
+.ant-menu-horizontal > .ant-menu-item,
+.ant-menu-horizontal > .ant-menu-submenu {
+  color: #374151; /* 浅色模式下为黑色 */
+  background-color: transparent !important;
+  border-bottom: 2px solid transparent;
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
-.ant-menu-horizontal > .ant-menu-item::after,
-.ant-menu-horizontal > .ant-menu-submenu::after {
-  border-bottom: 2px solid var(--primary-color);
-}
-
+.ant-menu-horizontal > .ant-menu-item:hover,
+.ant-menu-horizontal > .ant-menu-submenu:hover,
+.ant-menu-horizontal > .ant-menu-item-active,
+.ant-menu-horizontal > .ant-menu-submenu-active,
 .ant-menu-horizontal > .ant-menu-item-selected,
-.ant-menu-horizontal > .ant-menu-item-active {
-  color: var(--primary-color);
+.ant-menu-horizontal > .ant-menu-submenu-selected {
+  color: var(--primary-color) !important;
+  background-color: transparent !important;
   border-bottom-color: var(--primary-color);
 }
 
+/* 确保深色模式下菜单文字为白色 */
+.dark .ant-menu {
+  color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+.dark .ant-menu-horizontal > .ant-menu-item,
+.dark .ant-menu-horizontal > .ant-menu-submenu {
+  color: #ffffff !important;
+  background-color: transparent !important;
+  border-bottom: 2px solid transparent;
+}
+
+.dark .ant-menu-horizontal > .ant-menu-item:hover,
+.dark .ant-menu-horizontal > .ant-menu-submenu:hover,
+.dark .ant-menu-horizontal > .ant-menu-item-active,
+.dark .ant-menu-horizontal > .ant-menu-submenu-active,
 .dark .ant-menu-horizontal > .ant-menu-item-selected,
-.dark .ant-menu-horizontal > .ant-menu-item-active {
-  color: var(--primary-color);
+.dark .ant-menu-horizontal > .ant-menu-submenu-selected {
+  color: var(--primary-color) !important;
+  background-color: transparent !important;
   border-bottom-color: var(--primary-color);
-}
-
-.dark .ant-menu-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .dark .ant-btn {
