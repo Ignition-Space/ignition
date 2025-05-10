@@ -47,3 +47,5 @@ lerna-debug.log*
 pnpm-lock.yaml
 
 .next
+
+.config

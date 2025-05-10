@@ -59,3 +59,12 @@ export async function logout() {
 export async function getTokenInfo() {
   return api.get('/auth/token/info');
 }
+
+// 检查用户是否已登录
+export function isAuthenticated() {
+  if (typeof window === 'undefined') {
+    return false; // 在服务器端始终返回未认证
+  }
+  const token = localStorage.getItem('token');
+  return !!token; // 如果token存在则返回true
+}

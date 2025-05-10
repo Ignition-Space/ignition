@@ -20,7 +20,7 @@ MYSQL_DEVOPS_CONFIG:
   host: "127.0.0.1"
   port: 3306
   username: "root"
-  password: "123456"
+  password: "root"
   database: "devops_test"
   entities: "" # 这里的命名一定要跟 MongoDB 里面的配置命名区分开
   synchronize: true
@@ -33,7 +33,7 @@ MYSQL_USER_CONFIG:
   host: "127.0.0.1"
   port: 3306
   username: "root"
-  password: "123456"
+  password: "root"
   database: "user_test"
   entities: "mysql" # 这里的命名一定要跟 MongoDB 里面的配置命名区分开
   synchronize: true
