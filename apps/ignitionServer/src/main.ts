@@ -36,6 +36,6 @@ async function bootstrap() {
   // 创建文档
   generateDocument(app);
 
-  await app.listen(3000);
+  await app.listen(4002);
 }
 bootstrap();

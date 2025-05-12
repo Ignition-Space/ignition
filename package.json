@@ -8,18 +8,23 @@
   "scripts": {
     "dev": "turbo run dev",
     "dev:user": "turbo run dev:user",
-    "dev:ig": "turbo run dev:ig",
+    "dev:atom": "turbo run dev:atom",
     "dev-server:ig": "cross-env RUNNING_ENV=dev nest start --watch",
     "dev-server:user": "cross-env RUNNING_ENV=dev nest start --watch user-server",
     "dev-server:materials": "cross-env RUNNING_ENV=dev nest start --watch materials-server",
-    "dev-client:user": "pnpm --filter user-center run dev:user",
+    "dev-client:user": "pnpm --filter user-center run dev",
+    "dev-client:atom": "pnpm --filter atom run dev",
     "dev-server:devops": "cross-env RUNNING_ENV=dev nest start --watch devops-server",
     "prebuild": "rimraf dist",
-    "clean": "rimraf dist && rimraf node_modules && rimraf **/*/node_modules",
+    "clean": "rimraf dist && rimraf node_modules && rimraf **/*/node_modules && rimraf **/*/.next",
     "build": "turbo run build",
     "build:user": "turbo run build:user",
+    "build:atom": "turbo run build:atom",
     "build-server:user": "nest build user-server",
     "start-server:user": "node ./dist/apps/userServer/src/main.js",
+    "start:user": "pnpm --filter user-center run start",
+    "start:atom": "pnpm --filter atom run start",
+    "lint": "turbo run lint",
     "deploy:user": "turbo run deploy:user",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\""
   },
@@ -105,7 +110,7 @@
     "turbo": "^2.2.3",
     "typescript": "^5.3.3"
   },
-  "packageManager": "pnpm@6.32.4",
+  "packageManager": "pnpm@10.5.2",
   "resolutions": {
     "esbuild": "^0.18.20"
   },

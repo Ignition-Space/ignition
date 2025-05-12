@@ -49,3 +49,5 @@ pnpm-lock.yaml
 
 .next
 .env
+
+.config

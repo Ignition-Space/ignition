@@ -27,7 +27,6 @@ MONGODB_CONFIG:
   entities: "mongo"
   logging: false
   synchronize: true
-
 MYSQL_CONFIG:
   name: "material_test"
   type: "mysql"

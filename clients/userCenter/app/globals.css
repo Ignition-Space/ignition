@@ -1,0 +1,375 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* 主要颜色 */
+  --primary-color: #2563eb;
+  --primary-color-hover: #3b82f6;
+  --primary-color-active: #1d4ed8;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  
+  /* 文本颜色 */
+  --heading-color: #111827;
+  --text-color: #374151;
+  --text-color-secondary: #6b7280;
+  --disabled-color: #9ca3af;
+  
+  /* 边框和背景色 */
+  --border-color-base: #e5e7eb;
+  --border-color-split: #f3f4f6;
+  --layout-body-background: #f1f5f9;
+  --layout-header-background: #1e293b;
+  --layout-sider-background: #1e293b;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+    'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  scroll-behavior: smooth;
+  letter-spacing: -0.025em;
+}
+
+/* 系统整体布局样式 */
+.basic-layout {
+  min-height: 100vh;
+}
+
+.site-layout-header {
+  background-color: white;
+  padding: 0 24px;
+  height: 64px;
+  line-height: 64px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s;
+}
+
+.site-layout-sider {
+  background-color: var(--layout-sider-background);
+  box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
+  transition: all 0.2s;
+}
+
+.site-layout-sider .ant-menu-dark {
+  background-color: var(--layout-sider-background);
+}
+
+.site-layout-sider .ant-menu-dark .ant-menu-item-selected {
+  background-color: var(--primary-color);
+}
+
+.site-layout-sider .ant-menu-item {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  margin: 4px 0;
+  border-radius: 0 8px 8px 0;
+  font-weight: 500;
+}
+
+.site-layout-sider .ant-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.site-layout-content {
+  background-color: var(--layout-body-background);
+  padding: 16px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+/* 登录页面样式 */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--layout-sider-background);
+  background-position: center 110px;
+  background-size: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-form {
+  width: 420px;
+  padding: 36px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 10;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-form h2 {
+  margin-bottom: 24px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.form-group input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.3s;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-group input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+}
+
+.login-button {
+  width: 100%;
+  height: 48px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.login-button:hover {
+  background-color: var(--primary-color-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+}
+
+.login-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* 页面容器通用样式 */
+.page-container {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s;
+}
+
+.page-container:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: var(--heading-color);
+  position: relative;
+  padding-left: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.page-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 18px;
+  background: var(--primary-color);
+  border-radius: 2px;
+}
+
+/* Ant Design 覆盖样式 */
+.ant-btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  transition: all 0.3s;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ant-btn-primary:hover {
+  background-color: var(--primary-color-hover);
+  border-color: var(--primary-color-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.ant-layout-header {
+  background-color: var(--layout-header-background);
+  transition: all 0.3s;
+  padding: 0 24px;
+  line-height: 64px;
+  height: 64px;
+}
+
+.ant-layout-sider {
+  background-color: var(--layout-sider-background);
+  transition: all 0.3s;
+}
+
+.ant-menu-dark {
+  background-color: var(--layout-sider-background);
+}
+
+.ant-menu-dark .ant-menu-item-selected {
+  background-color: var(--primary-color);
+}
+
+.ant-menu-dark .ant-menu-item, 
+.ant-menu-dark .ant-menu-item-group-title, 
+.ant-menu-dark .ant-menu-item > a, 
+.ant-menu-dark .ant-menu-item > span > a {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.ant-table-wrapper {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #f8fafc !important;
+  font-weight: 500;
+  color: var(--heading-color);
+  border-bottom: 1px solid var(--border-color-split);
+  padding: 16px;
+}
+
+.ant-table-tbody > tr > td {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color-split);
+}
+
+.ant-table-tbody > tr:hover > td {
+  background-color: #f8fafc !important;
+}
+
+.ant-table-pagination {
+  margin: 16px !important;
+}
+
+.ant-tag {
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin: 0 8px 0 0;
+  font-size: 12px;
+  line-height: 1;
+  transition: all 0.3s;
+}
+
+.ant-tag-blue {
+  color: #2563eb;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.ant-tag-green {
+  color: #10b981;
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+
+.ant-tag-red {
+  color: #ef4444;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+/* 数据展示卡片 */
+.dashboard-card {
+  border-radius: 12px;
+  margin-bottom: 24px;
+  transition: all 0.3s;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-card .ant-card-head {
+  border-bottom: 1px solid var(--border-color-split);
+  padding: 16px 24px;
+}
+
+.dashboard-card .ant-card-head-title {
+  font-weight: 600;
+  color: var(--heading-color);
+  font-size: 16px;
+}
+
+.dashboard-card .ant-card-body {
+  padding: 24px;
+}
+
+/* 添加过渡动画 */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 适应响应式布局 */
+@media (max-width: 768px) {
+  .login-form {
+    width: 90%;
+    max-width: 420px;
+    padding: 24px;
+  }
+  
+  .site-layout-content {
+    padding: 16px;
+  }
+  
+  .page-container {
+    padding: 16px;
+  }
+} 

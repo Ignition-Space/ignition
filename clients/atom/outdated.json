@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "ECONNRESET",
+    "summary": "request to http://npm.xyb2b.com.cn/@monaco-editor%2freact failed, reason: read ECONNRESET",
+    "detail": "This is a problem related to network connectivity.\nIn most cases you are behind a proxy or have bad network settings.\n\nIf you are behind a proxy, please make sure that the\n'proxy' config is set properly.  See: 'npm help config'"
+  }
+}
