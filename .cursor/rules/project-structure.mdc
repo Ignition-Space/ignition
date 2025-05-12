@@ -1,0 +1,49 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 火石（Ignition）项目结构规则
+
+## 项目架构
+
+火石是一个基于Monorepo结构的一站式工程化解决方案，包含多个模块：
+
+```
+ignition/
+├── apps/                  # 服务端应用
+│   ├── userServer/        # 用户服务 - 用户认证与权限管理
+│   ├── materialsServer/   # 物料服务 - 组件物料管理
+│   ├── ignitionServer/    # 点火服务 - 核心服务
+│   └── devopsServer/      # DevOps服务 - CI/CD自动化
+├── clients/               # 客户端应用
+│   ├── userCenter/        # 用户中心 - 用户界面
+│   └── atom/              # 原子组件库 - 基础组件
+├── libs/                  # 共享库
+├── docs/                  # 文档目录
+└── .cursor/rules/         # Cursor规则
+```
+
+## 技术栈
+
+- **后端**：NestJS + TypeORM + MongoDB + MySQL
+- **前端**：React + Next.js + Ant Design + TailwindCSS
+- **工程化**：PNPM Workspace + Turbo + TypeScript
+
+## 开发规范
+
+1. 服务端代码放在 `apps` 目录下
+2. 客户端代码放在 `clients` 目录下
+3. 共享库代码放在 `libs` 目录下
+4. 文档放在 `docs` 目录下
+5. 使用 PNPM Workspace 管理依赖
+6. 使用 Turbo 管理构建和开发流程
+
+## 命名规范
+
+1. 服务端项目使用 camelCase 命名，后缀为 `Server`
+2. 客户端项目使用 camelCase 命名
+3. 共享库使用 kebab-case 命名
+4. TypeScript 类名使用 PascalCase
+5. 方法和变量使用 camelCase
+6. 常量使用 UPPER_SNAKE_CASE

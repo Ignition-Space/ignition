@@ -1,0 +1,193 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# 火石（Ignition）开发工作流规则
+
+## 开发环境设置
+
+### 安装依赖
+
+```bash
+# 使用pnpm安装所有依赖
+pnpm install
+```
+
+### 配置环境
+
+1. 在`.config`目录下创建`.dev.yaml`文件
+2. 参照以下格式配置数据库和第三方服务：
+
+```yaml
+MONGODB_CONFIG:
+  name: "ignition_test"
+  type: "mongodb"
+  url: "mongodb://127.0.0.1:27017"
+  database: "ignition_test"
+  entities: "mongo"
+  logging: false
+  synchronize: true
+
+MYSQL_CONFIG:
+  name: "material_test"
+  type: "mysql"
+  host: "127.0.0.1"
+  port: 3306
+  database: "material_test"
+  username: "root"
+  password: "123456"
+  entities: "mysql"
+  synchronize: true
+
+MYSQL_DEVOPS_CONFIG:
+  name: "devops_test"
+  type: "mysql"
+  host: "127.0.0.1"
+  port: 3306
+  username: "root"
+  password: "123456"
+  database: "devops_test"
+  entities: "mysql"
+  logging: false
+  synchronize: true
+
+GITGUB_CONFIG:
+  CLIENT_ID: ''
+  CLIENT_SECRETS: ''
+
+FEISHU_CONFIG:
+  FEISHU_APP_ID: ''
+  FEISHU_APP_SECRET: ''
+```
+
+### 使用Docker搭建开发环境
+
+```bash
+# 启动MySQL和MongoDB
+cd docker
+docker-compose up -d mysql mongodb
+```
+
+## 开发命令
+
+### 启动所有项目
+
+```bash
+pnpm dev
+```
+
+### 启动特定服务
+
+```bash
+# 启动用户服务
+pnpm dev:user
+
+# 启动原子组件库
+pnpm dev:atom
+
+# 启动独立服务
+pnpm dev-server:ig         # 点火服务
+pnpm dev-server:user       # 用户服务
+pnpm dev-server:materials  # 物料服务
+pnpm dev-server:devops     # DevOps服务
+
+# 启动独立客户端
+pnpm dev-client:user       # 用户中心
+pnpm dev-client:atom       # 原子组件库
+```
+
+### 构建项目
+
+```bash
+# 构建所有项目
+pnpm build
+
+# 构建特定项目
+pnpm build:user            # 构建用户系统
+pnpm build:atom            # 构建原子组件库
+```
+
+## Git工作流
+
+### 分支管理
+
+- `main` - 主分支，用于发布
+- `develop` - 开发分支，用于集成功能
+- `feature/*` - 功能分支，用于开发新功能
+- `bugfix/*` - 修复分支，用于修复问题
+- `release/*` - 发布分支，用于版本发布准备
+
+### 提交规范
+
+使用约定式提交（Conventional Commits）:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+类型（type）:
+- `feat` - 新功能
+- `fix` - Bug修复
+- `docs` - 文档更新
+- `style` - 代码风格修改
+- `refactor` - 代码重构
+- `perf` - 性能优化
+- `test` - 测试相关
+- `build` - 构建系统或外部依赖更改
+- `ci` - CI配置更改
+- `chore` - 其他更改
+
+示例:
+```
+feat(user): 添加用户登录功能
+
+实现了基于JWT的用户登录功能，包括：
+- 用户名密码登录
+- GitHub OAuth登录
+- 登录状态维护
+
+Closes #123
+```
+
+## 代码审查流程
+
+1. 创建Pull Request（PR）
+2. 至少一名团队成员审查代码
+3. 通过自动化测试
+4. 解决所有评论和问题
+5. 合并到目标分支
+
+## 代码风格
+
+### TypeScript/JavaScript
+
+- 使用ESLint进行代码检查
+- 使用Prettier进行代码格式化
+- 2空格缩进
+- 使用分号
+- 使用单引号
+- 行宽100字符
+
+### CSS/SCSS
+
+- 使用TailwindCSS原子化CSS
+- 自定义样式使用BEM命名规范
+
+## 测试要求
+
+- 所有新功能必须包含单元测试
+- 所有Bug修复必须包含测试用例
+- 保持测试覆盖率在80%以上
+- 提交前运行所有测试确保通过
+
+## 文档要求
+
+- API必须有Swagger/OpenAPI文档
+- 组件必须有使用示例
+- 复杂功能需要添加注释
+- 重要流程需要文档说明

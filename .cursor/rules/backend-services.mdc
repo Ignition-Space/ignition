@@ -1,0 +1,130 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# 火石（Ignition）后端服务开发规则
+
+## 服务概览
+
+火石平台包含以下后端服务：
+
+1. **用户服务 (userServer)** - 用户认证与权限管理
+2. **物料服务 (materialsServer)** - 组件物料管理
+3. **点火服务 (ignitionServer)** - 核心服务与API网关
+4. **DevOps服务 (devopsServer)** - CI/CD自动化流程
+
+## 技术栈
+
+- **框架**: NestJS
+- **数据库**: MongoDB (文档存储), MySQL (关系数据)
+- **API文档**: Swagger/OpenAPI
+- **认证**: JWT, Passport
+- **ORM**: TypeORM, Mongoose
+- **缓存**: Redis
+
+## 开发规范
+
+### 目录结构
+
+每个服务应遵循以下目录结构：
+
+```
+serviceDir/
+├── src/
+│   ├── main.ts                # 入口文件
+│   ├── app.module.ts          # 根模块
+│   ├── modules/               # 业务模块
+│   │   ├── module1/
+│   │   │   ├── dto/           # 数据传输对象
+│   │   │   ├── entities/      # 数据实体
+│   │   │   ├── services/      # 服务层
+│   │   │   ├── controllers/   # 控制器
+│   │   │   └── module1.module.ts
+│   │   └── module2/
+│   ├── common/                # 通用功能
+│   │   ├── decorators/        # 自定义装饰器
+│   │   ├── filters/           # 异常过滤器
+│   │   ├── guards/            # 守卫
+│   │   ├── interceptors/      # 拦截器
+│   │   ├── middlewares/       # 中间件
+│   │   └── pipes/             # 管道
+│   ├── config/                # 配置
+│   └── interfaces/            # 接口定义
+├── test/                      # 测试目录
+├── package.json               # 依赖配置
+└── tsconfig.app.json          # TypeScript配置
+```
+
+### 命名规范
+
+1. **文件命名**: 使用短横线分隔 (kebab-case)
+   - 例: `user-service.ts`, `auth-guard.ts`
+
+2. **类命名**: 使用大驼峰命名法 (PascalCase)
+   - 例: `UserService`, `AuthGuard`
+
+3. **方法命名**: 使用小驼峰命名法 (camelCase)
+   - 例: `findAllUsers()`, `createNewItem()`
+
+4. **变量命名**: 使用小驼峰命名法 (camelCase)
+   - 例: `userId`, `itemCount`
+
+5. **常量命名**: 使用大写下划线分隔 (UPPER_SNAKE_CASE)
+   - 例: `MAX_CONNECTIONS`, `DEFAULT_TIMEOUT`
+
+### API设计规范
+
+1. **RESTful原则**:
+   - GET: 获取资源
+   - POST: 创建资源
+   - PUT: 更新资源(全量)
+   - PATCH: 更新资源(部分)
+   - DELETE: 删除资源
+
+2. **URL命名**:
+   - 使用复数名词表示资源集合: `/users`, `/materials`
+   - 使用ID标识具体资源: `/users/:id`
+   - 使用嵌套表示资源关系: `/users/:id/roles`
+
+3. **版本控制**:
+   - 在URL中使用版本号: `/api/v1/users`
+
+4. **响应格式**:
+   ```typescript
+   {
+     code: number,     // 状态码
+     message: string,  // 消息
+     data: any         // 数据
+   }
+   ```
+
+5. **错误处理**:
+   - 使用HTTP状态码表示错误类型
+   - 提供详细的错误消息
+   - 包含错误代码便于追踪
+
+## 数据库规范
+
+### MongoDB
+
+1. 文档设计遵循最小冗余原则
+2. 使用索引优化查询性能
+3. 使用Mongoose Schema定义文档结构
+4. 复杂查询使用聚合管道
+
+### MySQL
+
+1. 表名使用复数形式，小写，下划线分隔
+2. 主键使用`id`，外键使用`resource_id`格式
+3. 使用软删除策略 (is_deleted, deleted_at)
+4. 添加创建和更新时间戳
+5. 合理设计索引优化查询
+
+## 测试规范
+
+1. 单元测试: 测试独立功能单元
+2. 集成测试: 测试模块间交互
+3. E2E测试: 测试完整流程
+4. 使用Jest作为测试框架
+5. 测试覆盖率目标: 80%以上

@@ -1,0 +1,197 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# 火石（Ignition）数据库配置规则
+
+## 数据库概览
+
+火石平台使用多种数据库：
+
+1. **MongoDB** - 用于存储文档型数据和系统配置
+2. **MySQL** - 用于存储关系型数据
+
+## 数据库配置
+
+### 配置文件
+
+数据库配置位于 `.config/.dev.yaml` 文件中：
+
+```yaml
+MONGODB_CONFIG:
+  name: "ignition_test"
+  type: "mongodb"
+  url: "mongodb://127.0.0.1:27017"
+  database: "ignition_test"
+  entities: "mongo"
+  logging: false
+  synchronize: true
+
+MYSQL_CONFIG:
+  name: "material_test"
+  type: "mysql"
+  host: "127.0.0.1"
+  port: 3306
+  database: "material_test"
+  username: "root"
+  password: "123456"
+  entities: "mysql"
+  synchronize: true
+
+MYSQL_DEVOPS_CONFIG:
+  name: "devops_test"
+  type: "mysql"
+  host: "127.0.0.1"
+  port: 3306
+  username: "root"
+  password: "123456"
+  database: "devops_test"
+  entities: "mysql"
+  logging: false
+  synchronize: true
+```
+
+## 数据库服务分配
+
+各服务使用的数据库：
+
+- **用户服务 (userServer)**: MongoDB
+- **物料服务 (materialsServer)**: MySQL
+- **点火服务 (ignitionServer)**: MongoDB
+- **DevOps服务 (devopsServer)**: MySQL
+
+## 数据库设计规范
+
+### MongoDB文档设计规范
+
+1. **文档结构**:
+   - 遵循扁平化原则，避免深度嵌套
+   - 合理使用嵌入式文档和引用
+   - 按照访问模式优化文档结构
+
+2. **命名规范**:
+   - 集合名使用复数形式（如`users`，`configs`）
+   - 字段名使用camelCase
+   - ID字段统一使用`_id`
+
+3. **索引规范**:
+   - 为常用查询字段创建索引
+   - 合理使用复合索引
+   - 避免创建过多索引影响写入性能
+
+4. **示例文档结构**:
+   ```javascript
+   // users集合示例
+   {
+     _id: ObjectId("..."),
+     username: "user1",
+     email: "user1@example.com",
+     roles: ["admin", "editor"],
+     profile: {
+       fullName: "User One",
+       avatar: "https://example.com/avatar.jpg"
+     },
+     createdAt: ISODate("2023-01-01T00:00:00Z"),
+     updatedAt: ISODate("2023-01-02T00:00:00Z")
+   }
+   ```
+
+### MySQL表设计规范
+
+1. **表命名**:
+   - 使用小写复数形式
+   - 使用下划线分隔词（如`user_roles`）
+   - 避免使用保留字
+
+2. **字段命名**:
+   - 使用下划线命名法（如`user_id`）
+   - 主键统一命名为`id`
+   - 外键使用`<表名单数>_id`（如`user_id`）
+
+3. **数据类型**:
+   - 优先选择合适的数据类型
+   - 字符串使用VARCHAR，避免过长
+   - 日期时间使用DATETIME或TIMESTAMP
+   - 货币使用DECIMAL而非FLOAT
+
+4. **通用字段**:
+   - 每个表包含`id`, `created_at`, `updated_at`
+   - 软删除使用`is_deleted`或`deleted_at`
+
+5. **示例表结构**:
+   ```sql
+   CREATE TABLE materials (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     name VARCHAR(100) NOT NULL,
+     description TEXT,
+     category_id INT,
+     version VARCHAR(20),
+     is_published BOOLEAN DEFAULT FALSE,
+     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+     FOREIGN KEY (category_id) REFERENCES material_categories(id)
+   );
+   ```
+
+## 数据访问层实现
+
+### MongoDB (使用Mongoose)
+
+```typescript
+// 用户模型定义示例
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+
+@Schema()
+export class User extends Document {
+  @Prop({ required: true, unique: true })
+  username: string;
+
+  @Prop({ required: true })
+  password: string;
+
+  @Prop({ default: [] })
+  roles: string[];
+}
+
+export const UserSchema = SchemaFactory.createForClass(User);
+```
+
+### MySQL (使用TypeORM)
+
+```typescript
+// 物料实体定义示例
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { MaterialCategory } from './material-category.entity';
+
+@Entity('materials')
+export class Material {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ length: 100 })
+  name: string;
+
+  @Column({ type: 'text', nullable: true })
+  description: string;
+
+  @ManyToOne(() => MaterialCategory)
+  category: MaterialCategory;
+
+  @Column({ default: false })
+  isPublished: boolean;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}
+```
+
+## 数据库迁移策略
+
+1. **开发环境**: 使用`synchronize: true`自动同步表结构
+2. **生产环境**: 使用迁移脚本手动管理表结构变更
+3. **版本控制**: 迁移脚本纳入版本控制

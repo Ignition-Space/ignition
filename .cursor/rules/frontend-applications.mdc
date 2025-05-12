@@ -1,0 +1,126 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 火石（Ignition）前端应用开发规则
+
+## 应用概览
+
+火石平台包含以下前端应用：
+
+1. **用户中心 (userCenter)** - 用户管理与权限配置界面
+2. **原子组件库 (atom)** - 基础UI组件库
+
+## 技术栈
+
+- **框架**: React, Next.js
+- **UI库**: Ant Design
+- **样式**: TailwindCSS
+- **状态管理**: React Context, React Query
+- **构建工具**: Turbo, webpack
+- **语言**: TypeScript
+
+## 开发规范
+
+### 目录结构
+
+每个前端应用应遵循以下目录结构：
+
+```
+clientDir/
+├── app/                  # Next.js 应用路由
+│   ├── page.tsx          # 入口页面
+│   └── layout.tsx        # 布局组件
+├── components/           # UI组件
+│   ├── common/           # 通用组件
+│   └── feature/          # 功能组件
+├── hooks/                # 自定义钩子
+├── lib/                  # 工具函数和逻辑
+│   ├── api/              # API接口
+│   ├── utils/            # 工具函数
+│   └── context/          # 上下文
+├── public/               # 静态资源
+├── styles/               # 全局样式
+├── package.json          # 依赖配置
+├── tsconfig.json         # TypeScript配置
+├── tailwind.config.js    # TailwindCSS配置
+└── next.config.js        # Next.js配置
+```
+
+### 命名规范
+
+1. **文件命名**:
+   - 组件文件: 使用PascalCase（如`Button.tsx`）
+   - 非组件文件: 使用kebab-case（如`api-client.ts`）
+
+2. **组件命名**: 使用PascalCase
+   - 例: `UserProfile`, `LoginForm`
+
+3. **函数命名**: 使用camelCase
+   - 例: `fetchUserData()`, `handleSubmit()`
+
+4. **变量命名**: 使用camelCase
+   - 例: `userData`, `isLoading`
+
+5. **常量命名**: 使用UPPER_SNAKE_CASE
+   - 例: `API_ENDPOINT`, `DEFAULT_THEME`
+
+### 组件开发规则
+
+1. **组件分类**:
+   - **页面组件**: 对应路由的组件
+   - **功能组件**: 实现特定功能的复杂组件
+   - **UI组件**: 纯展示型组件，无业务逻辑
+
+2. **组件最佳实践**:
+   - 使用函数组件和Hooks
+   - 避免过深的组件嵌套
+   - 合理拆分组件，保持单一职责
+   - 使用TypeScript类型定义props
+
+3. **Props定义**:
+   ```typescript
+   interface ButtonProps {
+     label: string;
+     onClick: () => void;
+     variant?: 'primary' | 'secondary';
+     disabled?: boolean;
+   }
+   ```
+
+4. **状态管理**:
+   - 本地状态使用useState
+   - 复杂状态使用useReducer
+   - 跨组件状态使用Context
+   - 服务端数据使用React Query
+
+### 样式规范
+
+1. **使用TailwindCSS作为主要样式方案**
+2. **遵循原子化CSS设计理念**
+3. **自定义样式使用CSS Modules**
+4. **主题配置统一放在tailwind.config.js中**
+5. **响应式设计遵循移动优先原则**
+
+### API交互规范
+
+1. **使用统一的API客户端**
+2. **处理请求、加载、错误状态**
+3. **实现请求缓存和数据预取**
+4. **API响应统一格式处理**
+
+## 测试规范
+
+1. **组件测试**: 使用React Testing Library
+2. **端到端测试**: 使用Cypress
+3. **单元测试**: 测试工具函数和hooks
+4. **测试覆盖率目标**: 70%以上
+
+## 性能优化
+
+1. **懒加载组件和路由**
+2. **图片优化使用Next.js Image组件**
+3. **使用React.memo避免不必要的重渲染**
+4. **合理使用useMemo和useCallback**
+5. **代码分割减小包体积**
