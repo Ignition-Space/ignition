@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
 import { GithubUserInfo } from '../user/user.dto';
-import { User } from '../user/user.mysql.entity';
+import { User } from '../user/user.mongo.entity';
 import { UserService } from '../user/user.service';
 import { OAuthService } from '../user/oauth.service';
 

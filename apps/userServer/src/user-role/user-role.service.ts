@@ -1,16 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { UserRole } from './user-role.mysql.entity';
+import { MongoRepository, ObjectId } from 'typeorm';
+import { UserRole } from './user-role.mongo.entity';
 import { IBathRole } from '../user/user.dto';
 
 @Injectable()
 export class UserRoleService {
   constructor(
     @Inject('USER_ROLE_REPOSITORY')
-    private userRoleRepository: Repository<UserRole>,
+    private userRoleRepository: MongoRepository<UserRole>,
   ) { }
 
-  listByUserId(userId: number) {
+  listByUserId(userId: string) {
     return this.userRoleRepository.find({
       where: {
         userId,
@@ -18,7 +18,7 @@ export class UserRoleService {
     });
   }
 
-  listByUserIdWithSys(userId: number, systemId: number) {
+  listByUserIdWithSys(userId: string, systemId: string) {
     return this.userRoleRepository.find({
       where: {
         systemId,
@@ -27,14 +27,14 @@ export class UserRoleService {
     });
   }
 
-  deleteByUserId(userId: number, systemId: number) {
-    return this.userRoleRepository.delete({
+  deleteByUserId(userId: string, systemId: string) {
+    return this.userRoleRepository.deleteMany({
       userId,
       systemId,
     });
   }
 
-  async setUserRoles(userId: number, bathRoles: IBathRole[]) {
+  async setUserRoles(userId: string, bathRoles: IBathRole[]) {
     let userRoles: UserRole[] = [];
 
     for (const sys of bathRoles) {

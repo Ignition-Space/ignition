@@ -1,9 +1,10 @@
-import { User } from './user.mysql.entity';
+import { User } from './user.mongo.entity';
 
 export const UserProviders = [
   {
     provide: 'USER_REPOSITORY',
-    useFactory: (AppDataSource) => AppDataSource.getRepository(User),
-    inject: ['MYSQL_USER_DATA_SOURCE'],
+    useFactory: async (AppDataSource) =>
+      await AppDataSource.getRepository(User),
+    inject: ['MONGODB_DATA_SOURCE'],
   },
 ];

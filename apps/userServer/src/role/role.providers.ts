@@ -1,9 +1,10 @@
-import { Role } from './role.mysql.entity';
+import { Role } from './role.mongo.entity';
 
 export const RoleProviders = [
   {
     provide: 'ROLE_REPOSITORY',
-    useFactory: (AppDataSource) => AppDataSource.getRepository(Role),
-    inject: ['MYSQL_USER_DATA_SOURCE'],
+    useFactory: async (AppDataSource) =>
+      await AppDataSource.getRepository(Role),
+    inject: ['MONGODB_DATA_SOURCE'],
   },
 ];

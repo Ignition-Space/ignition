@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { ResourceType } from './resource.mysql.entity';
+import { ResourceType } from './resource.mongo.entity';
 
 export class CreateResourceDto {
   @IsNotEmpty()
@@ -53,6 +53,9 @@ export class UpdateResourceDto extends CreateResourceDto {
 export class ResourceListWithPaginationDto {
   @ApiProperty({ example: '', description: '查询关键词' })
   keyword?: string;
+
+  @ApiProperty({ example: '', description: '系统ID' })
+  systemId?: string;
 
   @ApiProperty({ example: { pageSize: 10, currentPage: 1 } })
   page?: PaginationParams;

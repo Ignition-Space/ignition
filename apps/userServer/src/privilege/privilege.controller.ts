@@ -11,7 +11,7 @@ import {
   PrivilegeListWithPaginationDto,
   UpdatePrivilegeDto,
 } from './privilege.dto';
-import { Privilege } from './privilege.mysql.entity';
+import { Privilege } from './privilege.mongo.entity';
 import { PrivilegeService } from './privilege.service';
 
 @ApiTags('权限')

@@ -2,22 +2,22 @@ import { Inject, Injectable } from '@nestjs/common';
 import { isNotEmpty } from 'class-validator';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { CustomPaginationMeta, getPaginationOptions } from '@app/common';
-import { In, Repository } from 'typeorm';
+import { MongoRepository, ObjectId } from 'typeorm';
 import { PrivilegeListWithPaginationDto } from './privilege.dto';
-import { Privilege } from './privilege.mysql.entity';
+import { Privilege } from './privilege.mongo.entity';
 
 @Injectable()
 export class PrivilegeService {
   constructor(
     @Inject('PRIVILEGE_REPOSITORY')
-    private privilegeRepository: Repository<Privilege>,
+    private privilegeRepository: MongoRepository<Privilege>,
   ) { }
 
   createOrUpdate(privilege: Privilege) {
     return this.privilegeRepository.save(privilege);
   }
 
-  list(systemId: number) {
+  list(systemId: string) {
     return this.privilegeRepository.find({
       where: {
         systemId,
@@ -34,23 +34,19 @@ export class PrivilegeService {
   }
 
   findById(id) {
-    return this.privilegeRepository.findOne({
-      where: {
-        id,
-      },
-    });
+    return this.privilegeRepository.findOne(id);
   }
 
-  findByIds(ids: number[]) {
+  findByIds(ids: string[]) {
     return this.privilegeRepository.find({
       where: {
-        id: In(ids),
+        _id: { $in: ids.map((id) => new ObjectId(id)) },
       },
     });
   }
 
-  delete(id: number) {
-    return this.privilegeRepository.delete(id);
+  delete(id: string) {
+    return this.privilegeRepository.delete(new ObjectId(id));
   }
 
   async paginate(
@@ -63,8 +59,8 @@ export class PrivilegeService {
 
     // 关键字
     if (isNotEmpty(searchParams.keyword)) {
-      queryBuilder.andWhere('privilege.name LIKE :name', {
-        name: `%${searchParams.keyword}%`,
+      queryBuilder.andWhere({
+        name: { $regex: searchParams.keyword, $options: 'i' },
       });
     }
 

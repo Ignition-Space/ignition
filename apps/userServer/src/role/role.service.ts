@@ -4,14 +4,14 @@ import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { RolePrivilegeService } from '../role-privilege/role-privilege.service';
 import { SystemService } from '../system/system.service';
 import { getPaginationOptions, CustomPaginationMeta } from '@app/common';
-import { In, Repository } from 'typeorm';
+import { MongoRepository, ObjectId } from 'typeorm';
 import { RoleListWithPaginationDto } from './role.dto';
-import { Role } from './role.mysql.entity';
+import { Role } from './role.mongo.entity';
 
 @Injectable()
 export class RoleService {
   constructor(
-    @Inject('ROLE_REPOSITORY') private roleRepository: Repository<Role>,
+    @Inject('ROLE_REPOSITORY') private roleRepository: MongoRepository<Role>,
     private readonly rolePrivilegeService: RolePrivilegeService,
     private readonly systemService: SystemService,
   ) { }
@@ -24,20 +24,20 @@ export class RoleService {
     return this.roleRepository.save(role);
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     // 同步删除角色和权限关系表
     await this.rolePrivilegeService.remove(id);
-    return await this.roleRepository.delete(id);
+    return await this.roleRepository.delete(new ObjectId(id));
   }
 
   findById(id) {
-    return this.roleRepository.findOneBy(id);
+    return this.roleRepository.findOne(id);
   }
 
-  findByIds(ids: number[]) {
+  findByIds(ids: string[]) {
     return this.roleRepository.find({
       where: {
-        id: In(ids),
+        _id: { $in: ids.map((id) => new ObjectId(id)) },
       },
     });
   }
@@ -51,8 +51,8 @@ export class RoleService {
 
     // 关键字
     if (isNotEmpty(searchParams.keyword)) {
-      queryBuilder.andWhere('role.name LIKE :name', {
-        name: `%${searchParams.keyword}%`,
+      queryBuilder.andWhere({
+        name: { $regex: searchParams.keyword, $options: 'i' },
       });
     }
 
@@ -62,7 +62,7 @@ export class RoleService {
     );
   }
 
-  async listWithSys(systemId: number) {
+  async listWithSys(systemId: string) {
     const roles = await this.roleRepository.find({
       where: {
         systemId,

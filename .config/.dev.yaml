@@ -14,30 +14,6 @@ MONGODB_CONFIG:
   logging: false # 数据库打印日志
   synchronize: true # 是否开启同步数据表功能
 
-MYSQL_DEVOPS_CONFIG:
-  name: "devops_test"
-  type: "mysql"
-  host: "127.0.0.1"
-  port: 3306
-  username: "root"
-  password: "root"
-  database: "devops_test"
-  entities: "" # 这里的命名一定要跟 MongoDB 里面的配置命名区分开
-  synchronize: true
-
-# MongoDB 是无模式的，所以即使在配置参数开启了 synchronize，启动项目的时候也不会去数据库创建对应的表，所以不用奇怪，并没有出错，
-# 但 Mysql 在每次应用程序启动时自动同步表结构，容易造成数据丢失，生产环境记得关闭，以免造成无可预计的损失。
-MYSQL_USER_CONFIG:
-  name: "user_test"
-  type: "mysql"
-  host: "127.0.0.1"
-  port: 3306
-  username: "root"
-  password: "root"
-  database: "user_test"
-  entities: "mysql" # 这里的命名一定要跟 MongoDB 里面的配置命名区分开
-  synchronize: true
-
 REDIS_CONFIG:
   host: "localhost" # redis 链接
   port: 6379 # redis 端口

@@ -1,36 +1,24 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { isNotEmpty } from 'class-validator';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
+import { PrivilegeService } from '../privilege/privilege.service';
+import { SystemService } from '../system/system.service';
 import { getPaginationOptions, CustomPaginationMeta } from '@app/common';
-import { Repository } from 'typeorm';
+import { MongoRepository, ObjectId } from 'typeorm';
 import { ResourceListWithPaginationDto } from './resource.dto';
-import { Resource } from './resource.mysql.entity';
+import { Resource } from './resource.mongo.entity';
 
 @Injectable()
 export class ResourceService {
   constructor(
     @Inject('RESOURCE_REPOSITORY')
-    private resourceRepository: Repository<Resource>,
+    private resourceRepository: MongoRepository<Resource>,
+    private readonly privilegeService: PrivilegeService,
+    private readonly systemService: SystemService,
   ) { }
 
-  create(resource: Resource) {
+  createOrUpdate(resource: Resource) {
     return this.resourceRepository.save(resource);
-  }
-
-  update(resource: Resource) {
-    return this.resourceRepository.save(resource);
-  }
-
-  delete(id: number) {
-    return this.resourceRepository.delete(id);
-  }
-
-  findById(id) {
-    return this.resourceRepository.findOne({
-      where: {
-        id,
-      },
-    });
   }
 
   findByKey(key: string) {
@@ -41,17 +29,35 @@ export class ResourceService {
     });
   }
 
+  findById(id) {
+    return this.resourceRepository.findOne(id);
+  }
+
+  async delete(id: string) {
+    return await this.resourceRepository.delete(new ObjectId(id));
+  }
+
   async paginate(
     searchParams: ResourceListWithPaginationDto,
     page: PaginationParams,
   ): Promise<Pagination<Resource, CustomPaginationMeta>> {
     const queryBuilder = this.resourceRepository.createQueryBuilder('resource');
-    queryBuilder.orderBy('resource.createTime', 'DESC');
+    queryBuilder.orderBy('resource.sort', 'ASC');
+
+    // 系统
+    if (isNotEmpty(searchParams.systemId)) {
+      queryBuilder.andWhere({
+        systemId: searchParams.systemId,
+      });
+    }
 
     // 关键字
     if (isNotEmpty(searchParams.keyword)) {
-      queryBuilder.andWhere('resource.name LIKE :name', {
-        name: `%${searchParams.keyword}%`,
+      queryBuilder.andWhere({
+        $or: [
+          { name: { $regex: searchParams.keyword, $options: 'i' } },
+          { key: { $regex: searchParams.keyword, $options: 'i' } },
+        ],
       });
     }
 
@@ -61,7 +67,7 @@ export class ResourceService {
     );
   }
 
-  listBySystemId(systemId: number) {
+  list(systemId: string) {
     return this.resourceRepository.find({
       where: {
         systemId,

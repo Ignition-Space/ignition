@@ -5,7 +5,7 @@
 
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { UserStatus } from './user.mysql.entity';
+import { UserStatus } from './user.mongo.entity';
 
 export class DisableUserDto {
   @IsNotEmpty()
@@ -28,8 +28,8 @@ export class GetRolesByIdDto {
 }
 
 export interface IBathRole {
-  systemId: number;
-  roleIds: number[];
+  systemId: string;
+  roleIds: string[];
 }
 
 export class SetRolesDto {
