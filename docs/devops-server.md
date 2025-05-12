@@ -1,101 +1,167 @@
-# DevOps系统
+# DevOps服务
 
-DevOps系统是火石平台的自动化部署与持续集成服务，为项目提供全流程的CI/CD能力。
+DevOps服务是火石平台的持续集成与持续部署系统。
 
-## 核心功能
+## 功能概述
 
-- **自动化构建**: 支持多种项目类型的自动构建
-- **持续集成**: 与GitHub等代码仓库集成，实现代码提交后自动触发构建
-- **持续部署**: 支持多环境一键部署
-- **环境管理**: 提供开发、测试、预发布、生产等环境管理
-- **流水线配置**: 可视化配置CI/CD流水线
-- **构建监控**: 实时监控构建状态和日志
-- **质量门禁**: 支持代码质量检测和测试覆盖率要求
+DevOps服务提供以下功能：
+
+- 项目管理
+- 迭代管理
+- 构建部署
+- 发布管理
+- 第三方小程序管理
 
 ## 技术架构
 
-- 基于NestJS框架构建
-- 使用MySQL存储配置信息和任务记录
-- 集成Jenkins/GitHub Actions等CI/CD工具
-- 支持Docker容器化部署
+- **框架**: NestJS
+- **数据库**: MongoDB
+- **CI/CD工具**: Jenkins
+- **容器化**: Docker
 
-## 启动服务
+## 设计原则
 
-```bash
-# 开发环境启动
-pnpm dev-server:devops
+1. **自动化优先**: 所有重复任务实现自动化
+2. **可追溯性**: 所有操作记录完整日志
+3. **可扩展性**: 支持多种项目类型和部署环境
+4. **可靠性**: 确保构建和部署过程稳定可靠
+
+## 数据模型
+
+DevOps系统使用MongoDB数据库，主要包含以下集合结构：
+
+### 项目(Project)
+
+```typescript
+// 项目集合
+{
+  _id: ObjectId("..."),
+  zhName: "项目中文名",
+  usName: "project-english-name",
+  desc: "项目描述",
+  projectTypes: ["web", "mobile"],
+  gitProjectId: 12345,
+  gitNamespace: "team-name",
+  gitProjectUrl: "https://git.example.com/team-name/project-name",
+  gitProjectName: "project-name",
+  gitProjectDesc: "Git项目描述",
+  creatorName: "创建者",
+  creatorId: 10001,
+  createTime: ISODate("2023-01-01T00:00:00Z"),
+  status: 1
+}
 ```
 
-## API文档
+### 迭代(Iteration)
 
-启动服务后，访问以下地址查看API文档：
-
-```
-http://localhost:3000/doc
-```
-
-## 数据库设计
-
-DevOps系统使用MySQL数据库，主要包含以下表结构：
-
-- `projects`: 项目信息
-- `pipelines`: 流水线配置
-- `builds`: 构建记录
-- `deployments`: 部署记录
-- `environments`: 环境配置
-
-## 使用流程
-
-1. 创建项目并配置代码仓库
-2. 配置构建和部署流水线
-3. 触发构建（手动或Git提交触发）
-4. 查看构建状态和日志
-5. 选择目标环境进行部署
-
-## 与其他系统的集成
-
-DevOps系统与以下系统进行了集成：
-
-- **用户系统**: 获取用户认证和权限信息
-- **物料系统**: 实现物料的自动构建和发布
-- **点火服务**: 提供服务部署状态信息
-
-## 支持的项目类型
-
-- React/Vue前端项目
-- Node.js服务端项目
-- Java/Spring Boot项目
-- 容器化应用
-
-## 流水线示例
-
-```yaml
-# 基本流水线示例
-name: 基础Web应用流水线
-stages:
-  - name: 构建
-    steps:
-      - name: 安装依赖
-        command: pnpm install
-      - name: 代码检查
-        command: pnpm lint
-      - name: 单元测试
-        command: pnpm test
-      - name: 构建
-        command: pnpm build
-  - name: 部署
-    environments:
-      - dev
-      - test
-      - prod
-    steps:
-      - name: 部署
-        command: deploy.sh ${ENV}
+```typescript
+// 迭代集合
+{
+  _id: ObjectId("..."),
+  projectId: ObjectId("..."),
+  name: "v1.0.0",
+  desc: "第一个版本",
+  creatorId: 10001,
+  creatorName: "创建者",
+  branchName: "release/v1.0.0",
+  createTime: ISODate("2023-01-15T00:00:00Z"),
+  endTime: ISODate("2023-02-15T00:00:00Z"),
+  status: 1
+}
 ```
 
-## 后续计划
+### 部署任务(Task)
 
-- [ ] 支持更多CI/CD工具集成
-- [ ] 增强监控和报警功能
-- [ ] 实现自动回滚
-- [ ] 添加部署审批流程 
+```typescript
+// 部署任务集合
+{
+  _id: ObjectId("..."),
+  projectId: ObjectId("..."),
+  iterationId: ObjectId("..."),
+  processId: "process123",
+  branch: "release/v1.0.0",
+  env: "test",
+  projectType: "web",
+  status: 2,
+  creatorName: "部署者",
+  creatorId: 10001,
+  startTime: ISODate("2023-01-20T10:00:00Z"),
+  endTime: ISODate("2023-01-20T10:05:00Z"),
+  queueId: 45678,
+  buildId: 98765,
+  desc: "测试环境部署"
+}
+```
+
+### 操作记录(Operation)
+
+```typescript
+// 操作记录集合
+{
+  _id: ObjectId("..."),
+  operationType: 1,
+  record: {
+    projectId: ObjectId("..."),
+    iterationId: ObjectId("...")
+  },
+  operationTime: ISODate("2023-01-20T10:00:00Z"),
+  operatorId: 10001,
+  operatorName: "操作者"
+}
+```
+
+## 主要模块
+
+1. **项目模块**: 管理项目信息和配置
+2. **迭代模块**: 管理项目迭代和版本
+3. **分支模块**: 管理Git分支
+4. **部署模块**: 执行构建和部署任务
+5. **系统模块**: 管理系统配置和操作记录
+
+## API接口
+
+DevOps服务提供RESTful API，主要包括：
+
+- `GET /api/projects`: 获取项目列表
+- `POST /api/projects`: 创建新项目
+- `GET /api/projects/:id`: 获取项目详情
+- `PUT /api/projects/:id`: 更新项目信息
+- `GET /api/projects/:id/iterations`: 获取项目迭代列表
+- `POST /api/iterations`: 创建新迭代
+- `POST /api/tasks`: 创建部署任务
+- `GET /api/tasks`: 获取任务列表
+
+## 部署流程
+
+1. 接收部署请求
+2. 验证参数和权限
+3. 创建Jenkins任务
+4. 监控任务执行状态
+5. 记录部署结果
+6. 通知用户部署结果
+
+## 扩展能力
+
+DevOps服务支持多种项目类型的扩展：
+
+- Web前端项目
+- 服务端项目
+- 移动应用(iOS/Android)
+- 小程序
+- React Native应用
+
+## 数据库迁移
+
+DevOps服务已完成从MySQL到MongoDB的迁移，采用以下策略：
+
+1. 创建与MongoDB兼容的实体类(.mongo.entity.ts)
+2. 使用MongoDB的查询语法替代MySQL语法
+3. 将Repository替换为MongoRepository
+4. 将主键从自增ID替换为ObjectId
+5. 调整关系表示方式，使用引用或嵌入文档
+
+MongoDB的优势包括：
+- 文档模型与对象模型更自然匹配
+- 灵活的schema支持快速迭代
+- 高性能的读写操作
+- 易于横向扩展 
