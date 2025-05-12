@@ -2,16 +2,16 @@ import { Module } from '@nestjs/common';
 import { DatabaseModule } from '@app/common';
 import { SystemController } from './system.controller';
 import { SystemService } from './system.service';
-import { System } from './system.entity';
+import { System } from './system.mongo.entity';
 
 @Module({
   providers: [
     {
       provide: 'SYSTEM_REPOSITORY',
-      useFactory: (AppDataSource) => AppDataSource.getRepository(System),
-      inject: ['MYSQL_DEVOPS_DATA_SOURCE'],
+      useFactory: async (AppDataSource) =>
+        await AppDataSource.getRepository(System),
+      inject: ['MONGODB_DATA_SOURCE'],
     },
-    ,
     SystemService,
   ],
   imports: [DatabaseModule],

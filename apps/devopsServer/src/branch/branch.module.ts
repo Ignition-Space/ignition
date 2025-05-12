@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from '@app/common';
 import { BranchService } from './branch.service';
-import { Branch } from './branch.entity';
+import { Branch } from './branch.mongo.entity';
 
 @Module({
   providers: [
     {
       provide: 'BRANCH_REPOSITORY',
-      useFactory: (AppDataSource) => AppDataSource.getRepository(Branch),
-      inject: ['MYSQL_DEVOPS_DATA_SOURCE'],
+      useFactory: async (AppDataSource) =>
+        await AppDataSource.getRepository(Branch),
+      inject: ['MONGODB_DATA_SOURCE'],
     },
     BranchService,
   ],

@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { In, Repository } from 'typeorm';
+import { MongoRepository } from 'typeorm';
 import { SyncProjectRelationDto } from './project-relation.dto';
-import { ProjectRelation } from './project-relation.entity';
+import { ProjectRelation } from './project-relation.mongo.entity';
 
 @Injectable()
 export class ProjectRelationService {
   constructor(
     @Inject('PROJECT_RELATION_REPOSITORY')
-    private readonly projectRelationRepository: Repository<ProjectRelation>,
+    private readonly projectRelationRepository: MongoRepository<ProjectRelation>,
   ) { }
 
   async resetProjectRelation(dto: SyncProjectRelationDto) {
@@ -19,7 +19,7 @@ export class ProjectRelationService {
       return {
         projectId: dto.projectId,
         projectType: type,
-      };
+      } as ProjectRelation;
     });
 
     return await this.projectRelationRepository.save(entities);
@@ -28,7 +28,7 @@ export class ProjectRelationService {
   findRelationsByProjectTypes(projectTypes: string[]) {
     return this.projectRelationRepository.find({
       where: {
-        projectType: In(projectTypes),
+        projectType: { $in: projectTypes },
       },
     });
   }

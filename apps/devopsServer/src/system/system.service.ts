@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { In, Repository } from 'typeorm';
-import { System } from './system.entity';
+import { MongoRepository, ObjectId } from 'typeorm';
+import { System } from './system.mongo.entity';
 
 @Injectable()
 export class SystemService {
   constructor(
     @Inject('SYSTEM_REPOSITORY')
-    private readonly SystemRepository: Repository<System>,
+    private readonly SystemRepository: MongoRepository<System>,
   ) { }
 
   createOrUpdate(System) {
@@ -14,13 +14,15 @@ export class SystemService {
   }
 
   findById(id) {
-    return this.SystemRepository.findOne(id);
+    return this.SystemRepository.findOne({
+      where: { _id: new ObjectId(id) },
+    });
   }
 
   findByIds(ids) {
     return this.SystemRepository.find({
       where: {
-        id: In(ids),
+        _id: { $in: ids.map((id) => new ObjectId(id)) },
       },
     });
   }

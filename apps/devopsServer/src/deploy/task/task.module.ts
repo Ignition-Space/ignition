@@ -11,7 +11,7 @@ import { TaskController } from './task.controller';
 import { TaskService } from './task.service';
 import { OperationModule } from '@devopsServer/system/operation/operation.module';
 import { DeployHistoryModule } from '@devopsServer/deploy/history/history.module';
-import { Task } from './task.entity';
+import { Task } from './task.mongo.entity';
 
 @Module({
   controllers: [TaskController],
@@ -19,8 +19,9 @@ import { Task } from './task.entity';
     TaskService,
     {
       provide: 'TASK_REPOSITORY',
-      useFactory: (AppDataSource) => AppDataSource.getRepository(Task),
-      inject: ['MYSQL_DEVOPS_DATA_SOURCE'],
+      useFactory: async (AppDataSource) =>
+        await AppDataSource.getRepository(Task),
+      inject: ['MONGODB_DATA_SOURCE'],
     },
   ],
   imports: [

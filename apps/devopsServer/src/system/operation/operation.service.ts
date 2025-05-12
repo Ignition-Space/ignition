@@ -1,14 +1,14 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { getOperatorByTime } from '@devopsServer/utils/operators';
-import { Repository, Raw, In } from 'typeorm';
+import { MongoRepository } from 'typeorm';
 import { ListOperationDto } from './operation.dto';
-import { Operation } from './operation.entity';
+import { Operation } from './operation.mongo.entity';
 
 @Injectable()
 export class OperationService {
   constructor(
     @Inject('OPERATION_REPOSITORY')
-    private operationRepository: Repository<Operation>,
+    private operationRepository: MongoRepository<Operation>,
   ) { }
 
   createOrUpdate(operation: Operation): Promise<Operation> {
@@ -16,14 +16,24 @@ export class OperationService {
   }
 
   list(dto: ListOperationDto) {
+    const conditions: any = {};
+
+    if (dto.startTime || dto.endTime) {
+      conditions.operationTime = {};
+      if (dto.startTime) {
+        conditions.operationTime.$gte = new Date(dto.startTime);
+      }
+      if (dto.endTime) {
+        conditions.operationTime.$lte = new Date(dto.endTime);
+      }
+    }
+
+    if (Array.isArray(dto.operationTypes) && dto.operationTypes.length > 0) {
+      conditions.operationType = { $in: dto.operationTypes };
+    }
+
     return this.operationRepository.find({
-      where: {
-        operationTime: getOperatorByTime(dto.startTime, dto.endTime),
-        operationType:
-          Array.isArray(dto.operationTypes) && dto.operationTypes.length > 0
-            ? In(dto.operationTypes)
-            : Raw(() => '1=1'),
-      },
+      where: conditions,
       take: 20,
     });
   }

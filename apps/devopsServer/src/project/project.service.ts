@@ -1,22 +1,21 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Brackets, Repository } from 'typeorm';
-import { Project } from './project.entity';
+import { MongoRepository, ObjectId } from 'typeorm';
+import { Project } from './project.mongo.entity';
 
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { getPaginationOptions } from '@app/common';
 import { ProjectListWithPaginationDto } from './project.dto';
 import { isNotEmpty } from 'class-validator';
-import { In } from 'typeorm';
-import { UserStaredProject } from './user-star-project.entity';
+import { UserStaredProject } from './user-star-project.mongo.entity';
 import { ProjectRelationService } from './project-relation/project-relation.service';
 
 @Injectable()
 export class ProjectService {
   constructor(
     @Inject('PROJECT_REPOSITORY')
-    private readonly projectRepository: Repository<Project>,
+    private readonly projectRepository: MongoRepository<Project>,
     @Inject('USER_STAR_PROJECT_REPOSITORY')
-    private readonly userStarProjectRepository: Repository<UserStaredProject>,
+    private readonly userStarProjectRepository: MongoRepository<UserStaredProject>,
     private readonly projectRelationService: ProjectRelationService,
   ) { }
 
@@ -27,7 +26,7 @@ export class ProjectService {
   async findProjectById(projectId: number) {
     return this.projectRepository.findOne({
       where: {
-        id: projectId,
+        _id: new ObjectId(projectId),
       },
     });
   }
@@ -35,7 +34,7 @@ export class ProjectService {
   async findProjectListByIds(mIds: number[]) {
     return this.projectRepository.find({
       where: {
-        microserviceIds: In(mIds),
+        microserviceIds: { $in: mIds },
       },
     });
   }
@@ -44,27 +43,16 @@ export class ProjectService {
     searchParams: ProjectListWithPaginationDto,
     page: PaginationParams,
   ): Promise<Pagination<Project, CustomPaginationMeta>> {
-    const queryBuilder = this.projectRepository.createQueryBuilder('project');
-    queryBuilder.where('project.deleted_at is null');
-    queryBuilder.andWhere('project.app_type = "web"');
-
-    queryBuilder.orderBy('project.fcreate_time', 'DESC');
+    // 构建查询条件
+    const findOptions: any = {};
 
     // 关键字
     if (isNotEmpty(searchParams.keyword)) {
-      queryBuilder.andWhere(
-        new Brackets((qb) => {
-          qb.where('project.zh_name LIKE :name', {
-            name: `%${searchParams.keyword}%`,
-          })
-            .orWhere('project.fjob_name LIKE :name', {
-              name: `%${searchParams.keyword}%`,
-            })
-            .orWhere('project.git_project_name LIKE :name', {
-              name: `%${searchParams.keyword}%`,
-            });
-        }),
-      );
+      findOptions.$or = [
+        { zhName: { $regex: searchParams.keyword, $options: 'i' } },
+        { usName: { $regex: searchParams.keyword, $options: 'i' } },
+        { gitProjectName: { $regex: searchParams.keyword, $options: 'i' } },
+      ];
     }
 
     // 创建者
@@ -72,9 +60,7 @@ export class ProjectService {
       Array.isArray(searchParams.creatorIds) &&
       searchParams.creatorIds.length > 0
     ) {
-      queryBuilder.andWhere('project.feid IN (:...ids)', {
-        ids: searchParams.creatorIds,
-      });
+      findOptions.creatorId = { $in: searchParams.creatorIds };
     }
 
     // 项目类型
@@ -84,40 +70,48 @@ export class ProjectService {
         await this.projectRelationService.findRelationsByProjectTypes(
           Array.from(searchParams.projectTypes),
         );
-      const projectIds: Set<number> = new Set();
-      projectRelations.forEach((r) => {
-        projectIds.add(r.projectId);
-      });
-      if ([...projectIds].length > 0) {
-        queryBuilder.andWhere('project.fid IN (:...ids)', {
-          ids: [...projectIds],
-        });
+
+      if (projectRelations.length > 0) {
+        const projectIds = projectRelations.map((r) => r.projectId);
+        findOptions._id = { $in: projectIds.map((id) => new ObjectId(id)) };
       }
     }
 
-    const pageData = await paginate(queryBuilder, getPaginationOptions(page));
+    // 执行分页查询
+    const queryResult = await this.projectRepository.findAndCount({
+      where: findOptions,
+      skip: (page.currentPage - 1) * page.pageSize,
+      take: page.pageSize,
+      order: { createTime: 'DESC' },
+    });
 
     return {
-      items: pageData.items,
-      meta: pageData.meta,
+      items: queryResult[0],
+      meta: {
+        currentPage: page.currentPage,
+        itemCount: queryResult[1],
+        itemsPerPage: page.pageSize,
+        totalItems: queryResult[1],
+        totalPages: Math.ceil(queryResult[1] / page.pageSize),
+      } as CustomPaginationMeta,
     };
   }
 
   findProjectByKeyword({ keyword, take }) {
-    const queryBuilder = this.projectRepository.createQueryBuilder('project');
-    queryBuilder.where('project.deleted_at is null');
-    console.log('keyword: ' + keyword);
-    queryBuilder.orderBy('project.fcreate_time', 'DESC');
-    // 关键字
+    const findOptions: any = {};
+
     if (isNotEmpty(keyword)) {
-      queryBuilder.andWhere('project.zh_name LIKE :name', {
-        name: `%${keyword}%`,
-      });
-      queryBuilder.orWhere('project.fjob_name LIKE :name', {
-        name: `%${keyword}%`,
-      });
+      findOptions.$or = [
+        { zhName: { $regex: keyword, $options: 'i' } },
+        { usName: { $regex: keyword, $options: 'i' } },
+      ];
     }
-    return queryBuilder.take(take).getMany();
+
+    return this.projectRepository.find({
+      where: findOptions,
+      take,
+      order: { createTime: 'DESC' },
+    });
   }
 
   async findProjectByGitUrl(gitProjectUrl: string) {
@@ -131,7 +125,7 @@ export class ProjectService {
   async findProjectListByGitIds(gitIds: number[]) {
     return this.projectRepository.find({
       where: {
-        gitProjectId: In(gitIds),
+        gitProjectId: { $in: gitIds },
       },
     });
   }
@@ -157,7 +151,7 @@ export class ProjectService {
     const userStarProject: UserStaredProject = {
       userId,
       projectId,
-    };
+    } as UserStaredProject;
     return this.userStarProjectRepository.save(userStarProject);
   }
 
@@ -173,7 +167,7 @@ export class ProjectService {
     return this.userStarProjectRepository.find({
       where: {
         userId: user.userId,
-        projectId: In(projectIds),
+        projectId: { $in: projectIds },
       },
     });
   }
